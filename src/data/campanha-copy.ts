@@ -313,11 +313,11 @@ export const CAMPANHA = {
       {
         id: "mensal" as const,
         nome: "Mensal",
-        preco: "R$1",
+        preco: "R$47",
         periodo: "por mês",
         de: "",
         badge: "",
-        equivalente: "R$1/mês",
+        equivalente: "R$47/mês",
         parcelas: "",
         cta: "Começar mensal",
         inclui: ["Acesso completo ao sistema", "Cancele quando quiser", "Garantia de 14 dias"],
@@ -325,11 +325,11 @@ export const CAMPANHA = {
       {
         id: "semestral" as const,
         nome: "Semestral",
-        preco: "R$1",
+        preco: "R$147",
         periodo: "por 6 meses",
-        de: "",
+        de: "R$282",
         badge: "Mais escolhido",
-        equivalente: "R$0,17/mês",
+        equivalente: "R$24,50/mês",
         parcelas: "",
         cta: "Quero o semestral",
         inclui: [
@@ -341,11 +341,12 @@ export const CAMPANHA = {
       {
         id: "anual" as const,
         nome: "Anual",
-        preco: "R$1",
+        preco: "R$197",
         periodo: "por 12 meses",
-        de: "",
+        de: "R$564",
         badge: "Melhor valor",
-        equivalente: "R$0,08/mês",
+        equivalente: "R$16,42/mês",
+
         parcelas: "",
         cta: "Quero o anual",
         inclui: [
