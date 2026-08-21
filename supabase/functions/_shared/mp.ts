@@ -2,17 +2,17 @@ import { hmacSha256Hex, secretsEqual, sha256Hex } from "./crypto.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export const PLANOS: Record<string, { nome: string; amount: number }> = {
-  mensal: { nome: "Mensal", amount: 47 },
-  semestral: { nome: "Semestral", amount: 147 },
-  anual: { nome: "Anual", amount: 197 },
+export const PLANOS: Record<string, { nome: string; amount: number; maxInstallments: number }> = {
+  mensal: { nome: "Mensal", amount: 47, maxInstallments: 1 },
+  semestral: { nome: "Semestral", amount: 147, maxInstallments: 6 },
+  anual: { nome: "Anual", amount: 197, maxInstallments: 12 },
 
 };
 
 export type PlanoKey = keyof typeof PLANOS;
 
 /** Só campos que o Brick precisa enviar — nunca espalhar o body do cliente. */
-export function pickMpPaymentFields(formData: Record<string, unknown>) {
+export function pickMpPaymentFields(formData: Record<string, unknown>, maxInstallments = 1) {
   const payerIn = (formData.payer ?? {}) as Record<string, unknown>;
   const identificationIn = (payerIn.identification ?? {}) as Record<string, unknown>;
   const payer: Record<string, unknown> = {};
@@ -27,7 +27,10 @@ export function pickMpPaymentFields(formData: Record<string, unknown>) {
   if (typeof formData.token === "string" && formData.token) out.token = formData.token;
   if (typeof formData.payment_method_id === "string") out.payment_method_id = formData.payment_method_id;
   if (formData.installments != null && formData.installments !== "") {
-    out.installments = Number(formData.installments);
+    // Nunca confiar no cliente: parcelas limitadas ao teto do plano.
+    const teto = Math.max(1, Math.floor(maxInstallments));
+    const pedido = Number(formData.installments);
+    out.installments = Number.isFinite(pedido) ? Math.min(teto, Math.max(1, Math.floor(pedido))) : 1;
   }
   if (formData.issuer_id != null && formData.issuer_id !== "") out.issuer_id = formData.issuer_id;
   return out;

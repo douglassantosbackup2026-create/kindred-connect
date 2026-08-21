@@ -515,6 +515,7 @@ export const PLANOS_ASSINATURA = [
     precoCentavos: 4700,
     intervalo: "month" as const,
     intervaloCount: 1,
+    maxParcelas: 1,
   },
   {
     id: "semestral",
@@ -526,6 +527,7 @@ export const PLANOS_ASSINATURA = [
     precoCentavos: 14700,
     intervalo: "month" as const,
     intervaloCount: 6,
+    maxParcelas: 6,
   },
   {
     id: "anual",
@@ -537,6 +539,7 @@ export const PLANOS_ASSINATURA = [
     precoCentavos: 19700,
     intervalo: "year" as const,
     intervaloCount: 1,
+    maxParcelas: 12,
   },
 ];
 

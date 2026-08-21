@@ -160,17 +160,20 @@ export function MercadoPagoCheckout({
     };
   }, [amount, email, cpf]);
 
+  // Parcelamento só a partir do Semestral: mensal fica em 1x.
+  const maxParcelas = plano?.maxParcelas ?? 1;
+
   const customization = useMemo(
     () => ({
       paymentMethods: {
         creditCard: "all" as const,
         debitCard: "all" as const,
         bankTransfer: "all" as const,
-        maxInstallments: 12,
+        maxInstallments: maxParcelas,
       },
       visual: { hideFormTitle: true },
     }),
-    [],
+    [maxParcelas],
   );
 
   const onSubmit = useCallback<NonNullable<PaymentBrickProps["onSubmit"]>>(
