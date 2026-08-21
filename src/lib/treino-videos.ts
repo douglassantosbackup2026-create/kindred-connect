@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { urlVideoSegura, MENSAGEM_URL_INVALIDA } from "@/lib/video-url";
-import {
 import { getErrorMessage } from "@/lib/utils";
+import {
   salvarLinkVideoServer,
   registrarUploadVideoServer,
 } from "@/lib/treino-videos.functions";
