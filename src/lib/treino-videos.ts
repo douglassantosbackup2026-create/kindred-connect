@@ -178,9 +178,3 @@ async function apagarArquivo(path: string): Promise<string | null> {
   }
 }
 
-async function buscarRegistro(treinoId: string, exercicioNome: string | null) {
-  let q = supabase.from("treino_videos").select("*").eq("treino_id", treinoId);
-  q = exercicioNome === null ? q.is("exercicio_nome", null) : q.eq("exercicio_nome", exercicioNome);
-  const { data } = await q.maybeSingle();
-  return (data as TreinoVideo | null) ?? null;
-}

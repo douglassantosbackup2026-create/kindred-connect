@@ -20,7 +20,7 @@ export const Route = createFileRoute("/bem-vindo-pro")({
 });
 
 function BemVindoProPage() {
-  const { state, logado } = usePlayer();
+  const { state } = usePlayer();
   const semana1 = PLANO.find((s) => s.semana === 1);
   const primeiro = semana1?.dias[0];
   const treino = primeiro ? getTreino(primeiro.treinoId) : null;
