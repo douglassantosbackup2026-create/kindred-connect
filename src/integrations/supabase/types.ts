@@ -32,6 +32,36 @@ export type Database = {
         }
         Relationships: []
       }
+      checkout_intents: {
+        Row: {
+          last_seen_at: string
+          plano: string
+          purchased_at: string | null
+          recovered_at: string | null
+          started_at: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          last_seen_at?: string
+          plano: string
+          purchased_at?: string | null
+          recovered_at?: string | null
+          started_at?: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          last_seen_at?: string
+          plano?: string
+          purchased_at?: string | null
+          recovered_at?: string | null
+          started_at?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           active: boolean
@@ -119,6 +149,30 @@ export type Database = {
         }
         Relationships: []
       }
+      lifecycle_emails: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          sent_on: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          sent_on?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          sent_on?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payment_events: {
         Row: {
           affiliate_ref: string | null
@@ -177,8 +231,10 @@ export type Database = {
         Row: {
           affiliate_code: string | null
           assinante: boolean
+          assinante_until: string | null
           cancel_reason: string | null
           cancelled_at: string | null
+          cpf: string | null
           created_at: string
           disponibilidade: string | null
           id: string
@@ -186,8 +242,11 @@ export type Database = {
           mp_payment_id: string | null
           nome: string
           objetivo: string | null
+          onboarding_done: boolean
           pause_reason: string | null
+          pause_used_at: string | null
           paused_until: string | null
+          phone: string | null
           plano: string | null
           posicao: string | null
           referred_by: string | null
@@ -201,8 +260,10 @@ export type Database = {
         Insert: {
           affiliate_code?: string | null
           assinante?: boolean
+          assinante_until?: string | null
           cancel_reason?: string | null
           cancelled_at?: string | null
+          cpf?: string | null
           created_at?: string
           disponibilidade?: string | null
           id: string
@@ -210,8 +271,11 @@ export type Database = {
           mp_payment_id?: string | null
           nome?: string
           objetivo?: string | null
+          onboarding_done?: boolean
           pause_reason?: string | null
+          pause_used_at?: string | null
           paused_until?: string | null
+          phone?: string | null
           plano?: string | null
           posicao?: string | null
           referred_by?: string | null
@@ -225,8 +289,10 @@ export type Database = {
         Update: {
           affiliate_code?: string | null
           assinante?: boolean
+          assinante_until?: string | null
           cancel_reason?: string | null
           cancelled_at?: string | null
+          cpf?: string | null
           created_at?: string
           disponibilidade?: string | null
           id?: string
@@ -234,8 +300,11 @@ export type Database = {
           mp_payment_id?: string | null
           nome?: string
           objetivo?: string | null
+          onboarding_done?: boolean
           pause_reason?: string | null
+          pause_used_at?: string | null
           paused_until?: string | null
+          phone?: string | null
           plano?: string | null
           posicao?: string | null
           referred_by?: string | null
@@ -275,6 +344,63 @@ export type Database = {
           plano_key?: string | null
           treino_id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      sugestoes: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          mensagem: string
+          nome: string
+          tipo: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          mensagem: string
+          nome: string
+          tipo?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          mensagem?: string
+          nome?: string
+          tipo?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      sugestoes_rate_limit: {
+        Row: {
+          chave: string
+          created_at: string
+          envios: number
+          id: string
+          janela: string
+          updated_at: string
+        }
+        Insert: {
+          chave: string
+          created_at?: string
+          envios?: number
+          id?: string
+          janela: string
+          updated_at?: string
+        }
+        Update: {
+          chave?: string
+          created_at?: string
+          envios?: number
+          id?: string
+          janela?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -365,7 +491,23 @@ export type Database = {
       }
     }
     Functions: {
+      acesso_pro_ativo: { Args: never; Returns: boolean }
+      admin_search_users: {
+        Args: { p_q?: string }
+        Returns: {
+          assinante: boolean
+          created_at: string
+          email: string
+          id: string
+          mp_payment_id: string
+          nome: string
+          plano: string
+          role: string
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
+      redeem_coupon: { Args: { p_code: string }; Returns: boolean }
+      vault_secret: { Args: { p_name: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
