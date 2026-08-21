@@ -196,6 +196,7 @@ Deno.serve(async (req) => {
             currency,
             value,
             ...customData,
+            ...(orderId ? { order_id: orderId } : {}),
           },
         },
       ],
