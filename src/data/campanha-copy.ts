@@ -10,7 +10,7 @@ export const CAMPANHA = {
   heroCtaPlano: "semestral" as const,
   heroCtaSecundario: "Ver planos",
   heroCtaHint: "Acesso completo à jornada de 12 meses",
-  precoAncora: "Todos os planos por R$1 (modo teste) · Pix ou cartão",
+  precoAncora: "A partir de R$16,42/mês no plano anual · Pix ou cartão",
   precoComparativo: "Menos que uma mensalidade de escolinha — e você treina todo dia.",
 
   teaserTreino: {
