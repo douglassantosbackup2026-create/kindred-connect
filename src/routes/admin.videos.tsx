@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Link2, Trash2, Upload, Video } from "lucide-react";
 import { toast } from "sonner";
@@ -38,19 +38,19 @@ function AdminVideos() {
   const [loading, setLoading] = useState(true);
   const [treinoId, setTreinoId] = useState(TREINOS[0]?.id ?? "");
 
-  const recarregar = async () => {
+  const recarregar = useCallback(async () => {
     try {
       setRows(await listTreinoVideos());
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Erro ao carregar vídeos");
+      toast.error(getErrorMessage(e, "Erro ao carregar vídeos"));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     void recarregar();
-  }, []);
+  }, [recarregar]);
 
   const treino = useMemo(() => TREINOS.find((t) => t.id === treinoId), [treinoId]);
   const mapa = useMemo(() => {
