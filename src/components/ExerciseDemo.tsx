@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Play, VideoOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { urlVideoSegura, urlEmbedSegura } from "@/lib/video-url";
+import { ExerciseGuide } from "@/components/ExerciseGuide";
+
 
 const LABELS = {
   mobilidade: "Mobilidade",
