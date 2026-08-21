@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { memo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Clock, Dumbbell, Flame, Play, Sparkles, Star } from "lucide-react";
 import { usePlayer } from "@/lib/player-store";
@@ -32,20 +31,24 @@ export const DashboardStats = memo(function DashboardStats({ compact = false }: 
     setRetomar(lerRetomada());
   }, []);
 
-  const xp = xpTotal(state.sessoes);
-  const patente = patenteDe(xp);
+  const xp = useMemo(() => xpTotal(state.sessoes), [state.sessoes]);
+  const patente = useMemo(() => patenteDe(xp), [xp]);
   const proxima = proximaConquista({ totalTreinos, streak, planoConcluidos: planoConcluidos.length });
 
-  const dias = Array.from({ length: 7 }, (_, i) => {
-    const iso = diaBROffset(-(6 - i));
-    const dow = new Date(`${iso}T12:00:00Z`).getUTCDay();
-    return {
-      iso,
-      label: ["D", "S", "T", "Q", "Q", "S", "S"][dow]!,
-      ativo: state.sessoes.some((s) => s.data === iso),
-      hoje: i === 6,
-    };
-  });
+  const dias = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => {
+        const iso = diaBROffset(-(6 - i));
+        const dow = new Date(`${iso}T12:00:00Z`).getUTCDay();
+        return {
+          iso,
+          label: ["D", "S", "T", "Q", "Q", "S", "S"][dow]!,
+          ativo: state.sessoes.some((s) => s.data === iso),
+          hoje: i === 6,
+        };
+      }),
+    [state.sessoes],
+  );
   const feitosSemana = dias.filter((d) => d.ativo).length;
   const treinoRetomar = retomar ? getTreino(retomar.treinoId) : undefined;
 
