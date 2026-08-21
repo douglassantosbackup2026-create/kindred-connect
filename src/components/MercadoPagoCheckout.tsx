@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { supabase } from "@/integrations/supabase/client";
-import { captureFbclid, getFbc, trackMeta, trackMetaDedup } from "@/lib/meta-pixel";
+import { captureFbclid, getFbc, getInitiateCheckout, trackMeta, trackMetaDedup } from "@/lib/meta-pixel";
 import { getStoredUtm } from "@/lib/utm";
 import { extrairErroPagamento, traduzErroPagamento } from "@/lib/checkout";
 import { toast } from "sonner";
