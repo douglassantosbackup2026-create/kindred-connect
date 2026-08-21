@@ -189,7 +189,8 @@ export function MercadoPagoCheckout({
             client_user_agent: navigator.userAgent,
             event_source_url: window.location.href,
             referrer_url: document.referrer || null,
-            checkout_time: Math.floor(Date.now() / 1000),
+            checkout_time: getInitiateCheckout()?.time ?? Math.floor(Date.now() / 1000),
+            checkout_event_id: getInitiateCheckout()?.eventId ?? null,
           },
         },
       });
