@@ -27,7 +27,10 @@ export function pickMpPaymentFields(formData: Record<string, unknown>, maxInstal
   if (typeof formData.token === "string" && formData.token) out.token = formData.token;
   if (typeof formData.payment_method_id === "string") out.payment_method_id = formData.payment_method_id;
   if (formData.installments != null && formData.installments !== "") {
-    out.installments = Number(formData.installments);
+    // Nunca confiar no cliente: parcelas limitadas ao teto do plano.
+    const teto = Math.max(1, Math.floor(maxInstallments));
+    const pedido = Number(formData.installments);
+    out.installments = Number.isFinite(pedido) ? Math.min(teto, Math.max(1, Math.floor(pedido))) : 1;
   }
   if (formData.issuer_id != null && formData.issuer_id !== "") out.issuer_id = formData.issuer_id;
   return out;
