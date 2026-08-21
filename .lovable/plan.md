@@ -37,10 +37,11 @@ O navegador descobre o próprio IP público (preferindo IPv6) uma vez por sessã
 - `src/routes/__root.tsx`: script inline passa a capturar `fbclid` → cookie `_fbc`, ler/gerar o `external_id` em `localStorage` e chamar `fbq('init', ID, { external_id, country: 'br', em?, fn?, ln? })`.
 - `src/lib/meta-pixel.ts`: `applyAdvancedMatching` aceita `external_id` sozinho com guarda de chave para não reinicializar à toa; novo helper de espera por `_fbp`/`_fbc`; novo helper de IP público com cache em `sessionStorage`; persistência de e-mail/nome.
 - `src/lib/security-headers.ts` (+ teste): host de consulta de IP no `connect-src`.
-- Sem mudanças de banco, de pagamento ou de UI.
+- `src/components/MercadoPagoCheckout.tsx` / `supabase/functions/process-payment` e `mercadopago-webhook`: passar e persistir também o `client_ip_address` (IPv6) junto dos demais dados de atribuição já enviados.
+- Sem mudanças de banco, de fluxo de pagamento ou de UI.
 
 ## Verificação
 
-- No console, conferir que o PageView do Pixel sai com `external_id` e que a chamada `meta-capi` leva `fbc`, `external_id` e um `client_ip_address` IPv6.
+- No console, conferir que PageView, ViewContent, InitiateCheckout e Purchase saem do Pixel com `external_id` e que cada chamada `meta-capi` leva `fbc`, `external_id`, telefone (quando houver) e `client_ip_address` IPv6.
 - Testar com `?fbclid=teste` e confirmar o cookie `_fbc` já no primeiro carregamento.
 - Acompanhar o diagnóstico da Meta nas 24–48 h seguintes.
