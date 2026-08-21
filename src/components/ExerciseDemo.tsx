@@ -112,7 +112,9 @@ export function ExerciseDemo({
   const isEmbed = Boolean(embedSrc);
 
   return (
+    <div>
     <div className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-card">
+
       {carregando && (!isEmbed || ativo) ? <VideoSkeleton /> : null}
       {isEmbed && !ativo ? (
         <button
