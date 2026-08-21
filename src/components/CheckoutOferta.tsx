@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PLANO_PADRAO, registrarCheckoutIntent } from "@/lib/checkout";
 import { cpfValido, phoneValido } from "@/lib/br-docs";
 import { usePlayer } from "@/lib/player-store";
-import { trackMetaDedup } from "@/lib/meta-pixel";
+import { lembrarInitiateCheckout, newEventId, trackMetaDedup } from "@/lib/meta-pixel";
 import { cn } from "@/lib/utils";
 
 const CODE_RE = /^[A-Za-z0-9_-]{1,40}$/;
