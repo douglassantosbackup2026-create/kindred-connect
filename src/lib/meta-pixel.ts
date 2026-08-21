@@ -40,7 +40,13 @@ function cookie(name: string): string | undefined {
 const FBC_KEY = "jps:fbc";
 const EID_KEY = "jps:meta-eid";
 const IC_KEY = "jps:meta-ic";
+export const EMAIL_KEY = "jps:meta-em";
+export const NOME_KEY = "jps:meta-nm";
+const IP_KEY = "jps:meta-ip";
 const FBC_MAX_AGE = 60 * 60 * 24 * 90;
+
+/** Endpoint que devolve IPv6 quando o usuário tem conectividade IPv6. */
+export const IP_LOOKUP_URL = "https://api64.ipify.org?format=json";
 
 export function montarFbc(fbclid: string, now = Date.now()) {
   return `fb.1.${now}.${fbclid}`;
@@ -125,8 +131,79 @@ export function getAnonymousExternalId(): string {
   }
 }
 
+/** Telefone digitado no checkout: só na memória da aba (não vai para o storage). */
+let phoneSessao: string | undefined;
+
+/** Persiste os dados de correspondência avançada reutilizáveis entre visitas. */
+export function lembrarIdentidade(dados: {
+  email?: string | null | undefined;
+  nome?: string | null | undefined;
+  phone?: string | null | undefined;
+}) {
+  if (typeof window === "undefined") return;
+  if (dados.phone) phoneSessao = phoneE164Br(dados.phone) || undefined;
+  try {
+    if (dados.email?.trim()) localStorage.setItem(EMAIL_KEY, dados.email.trim().toLowerCase());
+    if (dados.nome?.trim()) localStorage.setItem(NOME_KEY, dados.nome.trim());
+  } catch {
+    /* ignore */
+  }
+}
+
+function lerStorage(key: string): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    return localStorage.getItem(key) ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Espera o `fbevents.js` gravar `_fbp`/`_fbc` para não enviar o evento sem eles. */
+export async function esperarCookiesPixel(timeoutMs = 1500): Promise<void> {
+  if (typeof document === "undefined") return;
+  const inicio = Date.now();
+  while (Date.now() - inicio < timeoutMs) {
+    if (cookie("_fbp") || cookie("_fbc")) return;
+    await new Promise((r) => setTimeout(r, 150));
+  }
+}
+
+/** IP público do visitante (IPv6 quando disponível), consultado uma vez por sessão. */
+export async function getClientIp(): Promise<string | undefined> {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const cache = sessionStorage.getItem(IP_KEY);
+    if (cache) return cache || undefined;
+  } catch {
+    /* ignore */
+  }
+  try {
+    const res = await fetch(IP_LOOKUP_URL, { cache: "no-store" });
+    const json = (await res.json()) as { ip?: string };
+    const ip = typeof json.ip === "string" ? json.ip : undefined;
+    try {
+      sessionStorage.setItem(IP_KEY, ip ?? "");
+    } catch {
+      /* ignore */
+    }
+    return ip;
+  } catch {
+    return undefined;
+  }
+}
+
 let perfilCache: { userId: string; phone: string | null; nome: string | null } | null = null;
-let matchingKey = "";
+
+function getMatchingKey(): string {
+  if (typeof window === "undefined") return "";
+  return (window as unknown as { __jpsMetaMatch?: string }).__jpsMetaMatch ?? "";
+}
+
+function setMatchingKey(key: string) {
+  if (typeof window === "undefined") return;
+  (window as unknown as { __jpsMetaMatch?: string }).__jpsMetaMatch = key;
+}
 
 async function fetchPerfilMeta(userId: string): Promise<{ phone?: string | undefined; nome?: string | undefined }> {
   if (perfilCache?.userId === userId) {
@@ -149,11 +226,14 @@ async function resolverIdentidade(overrides?: {
   nome?: string | null | undefined;
 }): Promise<MetaIdentidade> {
   captureFbclid();
+  if (overrides?.email || overrides?.nome || overrides?.phone) {
+    lembrarIdentidade({ email: overrides.email, nome: overrides.nome, phone: overrides.phone });
+  }
   const fbp = cookie("_fbp");
   const fbc = getFbc();
-  let email = overrides?.email?.trim() || undefined;
-  let phone = overrides?.phone ? phoneE164Br(overrides.phone) : undefined;
-  let nome = overrides?.nome?.trim() || undefined;
+  let email = overrides?.email?.trim() || lerStorage(EMAIL_KEY) || undefined;
+  let phone = overrides?.phone ? phoneE164Br(overrides.phone) : phoneSessao;
+  let nome = overrides?.nome?.trim() || lerStorage(NOME_KEY) || undefined;
   let externalId = getAnonymousExternalId() || undefined;
 
   try {
@@ -186,12 +266,11 @@ async function resolverIdentidade(overrides?: {
 
 export function applyAdvancedMatching(ident: MetaIdentidade) {
   if (typeof window === "undefined") return;
-  // Só reinicializa o pixel quando há PII real para enviar; caso contrário o Meta
-  // registra "Duplicate Pixel ID" sem nenhum ganho de matching.
-  if (!ident.email && !ident.phone) return;
+  // Reinicializa apenas quando os dados de correspondência realmente mudam —
+  // repetir a mesma `init` gera "Duplicate Pixel ID" sem ganho de matching.
   const key = `${ident.email ?? ""}|${ident.phone ?? ""}|${ident.firstName ?? ""}|${ident.lastName ?? ""}|${ident.externalId ?? ""}`;
-  if (!key.replace(/\|/g, "") || key === matchingKey) return;
-  matchingKey = key;
+  if (!key.replace(/\|/g, "") || key === getMatchingKey()) return;
+  setMatchingKey(key);
 
   try {
     window.fbq?.("init", META_PIXEL_ID, {
@@ -262,12 +341,20 @@ export function trackMetaDedup(
   const eventSourceUrl = window.location.href;
   const referrer = document.referrer || undefined;
 
+  const eventTime = options?.eventTime ?? Math.floor(Date.now() / 1000);
+
   void (async () => {
-    const ident = await resolverIdentidade({
-      email: options?.email,
-      phone: options?.phone,
-      nome: options?.nome,
-    });
+    // `_fbp`/`_fbc` são gravados pelo fbevents.js logo após o load; sem esperar,
+    // os primeiros eventos da visita chegariam à CAPI sem esses identificadores.
+    await esperarCookiesPixel();
+    const [ident, clientIp] = await Promise.all([
+      resolverIdentidade({
+        email: options?.email,
+        phone: options?.phone,
+        nome: options?.nome,
+      }),
+      getClientIp(),
+    ]);
     applyAdvancedMatching(ident);
 
     if (!ident.email && !ident.phone && !ident.fbp && !ident.fbc && !ident.externalId) return;
@@ -276,7 +363,8 @@ export function trackMetaDedup(
       body: {
         event_name: event,
         event_id: eventId,
-        event_time: options?.eventTime ?? Math.floor(Date.now() / 1000),
+        event_time: eventTime,
+        client_ip_address: clientIp,
         email: ident.email,
         phone: ident.phone,
         first_name: ident.firstName,

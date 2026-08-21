@@ -3,7 +3,15 @@ import { useServerFn } from "@tanstack/react-start";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { supabase } from "@/integrations/supabase/client";
-import { captureFbclid, getFbc, getInitiateCheckout, trackMeta, trackMetaDedup } from "@/lib/meta-pixel";
+import {
+  captureFbclid,
+  getClientIp,
+  getFbc,
+  getInitiateCheckout,
+  lembrarIdentidade,
+  trackMeta,
+  trackMetaDedup,
+} from "@/lib/meta-pixel";
 import { getStoredUtm } from "@/lib/utm";
 import { extrairErroPagamento, traduzErroPagamento } from "@/lib/checkout";
 import { toast } from "sonner";
@@ -175,6 +183,13 @@ export function MercadoPagoCheckout({
       }
       const fbp = document.cookie.match(/(^|; )_fbp=([^;]*)/)?.[2];
       captureFbclid();
+      // Alimenta a correspondência avançada dos próximos eventos com os dados do pagador.
+      const pagador = (formData as { payer?: { email?: string; phone?: { area_code?: string; number?: string } } })
+        .payer;
+      lembrarIdentidade({
+        email: pagador?.email ?? email ?? null,
+        phone: pagador?.phone?.number ? `${pagador.phone.area_code ?? ""}${pagador.phone.number}` : null,
+      });
       const { data, error } = await supabase.functions.invoke("process-payment", {
         body: {
           plano: planoId,
@@ -191,6 +206,7 @@ export function MercadoPagoCheckout({
             referrer_url: document.referrer || null,
             checkout_time: getInitiateCheckout()?.time ?? Math.floor(Date.now() / 1000),
             checkout_event_id: getInitiateCheckout()?.eventId ?? null,
+            client_ip: (await getClientIp()) ?? null,
           },
         },
       });
