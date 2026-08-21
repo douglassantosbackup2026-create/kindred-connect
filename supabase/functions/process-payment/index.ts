@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       body.formData && typeof body.formData === "object"
         ? (body.formData as Record<string, unknown>)
         : (body as Record<string, unknown>);
-    const formData = pickMpPaymentFields(rawForm);
+    const formData = pickMpPaymentFields(rawForm, cfg.maxInstallments);
 
     const metaAttr = (body.meta ?? {}) as Record<string, string | undefined>;
     const clientUa = metaAttr.client_user_agent ?? req.headers.get("user-agent") ?? undefined;
