@@ -222,11 +222,14 @@ async function resolverIdentidade(overrides?: {
   nome?: string | null | undefined;
 }): Promise<MetaIdentidade> {
   captureFbclid();
+  if (overrides?.email || overrides?.nome || overrides?.phone) {
+    lembrarIdentidade({ email: overrides.email, nome: overrides.nome, phone: overrides.phone });
+  }
   const fbp = cookie("_fbp");
   const fbc = getFbc();
-  let email = overrides?.email?.trim() || undefined;
-  let phone = overrides?.phone ? phoneE164Br(overrides.phone) : undefined;
-  let nome = overrides?.nome?.trim() || undefined;
+  let email = overrides?.email?.trim() || lerStorage(EMAIL_KEY) || undefined;
+  let phone = overrides?.phone ? phoneE164Br(overrides.phone) : phoneSessao;
+  let nome = overrides?.nome?.trim() || lerStorage(NOME_KEY) || undefined;
   let externalId = getAnonymousExternalId() || undefined;
 
   try {
