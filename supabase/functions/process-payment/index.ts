@@ -103,6 +103,7 @@ Deno.serve(async (req) => {
         meta_client_ip: clientIp ?? null,
         meta_referrer_url: metaAttr.referrer_url ?? null,
         meta_checkout_time: checkoutTime,
+        meta_checkout_event_id: metaAttr.checkout_event_id ?? null,
         meta_segmentation: segmentation,
       },
       notification_url: notificationUrl,
