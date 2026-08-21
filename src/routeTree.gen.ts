@@ -10,33 +10,315 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BemVindoProRouteImport } from './routes/bem-vindo-pro'
+import { Route as BibliotecaRouteImport } from './routes/biblioteca'
+import { Route as CampanhaRouteImport } from './routes/campanha'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as EscolinhasRouteImport } from './routes/escolinhas'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as PlanoRouteImport } from './routes/plano'
+import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as ProgressoRouteImport } from './routes/progresso'
+import { Route as RankingRouteImport } from './routes/ranking'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminPagamentosRouteImport } from './routes/admin.pagamentos'
+import { Route as AdminSessoesRouteImport } from './routes/admin.sessoes'
+import { Route as AdminSugestoesRouteImport } from './routes/admin.sugestoes'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminVideosRouteImport } from './routes/admin.videos'
+import { Route as TreinoTreinoIdRouteImport } from './routes/treino.$treinoId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BemVindoProRoute = BemVindoProRouteImport.update({
+  id: '/bem-vindo-pro',
+  path: '/bem-vindo-pro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaRoute = BibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampanhaRoute = CampanhaRouteImport.update({
+  id: '/campanha',
+  path: '/campanha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EscolinhasRoute = EscolinhasRouteImport.update({
+  id: '/escolinhas',
+  path: '/escolinhas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanoRoute = PlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressoRoute = ProgressoRouteImport.update({
+  id: '/progresso',
+  path: '/progresso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankingRoute = RankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPagamentosRoute = AdminPagamentosRouteImport.update({
+  id: '/pagamentos',
+  path: '/pagamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSessoesRoute = AdminSessoesRouteImport.update({
+  id: '/sessoes',
+  path: '/sessoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSugestoesRoute = AdminSugestoesRouteImport.update({
+  id: '/sugestoes',
+  path: '/sugestoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVideosRoute = AdminVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const TreinoTreinoIdRoute = TreinoTreinoIdRouteImport.update({
+  id: '/treino/$treinoId',
+  path: '/treino/$treinoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/app': typeof AppRoute
+  '/auth': typeof AuthRoute
+  '/bem-vindo-pro': typeof BemVindoProRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/campanha': typeof CampanhaRoute
+  '/checkout': typeof CheckoutRoute
+  '/escolinhas': typeof EscolinhasRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
+  '/progresso': typeof ProgressoRoute
+  '/ranking': typeof RankingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/sessoes': typeof AdminSessoesRoute
+  '/admin/sugestoes': typeof AdminSugestoesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/admin/videos': typeof AdminVideosRoute
+  '/treino/$treinoId': typeof TreinoTreinoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
+  '/auth': typeof AuthRoute
+  '/bem-vindo-pro': typeof BemVindoProRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/campanha': typeof CampanhaRoute
+  '/checkout': typeof CheckoutRoute
+  '/escolinhas': typeof EscolinhasRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
+  '/progresso': typeof ProgressoRoute
+  '/ranking': typeof RankingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/sessoes': typeof AdminSessoesRoute
+  '/admin/sugestoes': typeof AdminSugestoesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/admin/videos': typeof AdminVideosRoute
+  '/treino/$treinoId': typeof TreinoTreinoIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/app': typeof AppRoute
+  '/auth': typeof AuthRoute
+  '/bem-vindo-pro': typeof BemVindoProRoute
+  '/biblioteca': typeof BibliotecaRoute
+  '/campanha': typeof CampanhaRoute
+  '/checkout': typeof CheckoutRoute
+  '/escolinhas': typeof EscolinhasRoute
+  '/onboarding': typeof OnboardingRoute
+  '/perfil': typeof PerfilRoute
+  '/plano': typeof PlanoRoute
+  '/planos': typeof PlanosRoute
+  '/progresso': typeof ProgressoRoute
+  '/ranking': typeof RankingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin/pagamentos': typeof AdminPagamentosRoute
+  '/admin/sessoes': typeof AdminSessoesRoute
+  '/admin/sugestoes': typeof AdminSugestoesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/admin/videos': typeof AdminVideosRoute
+  '/treino/$treinoId': typeof TreinoTreinoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/app'
+    | '/auth'
+    | '/bem-vindo-pro'
+    | '/biblioteca'
+    | '/campanha'
+    | '/checkout'
+    | '/escolinhas'
+    | '/onboarding'
+    | '/perfil'
+    | '/plano'
+    | '/planos'
+    | '/progresso'
+    | '/ranking'
+    | '/reset-password'
+    | '/admin/pagamentos'
+    | '/admin/sessoes'
+    | '/admin/sugestoes'
+    | '/admin/usuarios'
+    | '/admin/videos'
+    | '/treino/$treinoId'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/bem-vindo-pro'
+    | '/biblioteca'
+    | '/campanha'
+    | '/checkout'
+    | '/escolinhas'
+    | '/onboarding'
+    | '/perfil'
+    | '/plano'
+    | '/planos'
+    | '/progresso'
+    | '/ranking'
+    | '/reset-password'
+    | '/admin/pagamentos'
+    | '/admin/sessoes'
+    | '/admin/sugestoes'
+    | '/admin/usuarios'
+    | '/admin/videos'
+    | '/treino/$treinoId'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/app'
+    | '/auth'
+    | '/bem-vindo-pro'
+    | '/biblioteca'
+    | '/campanha'
+    | '/checkout'
+    | '/escolinhas'
+    | '/onboarding'
+    | '/perfil'
+    | '/plano'
+    | '/planos'
+    | '/progresso'
+    | '/ranking'
+    | '/reset-password'
+    | '/admin/pagamentos'
+    | '/admin/sessoes'
+    | '/admin/sugestoes'
+    | '/admin/usuarios'
+    | '/admin/videos'
+    | '/treino/$treinoId'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AppRoute: typeof AppRoute
+  AuthRoute: typeof AuthRoute
+  BemVindoProRoute: typeof BemVindoProRoute
+  BibliotecaRoute: typeof BibliotecaRoute
+  CampanhaRoute: typeof CampanhaRoute
+  CheckoutRoute: typeof CheckoutRoute
+  EscolinhasRoute: typeof EscolinhasRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PerfilRoute: typeof PerfilRoute
+  PlanoRoute: typeof PlanoRoute
+  PlanosRoute: typeof PlanosRoute
+  ProgressoRoute: typeof ProgressoRoute
+  RankingRoute: typeof RankingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TreinoTreinoIdRoute: typeof TreinoTreinoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +330,201 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bem-vindo-pro': {
+      id: '/bem-vindo-pro'
+      path: '/bem-vindo-pro'
+      fullPath: '/bem-vindo-pro'
+      preLoaderRoute: typeof BemVindoProRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca': {
+      id: '/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/biblioteca'
+      preLoaderRoute: typeof BibliotecaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campanha': {
+      id: '/campanha'
+      path: '/campanha'
+      fullPath: '/campanha'
+      preLoaderRoute: typeof CampanhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/escolinhas': {
+      id: '/escolinhas'
+      path: '/escolinhas'
+      fullPath: '/escolinhas'
+      preLoaderRoute: typeof EscolinhasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plano': {
+      id: '/plano'
+      path: '/plano'
+      fullPath: '/plano'
+      preLoaderRoute: typeof PlanoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progresso': {
+      id: '/progresso'
+      path: '/progresso'
+      fullPath: '/progresso'
+      preLoaderRoute: typeof ProgressoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ranking': {
+      id: '/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof RankingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pagamentos': {
+      id: '/admin/pagamentos'
+      path: '/pagamentos'
+      fullPath: '/admin/pagamentos'
+      preLoaderRoute: typeof AdminPagamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sessoes': {
+      id: '/admin/sessoes'
+      path: '/sessoes'
+      fullPath: '/admin/sessoes'
+      preLoaderRoute: typeof AdminSessoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/sugestoes': {
+      id: '/admin/sugestoes'
+      path: '/sugestoes'
+      fullPath: '/admin/sugestoes'
+      preLoaderRoute: typeof AdminSugestoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/videos': {
+      id: '/admin/videos'
+      path: '/videos'
+      fullPath: '/admin/videos'
+      preLoaderRoute: typeof AdminVideosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/treino/$treinoId': {
+      id: '/treino/$treinoId'
+      path: '/treino/$treinoId'
+      fullPath: '/treino/$treinoId'
+      preLoaderRoute: typeof TreinoTreinoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminPagamentosRoute: typeof AdminPagamentosRoute
+  AdminSessoesRoute: typeof AdminSessoesRoute
+  AdminSugestoesRoute: typeof AdminSugestoesRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+  AdminVideosRoute: typeof AdminVideosRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminPagamentosRoute: AdminPagamentosRoute,
+  AdminSessoesRoute: AdminSessoesRoute,
+  AdminSugestoesRoute: AdminSugestoesRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+  AdminVideosRoute: AdminVideosRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AppRoute: AppRoute,
+  AuthRoute: AuthRoute,
+  BemVindoProRoute: BemVindoProRoute,
+  BibliotecaRoute: BibliotecaRoute,
+  CampanhaRoute: CampanhaRoute,
+  CheckoutRoute: CheckoutRoute,
+  EscolinhasRoute: EscolinhasRoute,
+  OnboardingRoute: OnboardingRoute,
+  PerfilRoute: PerfilRoute,
+  PlanoRoute: PlanoRoute,
+  PlanosRoute: PlanosRoute,
+  ProgressoRoute: ProgressoRoute,
+  RankingRoute: RankingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TreinoTreinoIdRoute: TreinoTreinoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
