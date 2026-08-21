@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
@@ -60,31 +60,44 @@ function Biblioteca() {
   }, [sugerida, usouSugestao]);
 
   const termo = busca.trim().toLowerCase();
-  const feitosPorTreino = state.sessoes.reduce<Record<string, number>>((acc, s) => {
-    acc[s.treinoId] = (acc[s.treinoId] ?? 0) + 1;
-    return acc;
-  }, {});
-  const lista = TREINOS.filter((t) => {
-    if (termo) {
-      const alvo = [t.nome, t.descricao, ...t.exercicios.map((e) => e.nome)].join(" ").toLowerCase();
-      if (!alvo.includes(termo)) return false;
-    }
-    if (filtro && !t.categorias.includes(filtro)) return false;
-    if (posicaoFiltro && posicaoFiltro !== "qualquer") {
-      const ok =
-        !t.posicoes?.length ||
-        t.posicoes.includes(posicaoFiltro) ||
-        t.posicoes.includes("qualquer");
-      if (!ok) return false;
-    }
-    if (temporada !== "todas" && t.temporada !== temporada) return false;
-    return true;
-  }).sort((a, b) => {
-    if (ordem === "duracao") return a.duracaoMin - b.duracaoMin;
-    if (ordem === "intensidade") return (PESO_NIVEL[b.nivel] ?? 0) - (PESO_NIVEL[a.nivel] ?? 0);
-    if (ordem === "feitos") return (feitosPorTreino[b.id] ?? 0) - (feitosPorTreino[a.id] ?? 0);
-    return scoreRecomendacao(b, state.objetivo, state.posicao) - scoreRecomendacao(a, state.objetivo, state.posicao);
-  });
+  const feitosPorTreino = useMemo(
+    () =>
+      state.sessoes.reduce<Record<string, number>>((acc, s) => {
+        acc[s.treinoId] = (acc[s.treinoId] ?? 0) + 1;
+        return acc;
+      }, {}),
+    [state.sessoes],
+  );
+  const lista = useMemo(
+    () =>
+      TREINOS.filter((t) => {
+        if (termo) {
+          const alvo = [t.nome, t.descricao, ...t.exercicios.map((e) => e.nome)]
+            .join(" ")
+            .toLowerCase();
+          if (!alvo.includes(termo)) return false;
+        }
+        if (filtro && !t.categorias.includes(filtro)) return false;
+        if (posicaoFiltro && posicaoFiltro !== "qualquer") {
+          const ok =
+            !t.posicoes?.length ||
+            t.posicoes.includes(posicaoFiltro) ||
+            t.posicoes.includes("qualquer");
+          if (!ok) return false;
+        }
+        if (temporada !== "todas" && t.temporada !== temporada) return false;
+        return true;
+      }).sort((a, b) => {
+        if (ordem === "duracao") return a.duracaoMin - b.duracaoMin;
+        if (ordem === "intensidade") return (PESO_NIVEL[b.nivel] ?? 0) - (PESO_NIVEL[a.nivel] ?? 0);
+        if (ordem === "feitos") return (feitosPorTreino[b.id] ?? 0) - (feitosPorTreino[a.id] ?? 0);
+        return (
+          scoreRecomendacao(b, state.objetivo, state.posicao) -
+          scoreRecomendacao(a, state.objetivo, state.posicao)
+        );
+      }),
+    [termo, filtro, posicaoFiltro, temporada, ordem, feitosPorTreino, state.objetivo, state.posicao],
+  );
   const foco = labelObjetivo(state.objetivo);
 
   return (
