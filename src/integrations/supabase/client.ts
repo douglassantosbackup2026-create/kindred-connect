@@ -2,9 +2,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const PROJECT_SUPABASE_URL = 'https://zuqjyxcjftrtrhqxuvfq.supabase.co';
+const PROJECT_SUPABASE_URL = 'https://ldxetjfmglvxmzaufpgk.supabase.co';
 const PROJECT_SUPABASE_PUBLISHABLE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1cWp5eGNqZnRydHJocXh1dmZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjg3MzgsImV4cCI6MjEwMTgwNDczOH0.XnDeKwuKvhO_8u4VPqUykCHo6rLZOI_t9XteQEht2Sw';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkeGV0amZtZ2x2eG16YXVmcGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyNzU1ODYsImV4cCI6MjEwMjg1MTU4Nn0.yqksatcp0tQnH2fTIXiZwqv7zpV2IvAX7OruE3uqp9s';
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
