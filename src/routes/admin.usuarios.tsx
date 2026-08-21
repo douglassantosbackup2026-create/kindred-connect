@@ -7,7 +7,7 @@ import { fetchAdminUsers, updateAdminUser, type AdminUserRow } from "@/lib/admin
 import { setAdminRole } from "@/lib/admin.functions";
 import { useAdminTable } from "@/hooks/use-admin-table";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 
 export const Route = createFileRoute("/admin/usuarios")({
@@ -31,7 +31,7 @@ function AdminUsuarios() {
       toast.success(!row.assinante ? "Assinatura liberada" : "Assinatura removida");
       reload();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao atualizar");
+      toast.error(getErrorMessage(e, "Falha ao atualizar"));
     }
   };
 
@@ -41,7 +41,7 @@ function AdminUsuarios() {
       toast.success(row.role === "admin" ? "Admin removido" : "Admin concedido");
       reload();
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao atualizar role");
+      toast.error(getErrorMessage(e, "Falha ao atualizar role"));
     }
   };
 

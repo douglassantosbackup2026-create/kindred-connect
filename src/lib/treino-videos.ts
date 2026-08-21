@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { urlVideoSegura, MENSAGEM_URL_INVALIDA } from "@/lib/video-url";
 import {
+import { getErrorMessage } from "@/lib/utils";
   salvarLinkVideoServer,
   registrarUploadVideoServer,
 } from "@/lib/treino-videos.functions";
@@ -172,7 +173,7 @@ async function apagarArquivo(path: string): Promise<string | null> {
     if (error) throw error;
     return null;
   } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
+    const msg = getErrorMessage(e, String(e));
     console.warn("[treino-videos] falha ao apagar arquivo antigo", path, msg);
     return `O vídeo antigo não pôde ser removido do armazenamento (${path}). Ele ficará ocupando espaço até ser apagado manualmente.`;
   }

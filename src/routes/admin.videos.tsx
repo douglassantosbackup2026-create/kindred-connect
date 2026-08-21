@@ -17,6 +17,7 @@ import {
   type TreinoVideo,
 } from "@/lib/treino-videos";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
+import { getErrorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/videos")({
   errorComponent: RouteError,
@@ -157,7 +158,7 @@ function VideoRow({
       toast.success(ok);
       if (res && res.aviso) toast.warning(res.aviso);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falhou");
+      toast.error(getErrorMessage(e, "Falhou"));
     } finally {
       setBusy(false);
     }

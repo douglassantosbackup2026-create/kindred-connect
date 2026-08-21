@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageFrame } from "@/components/PageFrame";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
+import { getErrorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
@@ -76,7 +77,7 @@ function ResetPasswordPage() {
         void navigate({ to: "/app" });
       }, 1200);
     } catch (err) {
-      setErro(err instanceof Error ? err.message : "Não foi possível atualizar a senha.");
+      setErro(getErrorMessage(err, "Não foi possível atualizar a senha."));
     } finally {
       setLoading(false);
     }

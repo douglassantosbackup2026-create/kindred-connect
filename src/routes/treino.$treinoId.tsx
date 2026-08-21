@@ -17,6 +17,7 @@ import { useTreinoVideos } from "@/lib/treino-videos";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { Confetti, CountUp, LevelBar, playSuccessSound } from "@/components/RewardBurst";
 import { patenteDe, xpDoTreino, xpTotal } from "@/lib/gamificacao";
+import { getErrorMessage } from "@/lib/utils";
 
 
 export const Route = createFileRoute("/treino/$treinoId")({
@@ -285,7 +286,7 @@ function TreinoPage() {
     } catch (e) {
       autoSaveRef.current = false;
       toast.error("Não foi possível registrar o treino", {
-        description: e instanceof Error ? e.message : "Tente novamente.",
+        description: getErrorMessage(e, "Tente novamente."),
       });
       return;
     }

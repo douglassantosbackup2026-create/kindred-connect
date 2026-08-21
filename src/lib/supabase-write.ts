@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorMessage } from "@/lib/utils";
 
 const QUEUE_KEY = "jogador-pro-write-queue-v1";
 
@@ -134,7 +135,7 @@ export async function safeWrite(
   } catch (e) {
     if (retry) enfileirar({ ...retry, label });
     toast.error(`Não foi possível salvar: ${label}`, {
-      description: e instanceof Error ? e.message : "Tente novamente.",
+      description: getErrorMessage(e, "Tente novamente."),
     });
     return false;
   }

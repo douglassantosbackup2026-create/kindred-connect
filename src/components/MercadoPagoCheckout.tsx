@@ -17,6 +17,7 @@ import { extrairErroPagamento, traduzErroPagamento } from "@/lib/checkout";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getMercadoPagoPublicKey } from "@/lib/mercadopago.functions";
+import { getErrorMessage } from "@/lib/utils";
 
 const PIX_QR_KEY = "jogador-pro-pix-qr";
 
@@ -137,7 +138,7 @@ export function MercadoPagoCheckout({
         setBrick(() => mod.Payment);
       })
       .catch((err) => {
-        if (vivo) setErroBrick(err instanceof Error ? err.message : "Não foi possível abrir o pagamento agora.");
+        if (vivo) setErroBrick(getErrorMessage(err, "Não foi possível abrir o pagamento agora."));
       });
     return () => {
       vivo = false;
