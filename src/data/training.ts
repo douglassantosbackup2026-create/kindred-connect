@@ -56,7 +56,8 @@ const ex = (
 
 
 export const VIDEO_DEMO_NOTES =
-  "Demos stock nos exercícios; substitua por filmagens próprias do método quando tiver.";
+  "Sem filmagem própria, o player mostra o guia de execução escrito. Cadastre o vídeo do exercício no admin e ele assume o lugar automaticamente.";
+
 
 export const TREINOS: Treino[] = [
   {
