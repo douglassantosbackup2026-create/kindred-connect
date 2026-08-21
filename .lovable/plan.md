@@ -1,6 +1,6 @@
-# Melhorar a cobertura de parâmetros do PageView (diagnóstico da Meta)
+# Melhorar a cobertura de parâmetros em todos os eventos (diagnóstico da Meta)
 
-O painel aponta quatro pontos no PageView: `fbc` ausente, telefone ausente, identificação externa ausente e IP enviado em IPv4 pela CAPI enquanto o Pixel envia IPv6.
+O painel aponta quatro pontos no PageView: `fbc` ausente, telefone ausente, identificação externa ausente e IP enviado em IPv4 pela CAPI enquanto o Pixel envia IPv6. As causas são as mesmas para os demais eventos (ViewContent, InitiateCheckout, Lead, CompleteRegistration, Purchase, Subscribe e os eventos personalizados), então a correção é feita na camada compartilhada — vale para todo evento do site, atual e futuro.
 
 ## O que o código faz hoje (verificado)
 
