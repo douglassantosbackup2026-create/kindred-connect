@@ -144,13 +144,27 @@ Deno.serve(async (req) => {
           customerSegmentation: segmentation,
           originalEventData:
             Number.isFinite(checkoutTime) && checkoutTime > limite
-              ? { event_name: "InitiateCheckout", event_time: checkoutTime }
+              ? {
+                  event_name: "InitiateCheckout",
+                  event_time: checkoutTime,
+                  ...(typeof md.meta_checkout_event_id === "string" && md.meta_checkout_event_id
+                    ? { event_id: md.meta_checkout_event_id }
+                    : {}),
+                  order_id: String(payment.id),
+                }
               : undefined,
           userData,
           customData: {
             currency: "BRL",
             value: Number(payment.transaction_amount ?? 0),
             content_name: plano,
+            content_type: "product",
+            content_ids: [plano],
+            contents: [
+              { id: plano, quantity: 1, item_price: Number(payment.transaction_amount ?? 0) },
+            ],
+            num_items: 1,
+            order_id: String(payment.id),
             coupon: md.coupon_code ?? undefined,
             utm_source: md.utm_source ?? undefined,
             utm_campaign: md.utm_campaign ?? undefined,
