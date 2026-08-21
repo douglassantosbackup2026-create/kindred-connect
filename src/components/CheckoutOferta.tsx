@@ -205,12 +205,19 @@ export function CheckoutOferta({
   const abrirBrick = useCallback((plano: string) => {
     if (!checkoutTrackedRef.current) {
       checkoutTrackedRef.current = true;
-      trackMetaDedup("InitiateCheckout", {
-        content_name: plano,
-        currency: "BRL",
-        value: (PLANOS_ASSINATURA.find((p) => p.id === plano)?.precoCentavos ?? 0) / 100,
-        num_items: 1,
-      });
+      const icEventId = newEventId("initiatecheckout");
+      lembrarInitiateCheckout(icEventId);
+      trackMetaDedup(
+        "InitiateCheckout",
+        {
+          content_name: plano,
+          content_type: "product",
+          currency: "BRL",
+          value: (PLANOS_ASSINATURA.find((p) => p.id === plano)?.precoCentavos ?? 0) / 100,
+          num_items: 1,
+        },
+        { eventId: icEventId },
+      );
     }
     setMostrarBrick(true);
     void registrarCheckoutIntent(plano).catch(() => {
