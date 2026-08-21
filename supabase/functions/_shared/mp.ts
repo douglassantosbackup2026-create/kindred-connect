@@ -12,7 +12,7 @@ export const PLANOS: Record<string, { nome: string; amount: number; maxInstallme
 export type PlanoKey = keyof typeof PLANOS;
 
 /** Só campos que o Brick precisa enviar — nunca espalhar o body do cliente. */
-export function pickMpPaymentFields(formData: Record<string, unknown>) {
+export function pickMpPaymentFields(formData: Record<string, unknown>, maxInstallments = 1) {
   const payerIn = (formData.payer ?? {}) as Record<string, unknown>;
   const identificationIn = (payerIn.identification ?? {}) as Record<string, unknown>;
   const payer: Record<string, unknown> = {};
