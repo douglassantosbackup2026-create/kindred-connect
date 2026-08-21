@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Play, VideoOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { urlVideoSegura, urlEmbedSegura } from "@/lib/video-url";
+import { ExerciseGuide } from "@/components/ExerciseGuide";
+
 
 const LABELS = {
   mobilidade: "Mobilidade",
@@ -46,11 +48,15 @@ export function ExerciseDemo({
   demo = "cardio",
   nome,
   videoUrl,
+  guia = true,
 }: {
   demo?: keyof typeof LABELS;
   nome: string;
   videoUrl?: string;
+  /** Mostra o guia de execução escrito (padrão). Desligue em vídeos de capa. */
+  guia?: boolean;
 }) {
+
   const [carregando, setCarregando] = useState(true);
   const [falhou, setFalhou] = useState(false);
   // Embeds só montam o iframe depois do play (evita carregar o player de terceiros à toa).
@@ -63,40 +69,56 @@ export function ExerciseDemo({
   }, [videoUrl]);
 
   if (!videoUrl) {
-    return <Ilustracao demo={demo} nome={nome} aviso="Vídeo em breve — siga pela descrição do exercício" />;
+    return (
+      <div>
+        <Ilustracao demo={demo} nome={nome} aviso="Siga o guia de execução abaixo" />
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
+      </div>
+    );
   }
 
   if (falhou) {
     return (
-      <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border border-border bg-secondary px-6 text-center">
-        <VideoOff className="h-8 w-8 text-muted-foreground" />
-        <p className="text-sm font-extrabold text-foreground">Vídeo em breve</p>
-        <p className="text-[11px] text-muted-foreground">
-          Não conseguimos carregar a demonstração de “{nome}”. Siga pelo tempo e pela descrição.
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            setFalhou(false);
-            setCarregando(true);
-          }}
-          className="mt-1 text-xs font-semibold text-primary underline underline-offset-4"
-        >
-          Tentar de novo
-        </button>
+      <div>
+        <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border border-border bg-secondary px-6 text-center">
+          <VideoOff className="h-8 w-8 text-muted-foreground" />
+          <p className="text-sm font-extrabold text-foreground">Vídeo indisponível</p>
+          <p className="text-[11px] text-muted-foreground">
+            Não conseguimos carregar a demonstração de “{nome}”. Siga o guia de execução abaixo.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setFalhou(false);
+              setCarregando(true);
+            }}
+            className="mt-1 text-xs font-semibold text-primary underline underline-offset-4"
+          >
+            Tentar de novo
+          </button>
+        </div>
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
   }
 
   const seguro = urlVideoSegura(videoUrl);
   if (!seguro) {
-    return <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />;
+    return (
+      <div>
+        <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
+      </div>
+    );
   }
+
   const embedSrc = urlEmbedSegura(seguro);
   const isEmbed = Boolean(embedSrc);
 
   return (
+    <div>
     <div className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-card">
+
       {carregando && (!isEmbed || ativo) ? <VideoSkeleton /> : null}
       {isEmbed && !ativo ? (
         <button
@@ -142,5 +164,8 @@ export function ExerciseDemo({
         />
       )}
     </div>
+    {guia ? <ExerciseGuide nome={nome} demo={demo} variante="recolhido" /> : null}
+    </div>
   );
 }
+
