@@ -48,11 +48,15 @@ export function ExerciseDemo({
   demo = "cardio",
   nome,
   videoUrl,
+  guia = true,
 }: {
   demo?: keyof typeof LABELS;
   nome: string;
   videoUrl?: string;
+  /** Mostra o guia de execução escrito (padrão). Desligue em vídeos de capa. */
+  guia?: boolean;
 }) {
+
   const [carregando, setCarregando] = useState(true);
   const [falhou, setFalhou] = useState(false);
   // Embeds só montam o iframe depois do play (evita carregar o player de terceiros à toa).
