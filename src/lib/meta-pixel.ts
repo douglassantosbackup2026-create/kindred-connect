@@ -40,7 +40,13 @@ function cookie(name: string): string | undefined {
 const FBC_KEY = "jps:fbc";
 const EID_KEY = "jps:meta-eid";
 const IC_KEY = "jps:meta-ic";
+export const EMAIL_KEY = "jps:meta-em";
+export const NOME_KEY = "jps:meta-nm";
+const IP_KEY = "jps:meta-ip";
 const FBC_MAX_AGE = 60 * 60 * 24 * 90;
+
+/** Endpoint que devolve IPv6 quando o usuário tem conectividade IPv6. */
+export const IP_LOOKUP_URL = "https://api64.ipify.org?format=json";
 
 export function montarFbc(fbclid: string, now = Date.now()) {
   return `fb.1.${now}.${fbclid}`;
