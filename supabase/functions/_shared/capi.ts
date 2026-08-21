@@ -9,7 +9,7 @@ export type CapiEvent = {
   eventSourceUrl?: string | null;
   referrerUrl?: string | null;
   customerSegmentation?: string | null;
-  originalEventData?: { event_name: string; event_time: number };
+  originalEventData?: { event_name: string; event_time?: number; event_id?: string; order_id?: string };
   userData: Record<string, unknown>;
   customData: Record<string, unknown>;
 };
