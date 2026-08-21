@@ -363,7 +363,8 @@ export function trackMetaDedup(
       body: {
         event_name: event,
         event_id: eventId,
-        event_time: options?.eventTime ?? Math.floor(Date.now() / 1000),
+        event_time: eventTime,
+        client_ip_address: clientIp,
         email: ident.email,
         phone: ident.phone,
         first_name: ident.firstName,
