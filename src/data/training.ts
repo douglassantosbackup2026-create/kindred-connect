@@ -1,4 +1,4 @@
-import { DEMO_VIDEOS } from "@/data/media";
+
 
 export type Categoria = "casa" | "campo" | "forca" | "explosao" | "core";
 export type Nivel = "Iniciante" | "Intermediário" | "Avançado" | "PRO";
