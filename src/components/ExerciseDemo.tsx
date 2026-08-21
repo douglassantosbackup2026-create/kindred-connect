@@ -160,5 +160,8 @@ export function ExerciseDemo({
         />
       )}
     </div>
+    <ExerciseGuide nome={nome} demo={demo} variante="recolhido" />
+    </div>
   );
 }
+
