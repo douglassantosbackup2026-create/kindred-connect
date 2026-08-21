@@ -65,35 +65,49 @@ export function ExerciseDemo({
   }, [videoUrl]);
 
   if (!videoUrl) {
-    return <Ilustracao demo={demo} nome={nome} aviso="Vídeo em breve — siga pela descrição do exercício" />;
+    return (
+      <div>
+        <Ilustracao demo={demo} nome={nome} aviso="Siga o guia de execução abaixo" />
+        <ExerciseGuide nome={nome} demo={demo} />
+      </div>
+    );
   }
 
   if (falhou) {
     return (
-      <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border border-border bg-secondary px-6 text-center">
-        <VideoOff className="h-8 w-8 text-muted-foreground" />
-        <p className="text-sm font-extrabold text-foreground">Vídeo em breve</p>
-        <p className="text-[11px] text-muted-foreground">
-          Não conseguimos carregar a demonstração de “{nome}”. Siga pelo tempo e pela descrição.
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            setFalhou(false);
-            setCarregando(true);
-          }}
-          className="mt-1 text-xs font-semibold text-primary underline underline-offset-4"
-        >
-          Tentar de novo
-        </button>
+      <div>
+        <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border border-border bg-secondary px-6 text-center">
+          <VideoOff className="h-8 w-8 text-muted-foreground" />
+          <p className="text-sm font-extrabold text-foreground">Vídeo indisponível</p>
+          <p className="text-[11px] text-muted-foreground">
+            Não conseguimos carregar a demonstração de “{nome}”. Siga o guia de execução abaixo.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setFalhou(false);
+              setCarregando(true);
+            }}
+            className="mt-1 text-xs font-semibold text-primary underline underline-offset-4"
+          >
+            Tentar de novo
+          </button>
+        </div>
+        <ExerciseGuide nome={nome} demo={demo} />
       </div>
     );
   }
 
   const seguro = urlVideoSegura(videoUrl);
   if (!seguro) {
-    return <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />;
+    return (
+      <div>
+        <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />
+        <ExerciseGuide nome={nome} demo={demo} />
+      </div>
+    );
   }
+
   const embedSrc = urlEmbedSegura(seguro);
   const isEmbed = Boolean(embedSrc);
 
