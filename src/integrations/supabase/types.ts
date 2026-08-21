@@ -14,13 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      payment_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json | null
+          plano: string | null
+          stripe_event_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          payload?: Json | null
+          plano?: string | null
+          stripe_event_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          plano?: string | null
+          stripe_event_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          assinante: boolean
+          created_at: string
+          id: string
+          mp_payer_id: string | null
+          mp_payment_id: string | null
+          nome: string
+          plano: string | null
+          role: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assinante?: boolean
+          created_at?: string
+          id: string
+          mp_payer_id?: string | null
+          mp_payment_id?: string | null
+          nome?: string
+          plano?: string | null
+          role?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assinante?: boolean
+          created_at?: string
+          id?: string
+          mp_payer_id?: string | null
+          mp_payment_id?: string | null
+          nome?: string
+          plano?: string | null
+          role?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sessoes: {
+        Row: {
+          created_at: string
+          data: string
+          id: string
+          minutos: number
+          plano_key: string | null
+          treino_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          id?: string
+          minutos?: number
+          plano_key?: string | null
+          treino_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          id?: string
+          minutos?: number
+          plano_key?: string | null
+          treino_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
