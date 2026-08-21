@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { usePlayer } from "@/lib/player-store";
 import { requestStreakReminderPermission, scheduleStreakReminder } from "@/lib/streak-reminder";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { diaBROffset } from "@/lib/date";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
@@ -430,7 +430,7 @@ function SugestoesSection({
       setMensagem("");
     } catch (err) {
       toast.error("Não foi possível enviar", {
-        description: err instanceof Error ? err.message : "Tente novamente.",
+        description: getErrorMessage(err, "Tente novamente."),
       });
     } finally {
       setEnviando(false);

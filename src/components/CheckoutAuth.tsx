@@ -9,6 +9,7 @@ import { checkoutEmailRedirect, garantirSessaoAposCadastro, traduzErroAuth } fro
 import { forcaSenha } from "@/lib/auth-ui";
 import { cpfValido, maskCpf, maskPhone, phoneE164Br, phoneValido, soDigitos } from "@/lib/br-docs";
 import { trackMetaDedup } from "@/lib/meta-pixel";
+import { getErrorMessage } from "@/lib/utils";
 
 const LOGIN_EVENT = "jps:checkout-login";
 
@@ -149,7 +150,7 @@ export function CheckoutAuth({
       }
       await concluirComDocs(userId, nome || perfil?.nome || "", cpfDigits, phoneDigits);
     } catch (err) {
-      setErro(traduzErroAuth(err instanceof Error ? err.message : "Não foi possível continuar. Tente novamente."));
+      setErro(traduzErroAuth(getErrorMessage(err, "Não foi possível continuar. Tente novamente.")));
     } finally {
       setLoading(false);
     }

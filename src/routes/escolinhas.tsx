@@ -7,6 +7,7 @@ import { PageFrame } from "@/components/PageFrame";
 import { toast } from "sonner";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { enviarEscolinhaLead } from "@/lib/leads.functions";
+import { getErrorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/escolinhas")({
   errorComponent: RouteError,
@@ -51,7 +52,7 @@ function EscolinhasPage() {
       setTelefone("");
       setEscolinha("");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao enviar");
+      toast.error(getErrorMessage(e, "Falha ao enviar"));
     } finally {
       setEnviando(false);
     }

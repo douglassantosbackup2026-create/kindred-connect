@@ -1,11 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export type AdminRole = "admin" | "user";
+
 export type AdminUserRow = {
   id: string;
   nome: string;
   assinante: boolean;
   plano: string | null;
-  role: string;
+  role: AdminRole;
   created_at: string;
   email?: string | null;
   mp_payment_id?: string | null;

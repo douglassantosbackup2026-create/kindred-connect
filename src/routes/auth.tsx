@@ -11,6 +11,7 @@ import { checkoutEmailRedirect, garantirSessaoAposCadastro, isCheckoutAuthFrom, 
 import { acessoProAtivo } from "@/lib/acesso";
 import { forcaSenha } from "@/lib/auth-ui";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
+import { getErrorMessage } from "@/lib/utils";
 
 export type AuthSearch = {
   from?: string;
@@ -165,7 +166,7 @@ function AuthPage() {
       }
       await navigate({ to: "/app" });
     } catch (e) {
-      setErro(traduzErroAuth(e instanceof Error ? e.message : "Não foi possível continuar. Tente novamente."));
+      setErro(traduzErroAuth(getErrorMessage(e, "Não foi possível continuar. Tente novamente.")));
     } finally {
       setLoading(false);
     }

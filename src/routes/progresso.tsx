@@ -9,7 +9,7 @@ import { CONQUISTAS } from "@/data/training";
 import { usePlayer } from "@/lib/player-store";
 import { diaBROffset, inicioSemanaBR } from "@/lib/date";
 import { supabase } from "@/integrations/supabase/client";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { safeWrite } from "@/lib/supabase-write";
@@ -135,7 +135,7 @@ function ProgressoPage() {
       await queryClient.invalidateQueries({ queryKey: ["weekly-scores"] });
       toast.success("Score da semana salvo");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Falha ao salvar");
+      toast.error(getErrorMessage(e, "Falha ao salvar"));
     } finally {
       setSalvando(false);
     }
