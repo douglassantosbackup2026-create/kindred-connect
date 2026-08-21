@@ -14,7 +14,7 @@ import { hmacSha256Hex } from "./crypto.ts";
 describe("process-payment contract helpers", () => {
   it("rejeita plano inválido", () => {
     expect(PLANOS["vip"]).toBeUndefined();
-    expect(PLANOS.semestral.amount).toBe(1);
+    expect(PLANOS.semestral.amount).toBe(147);
   });
 
   it("não espalha campos extras do Brick", () => {
