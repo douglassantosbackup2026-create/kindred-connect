@@ -217,12 +217,17 @@ export function MercadoPagoCheckout({
         gravarPixQr(null);
         setPixQr(null);
         const eventId = payload?.id ? `mp-${payload.id}` : undefined;
-        trackMeta("Purchase", { value: paid, currency: "BRL", content_name: planoId }, eventId);
-        trackMetaDedup(
-          "Subscribe",
-          { value: paid, currency: "BRL", content_name: planoId },
-          eventId ? { eventId: `${eventId}-sub` } : undefined,
-        );
+        const orderId = payload?.id ? String(payload.id) : undefined;
+        const compraPayload = {
+          value: paid,
+          currency: "BRL",
+          content_name: planoId,
+          content_type: "product",
+          num_items: 1,
+          ...(orderId ? { order_id: orderId } : {}),
+        };
+        trackMeta("Purchase", compraPayload, eventId);
+        trackMetaDedup("Subscribe", compraPayload, eventId ? { eventId: `${eventId}-sub` } : undefined);
         toast.success("Pagamento aprovado");
         onApprovedRef.current(planoId);
         return;
