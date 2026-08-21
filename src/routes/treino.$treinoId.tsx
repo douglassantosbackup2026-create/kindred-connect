@@ -612,7 +612,7 @@ function TreinoPage() {
             <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-primary">
               Sessão completa
             </p>
-            <ExerciseDemo demo="bola" nome={treino.nome} videoUrl={videosCadastrados[""] as string} />
+            <ExerciseDemo demo="bola" nome={treino.nome} guia={false} videoUrl={videosCadastrados[""] as string} />
           </div>
         ) : null}
 

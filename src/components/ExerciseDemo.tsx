@@ -72,7 +72,7 @@ export function ExerciseDemo({
     return (
       <div>
         <Ilustracao demo={demo} nome={nome} aviso="Siga o guia de execução abaixo" />
-        <ExerciseGuide nome={nome} demo={demo} />
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
   }
@@ -97,7 +97,7 @@ export function ExerciseDemo({
             Tentar de novo
           </button>
         </div>
-        <ExerciseGuide nome={nome} demo={demo} />
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
   }
@@ -107,7 +107,7 @@ export function ExerciseDemo({
     return (
       <div>
         <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />
-        <ExerciseGuide nome={nome} demo={demo} />
+        {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
   }
@@ -164,7 +164,7 @@ export function ExerciseDemo({
         />
       )}
     </div>
-    <ExerciseGuide nome={nome} demo={demo} variante="recolhido" />
+    {guia ? <ExerciseGuide nome={nome} demo={demo} variante="recolhido" /> : null}
     </div>
   );
 }
