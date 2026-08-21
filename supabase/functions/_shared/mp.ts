@@ -2,10 +2,10 @@ import { hmacSha256Hex, secretsEqual, sha256Hex } from "./crypto.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export const PLANOS: Record<string, { nome: string; amount: number }> = {
-  mensal: { nome: "Mensal", amount: 47 },
-  semestral: { nome: "Semestral", amount: 147 },
-  anual: { nome: "Anual", amount: 197 },
+export const PLANOS: Record<string, { nome: string; amount: number; maxInstallments: number }> = {
+  mensal: { nome: "Mensal", amount: 47, maxInstallments: 1 },
+  semestral: { nome: "Semestral", amount: 147, maxInstallments: 6 },
+  anual: { nome: "Anual", amount: 197, maxInstallments: 12 },
 
 };
 
