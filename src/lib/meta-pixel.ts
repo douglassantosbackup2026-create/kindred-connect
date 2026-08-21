@@ -341,12 +341,20 @@ export function trackMetaDedup(
   const eventSourceUrl = window.location.href;
   const referrer = document.referrer || undefined;
 
+  const eventTime = options?.eventTime ?? Math.floor(Date.now() / 1000);
+
   void (async () => {
-    const ident = await resolverIdentidade({
-      email: options?.email,
-      phone: options?.phone,
-      nome: options?.nome,
-    });
+    // `_fbp`/`_fbc` são gravados pelo fbevents.js logo após o load; sem esperar,
+    // os primeiros eventos da visita chegariam à CAPI sem esses identificadores.
+    await esperarCookiesPixel();
+    const [ident, clientIp] = await Promise.all([
+      resolverIdentidade({
+        email: options?.email,
+        phone: options?.phone,
+        nome: options?.nome,
+      }),
+      getClientIp(),
+    ]);
     applyAdvancedMatching(ident);
 
     if (!ident.email && !ident.phone && !ident.fbp && !ident.fbc && !ident.externalId) return;
