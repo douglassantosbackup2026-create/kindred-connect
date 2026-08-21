@@ -51,7 +51,7 @@ Header: `Authorization: Bearer <cron_secret do Vault>`.
 
 ## Webhook Mercado Pago
 
-`https://zuqjyxcjftrtrhqxuvfq.supabase.co/functions/v1/mercadopago-webhook`
+`https://ldxetjfmglvxmzaufpgk.supabase.co/functions/v1/mercadopago-webhook`
 
 ## Cupons seed
 
