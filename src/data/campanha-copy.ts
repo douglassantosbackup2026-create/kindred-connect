@@ -330,7 +330,7 @@ export const CAMPANHA = {
         de: "R$282",
         badge: "Mais escolhido",
         equivalente: "R$24,50/mês",
-        parcelas: "",
+        parcelas: "Em até 6x no cartão",
         cta: "Quero o semestral",
         inclui: [
           "Acesso completo ao sistema",
@@ -347,7 +347,7 @@ export const CAMPANHA = {
         badge: "Melhor valor",
         equivalente: "R$16,42/mês",
 
-        parcelas: "",
+        parcelas: "Em até 12x no cartão",
         cta: "Quero o anual",
         inclui: [
           "Acesso completo ao sistema",
