@@ -43,15 +43,17 @@ const ex = (
   demo: Exercicio["demo"] = "cardio",
   videoUrl?: string,
 ): Exercicio => {
-  const resolved = videoUrl ?? (demo ? DEMO_VIDEOS[demo] : undefined);
+  // Sem filmagem oficial cadastrada, o player mostra o guia de execução escrito
+  // (src/data/exercise-guides.ts) em vez de um clipe genérico.
   return {
     nome,
     duracaoSeg,
     dica,
     demo,
-    ...(resolved ? { videoUrl: resolved } : {}),
+    ...(videoUrl ? { videoUrl } : {}),
   };
 };
+
 
 export const VIDEO_DEMO_NOTES =
   "Demos stock nos exercícios; substitua por filmagens próprias do método quando tiver.";
