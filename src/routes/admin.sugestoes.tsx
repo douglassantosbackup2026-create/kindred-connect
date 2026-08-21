@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { MessageSquare, Bug, ThumbsUp, Lightbulb } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { listarSugestoes } from "@/lib/sugestoes.functions";
+import { useAdminTable } from "@/hooks/use-admin-table";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/sugestoes")({
@@ -23,19 +23,12 @@ const tipoBadge: Record<
 
 const defaultBadge = tipoBadge["sugestao"]!;
 
-type Sugestao = Awaited<ReturnType<typeof listarSugestoes>>[number];
-
 function SugestoesPage() {
-  const [sugestoes, setSugestoes] = useState<Sugestao[]>([]);
-  const [erro, setErro] = useState<string | null>(null);
-  const [carregando, setCarregando] = useState(true);
-
-  useEffect(() => {
-    void listarSugestoes()
-      .then((data) => setSugestoes(data))
-      .catch((e) => setErro(e instanceof Error ? e.message : "Falha ao carregar"))
-      .finally(() => setCarregando(false));
-  }, []);
+  const {
+    rows: sugestoes,
+    erro,
+    loading: carregando,
+  } = useAdminTable(listarSugestoes, { toastErro: false, fallback: "Falha ao carregar" });
 
   return (
     <AdminShell title="Sugestões" subtitle={`${sugestoes.length} mensagens recebidas`}>

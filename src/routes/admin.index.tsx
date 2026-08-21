@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CreditCard, Dumbbell, Users, Crown, TrendingUp } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { fetchAdminStats, exportFunilCsv } from "@/lib/admin";
 import { PRODUCT } from "@/lib/product-config";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
+import { useAdminResource } from "@/hooks/use-admin-table";
 
 export const Route = createFileRoute("/admin/")({
   errorComponent: RouteError,
@@ -12,17 +12,8 @@ export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
 });
 
-type Stats = Awaited<ReturnType<typeof fetchAdminStats>>;
-
 function AdminDashboard() {
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [erro, setErro] = useState<string | null>(null);
-
-  useEffect(() => {
-    void fetchAdminStats()
-      .then(setStats)
-      .catch((e) => setErro(e instanceof Error ? e.message : "Falha ao carregar"));
-  }, []);
+  const { data: stats, erro } = useAdminResource(fetchAdminStats);
 
   const cards = [
     { label: "Usuários", value: stats?.usuarios ?? 0, icon: Users, to: "/admin/usuarios" as const },
