@@ -187,6 +187,8 @@ Deno.serve(async (req) => {
           ...(referrerUrl ? { referrer_url: referrerUrl } : {}),
           ...(body.opt_out === true ? { opt_out: true } : {}),
           data_processing_options: [],
+          data_processing_options_country: 0,
+          data_processing_options_state: 0,
           ...(segmentation ? { customer_segmentation: segmentation } : {}),
           ...(originalEventData ? { original_event_data: originalEventData } : {}),
           user_data: userData,
