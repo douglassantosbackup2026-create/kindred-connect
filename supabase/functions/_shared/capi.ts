@@ -9,7 +9,7 @@ export type CapiEvent = {
   eventSourceUrl?: string | null;
   referrerUrl?: string | null;
   customerSegmentation?: string | null;
-  originalEventData?: { event_name: string; event_time: number };
+  originalEventData?: { event_name: string; event_time?: number; event_id?: string; order_id?: string };
   userData: Record<string, unknown>;
   customData: Record<string, unknown>;
 };
@@ -124,6 +124,8 @@ export async function sendCapi(event: CapiEvent) {
           event_source_url: eventSourceUrl,
           ...(event.referrerUrl ? { referrer_url: event.referrerUrl } : {}),
           data_processing_options: [],
+          data_processing_options_country: 0,
+          data_processing_options_state: 0,
           ...(event.customerSegmentation ? { customer_segmentation: event.customerSegmentation } : {}),
           ...(event.originalEventData ? { original_event_data: event.originalEventData } : {}),
           user_data: event.userData,

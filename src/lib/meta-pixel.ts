@@ -39,6 +39,7 @@ function cookie(name: string): string | undefined {
 
 const FBC_KEY = "jps:fbc";
 const EID_KEY = "jps:meta-eid";
+const IC_KEY = "jps:meta-ic";
 const FBC_MAX_AGE = 60 * 60 * 24 * 90;
 
 export function montarFbc(fbclid: string, now = Date.now()) {
@@ -76,6 +77,32 @@ export function getFbc(): string | undefined {
   if (doCookie) return doCookie;
   try {
     return localStorage.getItem(FBC_KEY) ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Guarda o `event_id`/hora do InitiateCheckout para que o Purchase confirmado
+ * depois (Pix/boleto) envie `original_event_data` apontando para ele.
+ */
+export function lembrarInitiateCheckout(eventId: string, time = Math.floor(Date.now() / 1000)) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(IC_KEY, JSON.stringify({ eventId, time }));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getInitiateCheckout(): { eventId: string; time: number } | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const raw = sessionStorage.getItem(IC_KEY);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as { eventId?: string; time?: number };
+    if (!parsed.eventId || !Number.isFinite(parsed.time)) return undefined;
+    return { eventId: parsed.eventId, time: Number(parsed.time) };
   } catch {
     return undefined;
   }

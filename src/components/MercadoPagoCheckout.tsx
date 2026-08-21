@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { supabase } from "@/integrations/supabase/client";
-import { captureFbclid, getFbc, trackMeta, trackMetaDedup } from "@/lib/meta-pixel";
+import { captureFbclid, getFbc, getInitiateCheckout, trackMeta, trackMetaDedup } from "@/lib/meta-pixel";
 import { getStoredUtm } from "@/lib/utm";
 import { extrairErroPagamento, traduzErroPagamento } from "@/lib/checkout";
 import { toast } from "sonner";
@@ -189,7 +189,8 @@ export function MercadoPagoCheckout({
             client_user_agent: navigator.userAgent,
             event_source_url: window.location.href,
             referrer_url: document.referrer || null,
-            checkout_time: Math.floor(Date.now() / 1000),
+            checkout_time: getInitiateCheckout()?.time ?? Math.floor(Date.now() / 1000),
+            checkout_event_id: getInitiateCheckout()?.eventId ?? null,
           },
         },
       });
@@ -216,12 +217,17 @@ export function MercadoPagoCheckout({
         gravarPixQr(null);
         setPixQr(null);
         const eventId = payload?.id ? `mp-${payload.id}` : undefined;
-        trackMeta("Purchase", { value: paid, currency: "BRL", content_name: planoId }, eventId);
-        trackMetaDedup(
-          "Subscribe",
-          { value: paid, currency: "BRL", content_name: planoId },
-          eventId ? { eventId: `${eventId}-sub` } : undefined,
-        );
+        const orderId = payload?.id ? String(payload.id) : undefined;
+        const compraPayload = {
+          value: paid,
+          currency: "BRL",
+          content_name: planoId,
+          content_type: "product",
+          num_items: 1,
+          ...(orderId ? { order_id: orderId } : {}),
+        };
+        trackMeta("Purchase", compraPayload, eventId);
+        trackMetaDedup("Subscribe", compraPayload, eventId ? { eventId: `${eventId}-sub` } : undefined);
         toast.success("Pagamento aprovado");
         onApprovedRef.current(planoId);
         return;

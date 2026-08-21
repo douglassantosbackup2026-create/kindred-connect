@@ -161,8 +161,12 @@ Deno.serve(async (req) => {
       originalEventData = {
         event_name: oed.event_name,
         ...(oed.event_time ? { event_time: normalizarTempo(oed.event_time, eventTime) } : {}),
+        ...(typeof oed.event_id === "string" && oed.event_id ? { event_id: oed.event_id } : {}),
+        ...(oed.order_id ? { order_id: String(oed.order_id) } : {}),
       };
     }
+
+    const orderId = body.order_id ? String(body.order_id) : undefined;
 
     const origin = req.headers.get("origin") ?? "";
     const eventSourceUrl =
@@ -183,6 +187,8 @@ Deno.serve(async (req) => {
           ...(referrerUrl ? { referrer_url: referrerUrl } : {}),
           ...(body.opt_out === true ? { opt_out: true } : {}),
           data_processing_options: [],
+          data_processing_options_country: 0,
+          data_processing_options_state: 0,
           ...(segmentation ? { customer_segmentation: segmentation } : {}),
           ...(originalEventData ? { original_event_data: originalEventData } : {}),
           user_data: userData,
@@ -190,6 +196,7 @@ Deno.serve(async (req) => {
             currency,
             value,
             ...customData,
+            ...(orderId ? { order_id: orderId } : {}),
           },
         },
       ],
