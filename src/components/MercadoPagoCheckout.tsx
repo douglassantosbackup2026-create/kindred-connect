@@ -183,6 +183,13 @@ export function MercadoPagoCheckout({
       }
       const fbp = document.cookie.match(/(^|; )_fbp=([^;]*)/)?.[2];
       captureFbclid();
+      // Alimenta a correspondência avançada dos próximos eventos com os dados do pagador.
+      const pagador = (formData as { payer?: { email?: string; phone?: { area_code?: string; number?: string } } })
+        .payer;
+      lembrarIdentidade({
+        email: pagador?.email ?? email ?? null,
+        phone: pagador?.phone?.number ? `${pagador.phone.area_code ?? ""}${pagador.phone.number}` : null,
+      });
       const { data, error } = await supabase.functions.invoke("process-payment", {
         body: {
           plano: planoId,
