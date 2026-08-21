@@ -39,6 +39,7 @@ function cookie(name: string): string | undefined {
 
 const FBC_KEY = "jps:fbc";
 const EID_KEY = "jps:meta-eid";
+const IC_KEY = "jps:meta-ic";
 const FBC_MAX_AGE = 60 * 60 * 24 * 90;
 
 export function montarFbc(fbclid: string, now = Date.now()) {
