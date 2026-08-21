@@ -131,8 +131,75 @@ export function getAnonymousExternalId(): string {
   }
 }
 
+/** Telefone digitado no checkout: só na memória da aba (não vai para o storage). */
+let phoneSessao: string | undefined;
+
+/** Persiste os dados de correspondência avançada reutilizáveis entre visitas. */
+export function lembrarIdentidade(dados: { email?: string | null; nome?: string | null; phone?: string | null }) {
+  if (typeof window === "undefined") return;
+  if (dados.phone) phoneSessao = phoneE164Br(dados.phone) || undefined;
+  try {
+    if (dados.email?.trim()) localStorage.setItem(EMAIL_KEY, dados.email.trim().toLowerCase());
+    if (dados.nome?.trim()) localStorage.setItem(NOME_KEY, dados.nome.trim());
+  } catch {
+    /* ignore */
+  }
+}
+
+function lerStorage(key: string): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    return localStorage.getItem(key) ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Espera o `fbevents.js` gravar `_fbp`/`_fbc` para não enviar o evento sem eles. */
+export async function esperarCookiesPixel(timeoutMs = 1500): Promise<void> {
+  if (typeof document === "undefined") return;
+  const inicio = Date.now();
+  while (Date.now() - inicio < timeoutMs) {
+    if (cookie("_fbp") || cookie("_fbc")) return;
+    await new Promise((r) => setTimeout(r, 150));
+  }
+}
+
+/** IP público do visitante (IPv6 quando disponível), consultado uma vez por sessão. */
+export async function getClientIp(): Promise<string | undefined> {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const cache = sessionStorage.getItem(IP_KEY);
+    if (cache) return cache || undefined;
+  } catch {
+    /* ignore */
+  }
+  try {
+    const res = await fetch(IP_LOOKUP_URL, { cache: "no-store" });
+    const json = (await res.json()) as { ip?: string };
+    const ip = typeof json.ip === "string" ? json.ip : undefined;
+    try {
+      sessionStorage.setItem(IP_KEY, ip ?? "");
+    } catch {
+      /* ignore */
+    }
+    return ip;
+  } catch {
+    return undefined;
+  }
+}
+
 let perfilCache: { userId: string; phone: string | null; nome: string | null } | null = null;
-let matchingKey = "";
+
+function getMatchingKey(): string {
+  if (typeof window === "undefined") return "";
+  return (window as unknown as { __jpsMetaMatch?: string }).__jpsMetaMatch ?? "";
+}
+
+function setMatchingKey(key: string) {
+  if (typeof window === "undefined") return;
+  (window as unknown as { __jpsMetaMatch?: string }).__jpsMetaMatch = key;
+}
 
 async function fetchPerfilMeta(userId: string): Promise<{ phone?: string | undefined; nome?: string | undefined }> {
   if (perfilCache?.userId === userId) {
