@@ -159,9 +159,13 @@ async function resolverIdentidade(overrides?: {
 
 export function applyAdvancedMatching(ident: MetaIdentidade) {
   if (typeof window === "undefined") return;
+  // Só reinicializa o pixel quando há PII real para enviar; caso contrário o Meta
+  // registra "Duplicate Pixel ID" sem nenhum ganho de matching.
+  if (!ident.email && !ident.phone) return;
   const key = `${ident.email ?? ""}|${ident.phone ?? ""}|${ident.firstName ?? ""}|${ident.lastName ?? ""}|${ident.externalId ?? ""}`;
   if (!key.replace(/\|/g, "") || key === matchingKey) return;
   matchingKey = key;
+
   try {
     window.fbq?.("init", META_PIXEL_ID, {
       ...(ident.email ? { em: ident.email } : {}),
