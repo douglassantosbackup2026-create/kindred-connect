@@ -14,74 +14,236 @@ export type Database = {
   }
   public: {
     Tables: {
-      payment_events: {
+      affiliate_clicks: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      coupons: {
+        Row: {
+          active: boolean
+          affiliate_code: string | null
+          code: string
+          created_at: string
+          discount_percent: number
+          max_redemptions: number | null
+          redemptions: number
+        }
+        Insert: {
+          active?: boolean
+          affiliate_code?: string | null
+          code: string
+          created_at?: string
+          discount_percent: number
+          max_redemptions?: number | null
+          redemptions?: number
+        }
+        Update: {
+          active?: boolean
+          affiliate_code?: string | null
+          code?: string
+          created_at?: string
+          discount_percent?: number
+          max_redemptions?: number | null
+          redemptions?: number
+        }
+        Relationships: []
+      }
+      escolinha_leads: {
         Row: {
           created_at: string
+          email: string
+          escolinha: string | null
+          id: string
+          nome: string
+          telefone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          escolinha?: string | null
+          id?: string
+          nome: string
+          telefone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          escolinha?: string | null
+          id?: string
+          nome?: string
+          telefone?: string | null
+        }
+        Relationships: []
+      }
+      league_entries: {
+        Row: {
+          id: string
+          minutos: number
+          streak_peak: number
+          treinos: number
+          updated_at: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          id?: string
+          minutos?: number
+          streak_peak?: number
+          treinos?: number
+          updated_at?: string
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          id?: string
+          minutos?: number
+          streak_peak?: number
+          treinos?: number
+          updated_at?: string
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
+      payment_events: {
+        Row: {
+          affiliate_ref: string | null
+          coupon_code: string | null
+          created_at: string
+          discount_percent: number | null
           event_type: string
           id: string
           payload: Json | null
           plano: string | null
           stripe_event_id: string | null
           user_id: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
         }
         Insert: {
+          affiliate_ref?: string | null
+          coupon_code?: string | null
           created_at?: string
+          discount_percent?: number | null
           event_type: string
           id?: string
           payload?: Json | null
           plano?: string | null
           stripe_event_id?: string | null
           user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Update: {
+          affiliate_ref?: string | null
+          coupon_code?: string | null
           created_at?: string
+          discount_percent?: number | null
           event_type?: string
           id?: string
           payload?: Json | null
           plano?: string | null
           stripe_event_id?: string | null
           user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Relationships: []
       }
       profiles: {
         Row: {
+          affiliate_code: string | null
           assinante: boolean
+          cancel_reason: string | null
+          cancelled_at: string | null
           created_at: string
+          disponibilidade: string | null
           id: string
           mp_payer_id: string | null
           mp_payment_id: string | null
           nome: string
+          objetivo: string | null
+          pause_reason: string | null
+          paused_until: string | null
           plano: string | null
+          posicao: string | null
+          referred_by: string | null
+          reminder_hour: number | null
           role: string
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
+          telegram_joined: boolean | null
           updated_at: string
         }
         Insert: {
+          affiliate_code?: string | null
           assinante?: boolean
+          cancel_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
+          disponibilidade?: string | null
           id: string
           mp_payer_id?: string | null
           mp_payment_id?: string | null
           nome?: string
+          objetivo?: string | null
+          pause_reason?: string | null
+          paused_until?: string | null
           plano?: string | null
+          posicao?: string | null
+          referred_by?: string | null
+          reminder_hour?: number | null
           role?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
+          telegram_joined?: boolean | null
           updated_at?: string
         }
         Update: {
+          affiliate_code?: string | null
           assinante?: boolean
+          cancel_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
+          disponibilidade?: string | null
           id?: string
           mp_payer_id?: string | null
           mp_payment_id?: string | null
           nome?: string
+          objetivo?: string | null
+          pause_reason?: string | null
+          paused_until?: string | null
           plano?: string | null
+          posicao?: string | null
+          referred_by?: string | null
+          reminder_hour?: number | null
           role?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
+          telegram_joined?: boolean | null
           updated_at?: string
         }
         Relationships: []
@@ -116,9 +278,91 @@ export type Database = {
         }
         Relationships: []
       }
+      treino_videos: {
+        Row: {
+          created_at: string
+          exercicio_nome: string | null
+          id: string
+          storage_path: string | null
+          tipo: string
+          titulo: string | null
+          treino_id: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercicio_nome?: string | null
+          id?: string
+          storage_path?: string | null
+          tipo?: string
+          titulo?: string | null
+          treino_id: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercicio_nome?: string | null
+          id?: string
+          storage_path?: string | null
+          tipo?: string
+          titulo?: string | null
+          treino_id?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      weekly_scores: {
+        Row: {
+          controle: number
+          created_at: string
+          explosao: number
+          id: string
+          jogou: boolean
+          nota: string | null
+          resistencia: number
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          controle: number
+          created_at?: string
+          explosao: number
+          id?: string
+          jogou?: boolean
+          nota?: string | null
+          resistencia: number
+          user_id: string
+          week_start: string
+        }
+        Update: {
+          controle?: number
+          created_at?: string
+          explosao?: number
+          id?: string
+          jogou?: boolean
+          nota?: string | null
+          resistencia?: number
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      ranking_semanal: {
+        Row: {
+          minutos: number | null
+          nome: string | null
+          posicao: number | null
+          streak_peak: number | null
+          treinos: number | null
+          week_start: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       is_admin: { Args: never; Returns: boolean }
