@@ -135,7 +135,11 @@ export function getAnonymousExternalId(): string {
 let phoneSessao: string | undefined;
 
 /** Persiste os dados de correspondência avançada reutilizáveis entre visitas. */
-export function lembrarIdentidade(dados: { email?: string | null; nome?: string | null; phone?: string | null }) {
+export function lembrarIdentidade(dados: {
+  email?: string | null | undefined;
+  nome?: string | null | undefined;
+  phone?: string | null | undefined;
+}) {
   if (typeof window === "undefined") return;
   if (dados.phone) phoneSessao = phoneE164Br(dados.phone) || undefined;
   try {
