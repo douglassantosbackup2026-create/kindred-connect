@@ -59,6 +59,8 @@ function Phone({
             src={src}
             alt={alt}
             loading="lazy"
+            width={360}
+            height={680}
             decoding="async"
             className="h-full w-full rounded-[1.25rem] object-contain object-top"
           />

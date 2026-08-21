@@ -23,6 +23,8 @@ export function PreviewTreinos({ onCta }: { onCta: () => void }) {
                 src={imagens[i % imagens.length]}
                 alt={`Treino ${treino.nome}`}
                 loading="lazy"
+                width={640}
+                height={360}
                 decoding="async"
                 className="h-full w-full object-cover opacity-80"
               />
