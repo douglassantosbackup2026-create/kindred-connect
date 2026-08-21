@@ -82,6 +82,32 @@ export function getFbc(): string | undefined {
   }
 }
 
+/**
+ * Guarda o `event_id`/hora do InitiateCheckout para que o Purchase confirmado
+ * depois (Pix/boleto) envie `original_event_data` apontando para ele.
+ */
+export function lembrarInitiateCheckout(eventId: string, time = Math.floor(Date.now() / 1000)) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(IC_KEY, JSON.stringify({ eventId, time }));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getInitiateCheckout(): { eventId: string; time: number } | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const raw = sessionStorage.getItem(IC_KEY);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as { eventId?: string; time?: number };
+    if (!parsed.eventId || !Number.isFinite(parsed.time)) return undefined;
+    return { eventId: parsed.eventId, time: Number(parsed.time) };
+  } catch {
+    return undefined;
+  }
+}
+
 /** UUID anônimo estável (sem telefone) para amarrar eventos antes do login. */
 export function getAnonymousExternalId(): string {
   if (typeof window === "undefined") return "";
