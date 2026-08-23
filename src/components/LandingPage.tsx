@@ -424,16 +424,16 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
 
       <footer className="relative border-t border-border px-5 py-8 text-center text-xs text-muted-foreground">
-        <p>{CAMPANHA.brand} — treinos guiados para evoluir no jogo</p>
+        <p>{CAMPANHA.brand} — {CAMPANHA.footer.tagline}</p>
         <p className="mt-2">
-          <Link to="/escolinhas" className="font-semibold text-primary underline-offset-4 hover:underline">
-            Treina uma escolinha? Fale com a gente
+          <Link to={CAMPANHA.footer.escolinhas.href} className="font-semibold text-primary underline-offset-4 hover:underline">
+            {CAMPANHA.footer.escolinhas.label}
           </Link>
           {zap ? (
             <>
               {" · "}
               <a href={zap} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline-offset-4 hover:underline">
-                WhatsApp
+                {CAMPANHA.footer.whatsappLabel}
               </a>
             </>
           ) : null}
