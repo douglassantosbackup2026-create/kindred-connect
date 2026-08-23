@@ -22,21 +22,21 @@ export const CAMPANHA = {
   },
 
   problemas: [
-    "Você treina sem saber se está fazendo certo",
-    "Cada dia faz um exercício diferente",
-    "Não vê evolução no seu jogo",
-    "Cansa rápido no campo",
+    "Você quer treinar, mas não sabe o que fazer em casa",
+    "Cada dia faz um exercício diferente, sem progresso",
+    "Não tem campo ou academia por perto",
+    "Cansa rápido e não vê evolução no jogo",
   ],
   quebra: {
     title: "O problema não é você.",
-    body: "É a falta de um plano.",
+    body: "É a falta de um plano que caiba na sua rotina.",
   },
 
   solucao: {
     eyebrow: "Apresentando",
     title: "Jogador PRO System",
-    body: "Um sistema de treinos guiados que te mostra exatamente o que fazer, todos os dias.",
-    passos: ["Abre o treino do dia", "Segue o passo a passo", "Evolui com consistência"],
+    body: "Um sistema de treinos guiados para você fazer em casa, com pouco espaço e sem equipamento caro.",
+    passos: ["Abre o app no celular", "Segue o treino do dia", "Evolui em minutos"],
   },
 
   comoFunciona: {
