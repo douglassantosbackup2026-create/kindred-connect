@@ -3,7 +3,7 @@ import { DEMO_VIDEOS, TEASER_TREINO_VIDEO } from "@/data/media";
 export const CAMPANHA = {
   socialProof: "Treinos em casa para quem quer evoluir no jogo sem perder tempo",
   brand: "Jogador PRO System",
-  headline: "Evolua no futebol treinando em casa.",
+  headline: "Transforme seu futebol em 10 a 20 minutos por dia, em casa",
   headlineLead: "Siga um plano pronto de minutos por dia.",
   subheadline: "Mesmo sem campo, sem equipamento e com pouco tempo.",
   heroCta: "Quero ser Jogador PRO",
