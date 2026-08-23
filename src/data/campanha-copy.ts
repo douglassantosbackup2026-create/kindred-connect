@@ -41,8 +41,8 @@ export const CAMPANHA = {
 
   comoFunciona: {
     plano: {
-      title: "Plano estruturado",
-      body: "Você não precisa pensar.",
+      title: "Plano pronto para fazer em casa",
+      body: "Você recebe o treino do dia. Só abrir e executar.",
       semanas: [
         { semana: 1, label: "Base física" },
         { semana: 2, label: "Controle + Core" },
@@ -52,42 +52,42 @@ export const CAMPANHA = {
     },
     tempo: {
       title: "Treinos rápidos",
-      body: "Apenas 10 a 20 minutos por dia",
-      para: ["Trabalha", "Estuda", "Não tem tempo"],
+      body: "Apenas 10 a 20 minutos por dia, no espaço da sua casa",
+      para: ["Trabalha", "Estuda", "Treina em casa", "Não tem tempo"],
     },
     acesso: {
       title: "Acesso imediato",
-      items: ["Celular", "Computador", "Onde quiser"],
+      items: ["Na sua casa", "No celular", "No computador"],
     },
   },
 
   beneficios: [
-    "Ganhar mais explosão",
-    "Melhorar seu controle de corpo",
+    "Evoluir tecnicamente sem sair de casa",
+    "Ganhar explosão e controle de corpo",
     "Aumentar resistência no jogo",
-    "Evoluir no drible e movimentação",
+    "Ter um treino que cabe na sua rotina",
     "Jogar com mais confiança",
   ],
 
   diferencial: {
     title: "Isso não é uma lista de exercícios.",
-    body: "É um plano progressivo, criado para te tirar do nível atual e te levar para outro nível de jogo.",
-    pontos: ["Te tirar do nível atual", "Te levar para outro nível de jogo"],
+    body: "É um plano progressivo feito para treinar em casa, com o pouco espaço e tempo que você já tem.",
+    pontos: ["Feito para fazer em casa", "Evolução sem depender de campo ou academia"],
   },
 
   showcase: {
     eyebrow: "Veja por dentro",
     title: "É isto que você abre todo dia.",
-    body: "Nada de PDF ou playlist solta: um app com plano do dia, timer guiado e progresso registrado.",
+    body: "Nada de PDF ou playlist solta: um app com treino do dia, timer guiado e progresso — tudo no celular, de onde você estiver.",
     dashboard: "Seu dia pronto: meta da semana, streak e treino de hoje",
     plano: "Jornada guiada de 12 meses, mês a mês",
-    treino: "Biblioteca completa de treinos com filtros",
+    treino: "Biblioteca completa com filtros para casa, campo e academia",
   },
 
   modoRapido: {
     eyebrow: "Diferencial",
-    title: "Sem tempo hoje? O treino se ajusta a você.",
-    body: "Um toque e o sistema monta uma sessão curta e intensa que mantém seu streak vivo — em vez de você pular o dia e perder o ritmo.",
+    title: "Sem tempo hoje? O treino vem até você.",
+    body: "Um toque e o sistema monta uma sessão curta e intensa para fazer em casa — em vez de você pular o dia e perder o ritmo.",
     botao: "Tenho 10 minutos hoje",
   },
 
