@@ -384,6 +384,15 @@ export const CAMPANHA = {
     "Pagamento seguro · Pix ou cartão",
     "14 dias de garantia incondicional",
   ],
+
+  footer: {
+    tagline: "treinos guiados para evoluir no jogo",
+    escolinhas: {
+      label: "Treina uma escolinha? Fale com a gente",
+      href: "/escolinhas",
+    },
+    whatsappLabel: "WhatsApp",
+  },
 } as const;
 
 
