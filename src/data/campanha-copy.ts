@@ -21,6 +21,9 @@ export const CAMPANHA = {
     videoSrc: TEASER_TREINO_VIDEO,
   },
 
+  problemaEyebrow: "O problema",
+  problemaHeadline:
+    "Se você joga bola, mas sente que não evolui… provavelmente não é falta de esforço.",
   problemas: [
     "Você quer treinar, mas não sabe o que fazer em casa",
     "Cada dia faz um exercício diferente, sem progresso",
