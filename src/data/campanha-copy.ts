@@ -230,6 +230,7 @@ export const CAMPANHA = {
 
   oferta: {
     title: "Acesso completo ao Jogador PRO System",
+    recebeLabel: "Você recebe:",
     recebe: [
       "Jornada guiada completa de 12 meses",
       "Biblioteca + modos pré-partida e pós-jogo",
