@@ -43,6 +43,8 @@ export const CAMPANHA = {
   },
 
   comoFunciona: {
+    eyebrow: "Como funciona",
+    headline: "Simples. Direto. Todo dia.",
     plano: {
       title: "Plano pronto para fazer em casa",
       body: "Você recebe o treino do dia. Só abrir e executar.",
@@ -56,12 +58,18 @@ export const CAMPANHA = {
     tempo: {
       title: "Treinos rápidos",
       body: "Apenas 10 a 20 minutos por dia, no espaço da sua casa",
+      paraLabel: "Perfeito pra quem",
       para: ["Trabalha", "Estuda", "Treina em casa", "Não tem tempo"],
     },
     acesso: {
       title: "Acesso imediato",
       items: ["Na sua casa", "No celular", "No computador"],
     },
+  },
+
+  transformacao: {
+    eyebrow: "Transformação",
+    headline: "Com o Jogador PRO, você vai:",
   },
 
   beneficios: [
