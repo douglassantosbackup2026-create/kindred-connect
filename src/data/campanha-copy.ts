@@ -229,8 +229,8 @@ export const CAMPANHA = {
   },
 
   urgencia: {
-    title: "Você pode continuar treinando do jeito errado…",
-    body: "ou começar hoje a evoluir com um plano.",
+    title: "Você pode continuar sem treinar…",
+    body: "ou começar hoje a evoluir em casa, em minutos por dia.",
     cta: "Quero ser Jogador PRO",
   },
 
@@ -241,7 +241,7 @@ export const CAMPANHA = {
 
   beneficiosIcones: {
     eyebrow: "O que você leva",
-    title: "Tudo que muda no seu treino a partir de hoje",
+    title: "Tudo que muda no seu treino em casa a partir de hoje",
     itens: [
       { icone: "calendar", texto: "Jornada guiada de 12 meses, mês a mês" },
       { icone: "clock", texto: "Treinos de 10 a 20 minutos por dia" },
