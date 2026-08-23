@@ -1,17 +1,17 @@
 import { DEMO_VIDEOS, TEASER_TREINO_VIDEO } from "@/data/media";
 
 export const CAMPANHA = {
-  socialProof: "Sistema diário para quem treina sozinho e quer evoluir no jogo",
+  socialProof: "Treinos em casa para quem quer evoluir no jogo sem perder tempo",
   brand: "Jogador PRO System",
-  headline: "Pare de treinar sem resultado.",
-  headlineLead: "Siga um plano pronto e evolua como jogador em poucas semanas.",
-  subheadline: "Mesmo treinando sozinho e com pouco tempo por dia.",
+  headline: "Evolua no futebol treinando em casa.",
+  headlineLead: "Siga um plano pronto de minutos por dia.",
+  subheadline: "Mesmo sem campo, sem equipamento e com pouco tempo.",
   heroCta: "Quero ser Jogador PRO",
   heroCtaPlano: "semestral" as const,
   heroCtaSecundario: "Ver planos",
-  heroCtaHint: "Acesso completo à jornada de 12 meses",
+  heroCtaHint: "Acesso completo no celular, de onde você estiver",
   precoAncora: "A partir de R$16,42/mês no plano anual · Pix ou cartão",
-  precoComparativo: "Menos que uma mensalidade de escolinha — e você treina todo dia.",
+  precoComparativo: "Menos que uma mensalidade de escolinha — e você treina todo dia em casa.",
 
   teaserTreino: {
     titulo: "Preview do método",
