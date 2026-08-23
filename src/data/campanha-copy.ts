@@ -94,7 +94,7 @@ export const CAMPANHA = {
   depoimentos: {
     eyebrow: "Quem já treina",
     title: "O que os alunos mandam depois dos treinos",
-    body: "O que eles mandam depois de treinar.",
+    body: "Mensagens reais de alunos que treinam no dia a dia, muitos deles em casa.",
     selo: "Mensagens reais enviadas por alunos. Identidades preservadas a pedido deles.",
     cta: "Quero treinar como eles",
     itens: [
