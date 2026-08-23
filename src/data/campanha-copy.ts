@@ -257,7 +257,7 @@ export const CAMPANHA = {
   preview: {
     eyebrow: "Veja o que você vai treinar",
     title: "Treinos reais que já estão dentro do app",
-    body: "Cada sessão vem com exercícios, tempo e execução guiada. Nada de improviso.",
+    body: "Cada sessão vem com exercícios, tempo e execução guiada — com versões para fazer em casa. Nada de improviso.",
     cta: "Quero acessar todos os treinos",
     /** ids devem existir em TREINOS */
     ids: [
@@ -281,7 +281,7 @@ export const CAMPANHA = {
   incluso: {
     eyebrow: "Está tudo incluso",
     title: "Uma assinatura, o sistema inteiro",
-    body: "Sem upsell escondido e sem módulo bloqueado: ao assinar, você abre tudo.",
+    body: "Sem upsell escondido e sem módulo bloqueado: ao assinar, você abre tudo — e treina em casa, no seu tempo.",
     itens: [
       {
         titulo: "Jornada de 12 meses",
@@ -293,7 +293,7 @@ export const CAMPANHA = {
       },
       {
         titulo: "Modo Rápido",
-        body: "Sessão de 10 minutos montada na hora para você não perder o dia.",
+        body: "Sessão de 10 minutos montada na hora para você não perder o dia, mesmo sem sair de casa.",
       },
       {
         titulo: "Progresso e gamificação",
