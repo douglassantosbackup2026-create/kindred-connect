@@ -176,53 +176,57 @@ export const CAMPANHA = {
 
   pagamento: "Pix · Cartão em até 12x · Pagamento seguro",
 
-  faq: [
-    {
-      pergunta: "Preciso de campo ou material especial?",
-      resposta:
-        "Não. Os treinos têm versões para casa, campo e academia. O básico é espaço para alguns passos e, quando pedido, uma bola.",
-    },
-    {
-      pergunta: "E se eu não tiver espaço em casa?",
-      resposta:
-        "A maioria dos treinos foi feita para ambientes pequenos. Com poucos metros você já consegue executar a versão de casa. Quando der, você pode fazer a versão de campo.",
-    },
-    {
-      pergunta: "Serve para a minha idade?",
-      resposta:
-        "O sistema foi desenhado para jovens atletas e adultos que jogam por prazer. A partir de 14 anos; abaixo disso, com acompanhamento de um responsável.",
-    },
-    {
-      pergunta: "Quanto tempo por dia preciso?",
-      resposta:
-        "De 10 a 20 minutos. Em dias corridos, o Modo Rápido monta uma sessão de 10 minutos para você não perder o ritmo.",
-    },
-    {
-      pergunta: "Funciona para goleiro?",
-      resposta:
-        "Os pilares de explosão, controle de corpo e performance servem a qualquer posição. A biblioteca permite filtrar o que faz sentido pro seu jogo.",
-    },
-    {
-      pergunta: "Quais são as formas de pagamento?",
-      resposta:
-        "Pix (libera na hora da confirmação) e cartão de crédito ou débito. Semestral e anual podem ser parcelados em até 6x e 12x no cartão, conforme a operadora.",
-    },
-    {
-      pergunta: "Como faço para cancelar?",
-      resposta:
-        "Pelo seu perfil, a qualquer momento. Não há fidelidade nem multa, e você mantém o acesso até o fim do período pago.",
-    },
-    {
-      pergunta: "Consigo usar no celular?",
-      resposta:
-        "Sim. O app funciona no navegador do celular, tablet e computador, com o mesmo progresso sincronizado na nuvem.",
-    },
-    {
-      pergunta: "O que acontece depois dos 12 meses?",
-      resposta:
-        "A jornada guiada entra em ciclos de manutenção com carga progressiva, além da biblioteca completa e dos modos pré-partida e pós-jogo. Renove o plano anual para continuar com acesso PRO.",
-    },
-  ],
+  faq: {
+    eyebrow: "Dúvidas",
+    headline: "Antes de assinar",
+    itens: [
+      {
+        pergunta: "Preciso de campo ou material especial?",
+        resposta:
+          "Não. Os treinos têm versões para casa, campo e academia. O básico é espaço para alguns passos e, quando pedido, uma bola.",
+      },
+      {
+        pergunta: "E se eu não tiver espaço em casa?",
+        resposta:
+          "A maioria dos treinos foi feita para ambientes pequenos. Com poucos metros você já consegue executar a versão de casa. Quando der, você pode fazer a versão de campo.",
+      },
+      {
+        pergunta: "Serve para a minha idade?",
+        resposta:
+          "O sistema foi desenhado para jovens atletas e adultos que jogam por prazer. A partir de 14 anos; abaixo disso, com acompanhamento de um responsável.",
+      },
+      {
+        pergunta: "Quanto tempo por dia preciso?",
+        resposta:
+          "De 10 a 20 minutos. Em dias corridos, o Modo Rápido monta uma sessão de 10 minutos para você não perder o ritmo.",
+      },
+      {
+        pergunta: "Funciona para goleiro?",
+        resposta:
+          "Os pilares de explosão, controle de corpo e performance servem a qualquer posição. A biblioteca permite filtrar o que faz sentido pro seu jogo.",
+      },
+      {
+        pergunta: "Quais são as formas de pagamento?",
+        resposta:
+          "Pix (libera na hora da confirmação) e cartão de crédito ou débito. Semestral e anual podem ser parcelados em até 6x e 12x no cartão, conforme a operadora.",
+      },
+      {
+        pergunta: "Como faço para cancelar?",
+        resposta:
+          "Pelo seu perfil, a qualquer momento. Não há fidelidade nem multa, e você mantém o acesso até o fim do período pago.",
+      },
+      {
+        pergunta: "Consigo usar no celular?",
+        resposta:
+          "Sim. O app funciona no navegador do celular, tablet e computador, com o mesmo progresso sincronizado na nuvem.",
+      },
+      {
+        pergunta: "O que acontece depois dos 12 meses?",
+        resposta:
+          "A jornada guiada entra em ciclos de manutenção com carga progressiva, além da biblioteca completa e dos modos pré-partida e pós-jogo. Renove o plano anual para continuar com acesso PRO.",
+      },
+    ],
+  },
 
   oferta: {
     title: "Acesso completo ao Jogador PRO System",
