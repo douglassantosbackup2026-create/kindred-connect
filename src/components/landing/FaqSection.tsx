@@ -10,7 +10,7 @@ import { trackMetaCustom } from "@/lib/meta-pixel";
 const faqJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: CAMPANHA.faq.map((f) => ({
+  mainEntity: CAMPANHA.faq.itens.map((f) => ({
     "@type": "Question",
     name: f.pergunta,
     acceptedAnswer: { "@type": "Answer", text: f.resposta },
@@ -29,7 +29,7 @@ export function FaqSection() {
           if (v) trackMetaCustom("FaqOpen", { pergunta: v });
         }}
       >
-        {CAMPANHA.faq.map((f) => (
+        {CAMPANHA.faq.itens.map((f) => (
           <AccordionItem key={f.pergunta} value={f.pergunta}>
             <AccordionTrigger className="text-left text-sm font-bold sm:text-base">
               {f.pergunta}

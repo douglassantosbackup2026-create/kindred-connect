@@ -187,9 +187,9 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
       {/* Problema */}
       <Section>
-        <Eyebrow>O problema</Eyebrow>
+        <Eyebrow>{CAMPANHA.problemaEyebrow}</Eyebrow>
         <h2 className="mt-3 max-w-2xl text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Se você joga bola, mas sente que não evolui… provavelmente não é falta de esforço.
+          {CAMPANHA.problemaHeadline}
         </h2>
         <ul className="mt-8 space-y-3">
           {CAMPANHA.problemas.map((item) => (
@@ -226,8 +226,8 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
       {/* Como funciona */}
       <Section>
-        <Eyebrow>Como funciona</Eyebrow>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">Simples. Direto. Todo dia.</h2>
+        <Eyebrow>{CAMPANHA.comoFunciona.eyebrow}</Eyebrow>
+        <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">{CAMPANHA.comoFunciona.headline}</h2>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-3">
           <div>
@@ -248,7 +248,7 @@ export function LandingPage({ search }: { search: LandingSearch }) {
             <Clock className="h-6 w-6 text-primary" />
             <h3 className="mt-3 text-lg font-bold">{CAMPANHA.comoFunciona.tempo.title}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{CAMPANHA.comoFunciona.tempo.body}</p>
-            <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">Perfeito pra quem</p>
+            <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">{CAMPANHA.comoFunciona.tempo.paraLabel}</p>
             <ul className="mt-2 space-y-1.5 text-sm text-foreground">
               {CAMPANHA.comoFunciona.tempo.para.map((p) => (
                 <li key={p} className="flex items-center gap-2">
@@ -297,9 +297,9 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
       {/* Benefícios */}
       <Section tone="card">
-        <Eyebrow>Transformação</Eyebrow>
+        <Eyebrow>{CAMPANHA.transformacao.eyebrow}</Eyebrow>
         <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Com o Jogador PRO, você vai:
+          {CAMPANHA.transformacao.headline}
         </h2>
         <ul className="mt-8 space-y-3">
           {CAMPANHA.beneficios.map((b) => (
@@ -348,7 +348,7 @@ export function LandingPage({ search }: { search: LandingSearch }) {
         <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">{CAMPANHA.oferta.title}</h2>
         <p className="mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">{CAMPANHA.planos.body}</p>
 
-        <p className="mt-6 text-sm text-muted-foreground">Você recebe:</p>
+        <p className="mt-6 text-sm text-muted-foreground">{CAMPANHA.oferta.recebeLabel}</p>
         <ul className="mt-2 space-y-2">
           {CAMPANHA.oferta.recebe.map((item) => (
             <li key={item} className="flex items-center gap-2 text-sm text-foreground">
@@ -391,8 +391,8 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
       {/* FAQ */}
       <Section>
-        <Eyebrow>Dúvidas</Eyebrow>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">Antes de assinar</h2>
+        <Eyebrow>{CAMPANHA.faq.eyebrow}</Eyebrow>
+        <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">{CAMPANHA.faq.headline}</h2>
         <FaqSection />
       </Section>
 
@@ -424,16 +424,16 @@ export function LandingPage({ search }: { search: LandingSearch }) {
 
 
       <footer className="relative border-t border-border px-5 py-8 text-center text-xs text-muted-foreground">
-        <p>{CAMPANHA.brand} — treinos guiados para evoluir no jogo</p>
+        <p>{CAMPANHA.brand} — {CAMPANHA.footer.tagline}</p>
         <p className="mt-2">
-          <Link to="/escolinhas" className="font-semibold text-primary underline-offset-4 hover:underline">
-            Treina uma escolinha? Fale com a gente
+          <Link to={CAMPANHA.footer.escolinhas.href} className="font-semibold text-primary underline-offset-4 hover:underline">
+            {CAMPANHA.footer.escolinhas.label}
           </Link>
           {zap ? (
             <>
               {" · "}
               <a href={zap} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary underline-offset-4 hover:underline">
-                WhatsApp
+                {CAMPANHA.footer.whatsappLabel}
               </a>
             </>
           ) : null}

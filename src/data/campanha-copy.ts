@@ -1,17 +1,17 @@
 import { DEMO_VIDEOS, TEASER_TREINO_VIDEO } from "@/data/media";
 
 export const CAMPANHA = {
-  socialProof: "Sistema diário para quem treina sozinho e quer evoluir no jogo",
+  socialProof: "Treinos em casa para quem quer evoluir no jogo sem perder tempo",
   brand: "Jogador PRO System",
-  headline: "Pare de treinar sem resultado.",
-  headlineLead: "Siga um plano pronto e evolua como jogador em poucas semanas.",
-  subheadline: "Mesmo treinando sozinho e com pouco tempo por dia.",
+  headline: "Evolua no futebol treinando em casa.",
+  headlineLead: "Siga um plano pronto de minutos por dia.",
+  subheadline: "Mesmo sem campo, sem equipamento e com pouco tempo.",
   heroCta: "Quero ser Jogador PRO",
   heroCtaPlano: "semestral" as const,
   heroCtaSecundario: "Ver planos",
-  heroCtaHint: "Acesso completo à jornada de 12 meses",
+  heroCtaHint: "Acesso completo no celular, de onde você estiver",
   precoAncora: "A partir de R$16,42/mês no plano anual · Pix ou cartão",
-  precoComparativo: "Menos que uma mensalidade de escolinha — e você treina todo dia.",
+  precoComparativo: "Menos que uma mensalidade de escolinha — e você treina todo dia em casa.",
 
   teaserTreino: {
     titulo: "Preview do método",
@@ -21,28 +21,33 @@ export const CAMPANHA = {
     videoSrc: TEASER_TREINO_VIDEO,
   },
 
+  problemaEyebrow: "O problema",
+  problemaHeadline:
+    "Se você joga bola, mas sente que não evolui… provavelmente não é falta de esforço.",
   problemas: [
-    "Você treina sem saber se está fazendo certo",
-    "Cada dia faz um exercício diferente",
-    "Não vê evolução no seu jogo",
-    "Cansa rápido no campo",
+    "Você quer treinar, mas não sabe o que fazer em casa",
+    "Cada dia faz um exercício diferente, sem progresso",
+    "Não tem campo ou academia por perto",
+    "Cansa rápido e não vê evolução no jogo",
   ],
   quebra: {
     title: "O problema não é você.",
-    body: "É a falta de um plano.",
+    body: "É a falta de um plano que caiba na sua rotina.",
   },
 
   solucao: {
     eyebrow: "Apresentando",
     title: "Jogador PRO System",
-    body: "Um sistema de treinos guiados que te mostra exatamente o que fazer, todos os dias.",
-    passos: ["Abre o treino do dia", "Segue o passo a passo", "Evolui com consistência"],
+    body: "Um sistema de treinos guiados para você fazer em casa, com pouco espaço e sem equipamento caro.",
+    passos: ["Abre o app no celular", "Segue o treino do dia", "Evolui em minutos"],
   },
 
   comoFunciona: {
+    eyebrow: "Como funciona",
+    headline: "Simples. Direto. Todo dia.",
     plano: {
-      title: "Plano estruturado",
-      body: "Você não precisa pensar.",
+      title: "Plano pronto para fazer em casa",
+      body: "Você recebe o treino do dia. Só abrir e executar.",
       semanas: [
         { semana: 1, label: "Base física" },
         { semana: 2, label: "Controle + Core" },
@@ -52,49 +57,55 @@ export const CAMPANHA = {
     },
     tempo: {
       title: "Treinos rápidos",
-      body: "Apenas 10 a 20 minutos por dia",
-      para: ["Trabalha", "Estuda", "Não tem tempo"],
+      body: "Apenas 10 a 20 minutos por dia, no espaço da sua casa",
+      paraLabel: "Perfeito pra quem",
+      para: ["Trabalha", "Estuda", "Treina em casa", "Não tem tempo"],
     },
     acesso: {
       title: "Acesso imediato",
-      items: ["Celular", "Computador", "Onde quiser"],
+      items: ["Na sua casa", "No celular", "No computador"],
     },
   },
 
+  transformacao: {
+    eyebrow: "Transformação",
+    headline: "Com o Jogador PRO, você vai:",
+  },
+
   beneficios: [
-    "Ganhar mais explosão",
-    "Melhorar seu controle de corpo",
+    "Evoluir tecnicamente sem sair de casa",
+    "Ganhar explosão e controle de corpo",
     "Aumentar resistência no jogo",
-    "Evoluir no drible e movimentação",
+    "Ter um treino que cabe na sua rotina",
     "Jogar com mais confiança",
   ],
 
   diferencial: {
     title: "Isso não é uma lista de exercícios.",
-    body: "É um plano progressivo, criado para te tirar do nível atual e te levar para outro nível de jogo.",
-    pontos: ["Te tirar do nível atual", "Te levar para outro nível de jogo"],
+    body: "É um plano progressivo feito para treinar em casa, com o pouco espaço e tempo que você já tem.",
+    pontos: ["Feito para fazer em casa", "Evolução sem depender de campo ou academia"],
   },
 
   showcase: {
     eyebrow: "Veja por dentro",
     title: "É isto que você abre todo dia.",
-    body: "Nada de PDF ou playlist solta: um app com plano do dia, timer guiado e progresso registrado.",
+    body: "Nada de PDF ou playlist solta: um app com treino do dia, timer guiado e progresso — tudo no celular, de onde você estiver.",
     dashboard: "Seu dia pronto: meta da semana, streak e treino de hoje",
     plano: "Jornada guiada de 12 meses, mês a mês",
-    treino: "Biblioteca completa de treinos com filtros",
+    treino: "Biblioteca completa com filtros para casa, campo e academia",
   },
 
   modoRapido: {
     eyebrow: "Diferencial",
-    title: "Sem tempo hoje? O treino se ajusta a você.",
-    body: "Um toque e o sistema monta uma sessão curta e intensa que mantém seu streak vivo — em vez de você pular o dia e perder o ritmo.",
+    title: "Sem tempo hoje? O treino vem até você.",
+    body: "Um toque e o sistema monta uma sessão curta e intensa para fazer em casa — em vez de você pular o dia e perder o ritmo.",
     botao: "Tenho 10 minutos hoje",
   },
 
   depoimentos: {
     eyebrow: "Quem já treina",
     title: "O que os alunos mandam depois dos treinos",
-    body: "O que eles mandam depois de treinar.",
+    body: "Mensagens reais de alunos que treinam no dia a dia, muitos deles em casa.",
     selo: "Mensagens reais enviadas por alunos. Identidades preservadas a pedido deles.",
     cta: "Quero treinar como eles",
     itens: [
@@ -165,51 +176,61 @@ export const CAMPANHA = {
 
   pagamento: "Pix · Cartão em até 12x · Pagamento seguro",
 
-  faq: [
-    {
-      pergunta: "Preciso de campo ou material especial?",
-      resposta:
-        "Não. Os treinos têm versões para casa, campo e academia. O básico é espaço para alguns passos e, quando pedido, uma bola.",
-    },
-    {
-      pergunta: "Serve para a minha idade?",
-      resposta:
-        "O sistema foi desenhado para jovens atletas e adultos que jogam por prazer. A partir de 14 anos; abaixo disso, com acompanhamento de um responsável.",
-    },
-    {
-      pergunta: "Quanto tempo por dia preciso?",
-      resposta:
-        "De 10 a 20 minutos. Em dias corridos, o Modo Rápido monta uma sessão de 10 minutos para você não perder o ritmo.",
-    },
-    {
-      pergunta: "Funciona para goleiro?",
-      resposta:
-        "Os pilares de explosão, controle de corpo e performance servem a qualquer posição. A biblioteca permite filtrar o que faz sentido pro seu jogo.",
-    },
-    {
-      pergunta: "Quais são as formas de pagamento?",
-      resposta:
-        "Pix (libera na hora da confirmação) e cartão de crédito ou débito. Semestral e anual podem ser parcelados em até 6x e 12x no cartão, conforme a operadora.",
-    },
-    {
-      pergunta: "Como faço para cancelar?",
-      resposta:
-        "Pelo seu perfil, a qualquer momento. Não há fidelidade nem multa, e você mantém o acesso até o fim do período pago.",
-    },
-    {
-      pergunta: "Consigo usar no celular?",
-      resposta:
-        "Sim. O app funciona no navegador do celular, tablet e computador, com o mesmo progresso sincronizado na nuvem.",
-    },
-    {
-      pergunta: "O que acontece depois dos 12 meses?",
-      resposta:
-        "A jornada guiada entra em ciclos de manutenção com carga progressiva, além da biblioteca completa e dos modos pré-partida e pós-jogo. Renove o plano anual para continuar com acesso PRO.",
-    },
-  ],
+  faq: {
+    eyebrow: "Dúvidas",
+    headline: "Antes de assinar",
+    itens: [
+      {
+        pergunta: "Preciso de campo ou material especial?",
+        resposta:
+          "Não. Os treinos têm versões para casa, campo e academia. O básico é espaço para alguns passos e, quando pedido, uma bola.",
+      },
+      {
+        pergunta: "E se eu não tiver espaço em casa?",
+        resposta:
+          "A maioria dos treinos foi feita para ambientes pequenos. Com poucos metros você já consegue executar a versão de casa. Quando der, você pode fazer a versão de campo.",
+      },
+      {
+        pergunta: "Serve para a minha idade?",
+        resposta:
+          "O sistema foi desenhado para jovens atletas e adultos que jogam por prazer. A partir de 14 anos; abaixo disso, com acompanhamento de um responsável.",
+      },
+      {
+        pergunta: "Quanto tempo por dia preciso?",
+        resposta:
+          "De 10 a 20 minutos. Em dias corridos, o Modo Rápido monta uma sessão de 10 minutos para você não perder o ritmo.",
+      },
+      {
+        pergunta: "Funciona para goleiro?",
+        resposta:
+          "Os pilares de explosão, controle de corpo e performance servem a qualquer posição. A biblioteca permite filtrar o que faz sentido pro seu jogo.",
+      },
+      {
+        pergunta: "Quais são as formas de pagamento?",
+        resposta:
+          "Pix (libera na hora da confirmação) e cartão de crédito ou débito. Semestral e anual podem ser parcelados em até 6x e 12x no cartão, conforme a operadora.",
+      },
+      {
+        pergunta: "Como faço para cancelar?",
+        resposta:
+          "Pelo seu perfil, a qualquer momento. Não há fidelidade nem multa, e você mantém o acesso até o fim do período pago.",
+      },
+      {
+        pergunta: "Consigo usar no celular?",
+        resposta:
+          "Sim. O app funciona no navegador do celular, tablet e computador, com o mesmo progresso sincronizado na nuvem.",
+      },
+      {
+        pergunta: "O que acontece depois dos 12 meses?",
+        resposta:
+          "A jornada guiada entra em ciclos de manutenção com carga progressiva, além da biblioteca completa e dos modos pré-partida e pós-jogo. Renove o plano anual para continuar com acesso PRO.",
+      },
+    ],
+  },
 
   oferta: {
     title: "Acesso completo ao Jogador PRO System",
+    recebeLabel: "Você recebe:",
     recebe: [
       "Jornada guiada completa de 12 meses",
       "Biblioteca + modos pré-partida e pós-jogo",
@@ -224,8 +245,8 @@ export const CAMPANHA = {
   },
 
   urgencia: {
-    title: "Você pode continuar treinando do jeito errado…",
-    body: "ou começar hoje a evoluir com um plano.",
+    title: "Você pode continuar sem treinar…",
+    body: "ou começar hoje a evoluir em casa, em minutos por dia.",
     cta: "Quero ser Jogador PRO",
   },
 
@@ -236,7 +257,7 @@ export const CAMPANHA = {
 
   beneficiosIcones: {
     eyebrow: "O que você leva",
-    title: "Tudo que muda no seu treino a partir de hoje",
+    title: "Tudo que muda no seu treino em casa a partir de hoje",
     itens: [
       { icone: "calendar", texto: "Jornada guiada de 12 meses, mês a mês" },
       { icone: "clock", texto: "Treinos de 10 a 20 minutos por dia" },
@@ -252,7 +273,7 @@ export const CAMPANHA = {
   preview: {
     eyebrow: "Veja o que você vai treinar",
     title: "Treinos reais que já estão dentro do app",
-    body: "Cada sessão vem com exercícios, tempo e execução guiada. Nada de improviso.",
+    body: "Cada sessão vem com exercícios, tempo e execução guiada — com versões para fazer em casa. Nada de improviso.",
     cta: "Quero acessar todos os treinos",
     /** ids devem existir em TREINOS */
     ids: [
@@ -276,7 +297,7 @@ export const CAMPANHA = {
   incluso: {
     eyebrow: "Está tudo incluso",
     title: "Uma assinatura, o sistema inteiro",
-    body: "Sem upsell escondido e sem módulo bloqueado: ao assinar, você abre tudo.",
+    body: "Sem upsell escondido e sem módulo bloqueado: ao assinar, você abre tudo — e treina em casa, no seu tempo.",
     itens: [
       {
         titulo: "Jornada de 12 meses",
@@ -288,7 +309,7 @@ export const CAMPANHA = {
       },
       {
         titulo: "Modo Rápido",
-        body: "Sessão de 10 minutos montada na hora para você não perder o dia.",
+        body: "Sessão de 10 minutos montada na hora para você não perder o dia, mesmo sem sair de casa.",
       },
       {
         titulo: "Progresso e gamificação",
@@ -363,6 +384,15 @@ export const CAMPANHA = {
     "Pagamento seguro · Pix ou cartão",
     "14 dias de garantia incondicional",
   ],
+
+  footer: {
+    tagline: "treinos guiados para evoluir no jogo",
+    escolinhas: {
+      label: "Treina uma escolinha? Fale com a gente",
+      href: "/escolinhas",
+    },
+    whatsappLabel: "WhatsApp",
+  },
 } as const;
 
 
