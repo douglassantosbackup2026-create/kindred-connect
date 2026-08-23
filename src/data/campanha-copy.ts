@@ -172,6 +172,11 @@ export const CAMPANHA = {
         "Não. Os treinos têm versões para casa, campo e academia. O básico é espaço para alguns passos e, quando pedido, uma bola.",
     },
     {
+      pergunta: "E se eu não tiver espaço em casa?",
+      resposta:
+        "A maioria dos treinos foi feita para ambientes pequenos. Com poucos metros você já consegue executar a versão de casa. Quando der, você pode fazer a versão de campo.",
+    },
+    {
       pergunta: "Serve para a minha idade?",
       resposta:
         "O sistema foi desenhado para jovens atletas e adultos que jogam por prazer. A partir de 14 anos; abaixo disso, com acompanhamento de um responsável.",
