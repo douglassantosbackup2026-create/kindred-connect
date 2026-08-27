@@ -442,7 +442,9 @@ export function CheckoutOferta({
         {children({
           dados,
           pagamento,
-          cupom: null,
+          cupom: (
+            <CupomCampo aplicado={cupomAplicado} onBuscar={buscarCupomAtivo} onAplicar={setCupomAplicado} />
+          ),
           cta,
           desconto: cupomAplicado?.discount ?? 0,
           cupomCode: cupomAplicado?.code ?? null,
