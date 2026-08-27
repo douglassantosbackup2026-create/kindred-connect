@@ -6,6 +6,7 @@ import { Clock, Loader2, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CheckoutAuth, type CheckoutDados } from "@/components/CheckoutAuth";
+import { CupomCampo } from "@/components/checkout/CupomCampo";
 import { MercadoPagoCheckout } from "@/components/MercadoPagoCheckout";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { CAMPANHA } from "@/data/campanha-copy";
