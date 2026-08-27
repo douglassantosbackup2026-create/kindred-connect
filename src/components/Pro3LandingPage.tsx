@@ -104,64 +104,62 @@ export function Pro3LandingPage({ search }: { search: LandingSearch }) {
       </div>
 
       {/* Hero */}
-      <section className="relative mx-auto w-full max-w-6xl px-5 pb-12 pt-12 sm:px-8 md:pb-16 md:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-primary sm:text-sm">
-              {PRO3_COPY.hero.selo}
-            </p>
+      <section className="relative mx-auto w-full max-w-4xl px-5 pb-12 pt-12 sm:px-8 md:pb-16 md:pt-16">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 text-center">
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-primary sm:text-sm">
+            {PRO3_COPY.hero.selo}
+          </p>
 
-            <h1 className="mt-6 inline-block border-2 border-foreground px-5 py-4 text-3xl font-black uppercase leading-[1.03] tracking-tight sm:px-7 sm:py-6 sm:text-5xl lg:text-6xl">
-              {PRO3_COPY.hero.headline.map((linha, i) => (
-                <span key={linha} className={cn("block", i === 2 && "text-primary")}>
-                  {linha}
-                </span>
-              ))}
-            </h1>
+          <h1 className="mx-auto mt-6 inline-block border-2 border-foreground px-5 py-4 text-3xl font-black uppercase leading-[1.03] tracking-tight sm:px-7 sm:py-6 sm:text-5xl lg:text-6xl">
+            {PRO3_COPY.hero.headline.map((linha, i) => (
+              <span key={linha} className={cn("block", i === 2 && "text-primary")}>
+                {linha}
+              </span>
+            ))}
+          </h1>
 
-            <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{PRO3_COPY.hero.sub}</p>
+          <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{PRO3_COPY.hero.sub}</p>
 
-            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground sm:text-base">
-              {PRO3_COPY.hero.bullets.map((b) => (
-                <li key={b} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-                  {b}
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Button
-                size="lg"
-                className="h-14 w-full px-8 text-base font-extrabold sm:w-auto sm:min-w-[280px]"
-                onClick={() => irParaCheckout(planoAtivo)}
-              >
-                {PRO3_COPY.hero.cta} →
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-14 w-full px-8 text-base font-extrabold sm:w-auto sm:min-w-[180px]"
-                onClick={rolarParaPlanos}
-              >
-                {PRO3_COPY.hero.ctaSecundario}
-              </Button>
-            </div>
-
-            <ul className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-              {PRO3_COPY.hero.selos.map((s) => (
-                <li key={s} className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-muted-foreground sm:text-xs">
-                  <Check className="h-3.5 w-3.5 text-primary" strokeWidth={3} />
-                  {s}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-4 text-xs text-muted-foreground">{PRO3_COPY.hero.notaIdade}</p>
-          </div>
-
-          <div className="lg:pl-4">
+          <div className="mx-auto mt-8 max-w-3xl">
             <AppShowcase />
           </div>
+
+          <ul className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-foreground sm:text-base">
+            {PRO3_COPY.hero.bullets.map((b) => (
+              <li key={b} className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+                {b}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:items-center">
+            <Button
+              size="lg"
+              className="h-14 w-full px-8 text-base font-extrabold sm:w-auto sm:min-w-[280px]"
+              onClick={() => irParaCheckout(planoAtivo)}
+            >
+              {PRO3_COPY.hero.cta} →
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-14 w-full px-8 text-base font-extrabold sm:w-auto sm:min-w-[180px]"
+              onClick={rolarParaPlanos}
+            >
+              {PRO3_COPY.hero.ctaSecundario}
+            </Button>
+          </div>
+
+          <ul className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {PRO3_COPY.hero.selos.map((s) => (
+              <li key={s} className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-muted-foreground sm:text-xs">
+                <Check className="h-3.5 w-3.5 text-primary" strokeWidth={3} />
+                {s}
+              </li>
+            ))}
+          </ul>
+          <p className="mx-auto mt-4 max-w-2xl text-xs text-muted-foreground">{PRO3_COPY.hero.notaIdade}</p>
         </div>
       </section>
 
