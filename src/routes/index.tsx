@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LandingPage, validateLandingSearch, type LandingSearch } from "@/components/LandingPage";
+import { Pro3LandingPage } from "@/components/Pro3LandingPage";
+import { validateLandingSearch, type LandingSearch } from "@/components/LandingPage";
 import { usePlayer } from "@/lib/player-store";
 import { useEffect } from "react";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
@@ -10,22 +11,25 @@ export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): LandingSearch => validateLandingSearch(search),
   head: () => ({
     meta: [
-      { title: "Pare de treinar sem resultado — Jogador PRO System" },
+      { title: "Treine em casa e evolua como Jogador PRO — a partir de R$16,42/mês" },
       {
         name: "description",
         content:
-          "Siga um plano pronto e evolua como jogador em poucas semanas. Treinos guiados de 10 a 20 minutos, mesmo treinando sozinho.",
+          "Jornada guiada de 12 meses para treinar em casa em 10 a 20 minutos por dia. +2.469 jogadores, biblioteca completa, progresso na nuvem e 14 dias de garantia.",
       },
-      { property: "og:title", content: "Pare de treinar sem resultado — Jogador PRO System" },
+      { property: "og:title", content: "Treine em casa e evolua como Jogador PRO" },
       {
         property: "og:description",
-        content: "Jornada guiada de 12 meses. Semestral R$147 no Pix ou cartão.",
+        content:
+          "Plano pronto, treino do dia no app e evolução acompanhada. A partir de R$16,42/mês no plano anual, com 14 dias de garantia.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://ballstar-trainer.lovable.app/og-cover.jpg" },
+      { property: "og:url", content: "https://jogadorprosystem.lovable.app/" },
+      { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://ballstar-trainer.lovable.app/og-cover.jpg" },
+      { name: "twitter:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
     ],
+    links: [{ rel: "canonical", href: "https://jogadorprosystem.lovable.app/" }],
   }),
   component: HomePage,
 });
@@ -42,7 +46,7 @@ function HomePage() {
       return;
     }
     if (logado && !state.assinante) {
-      void navigate({ to: "/checkout", search: { from: "home", ...search }, replace: true });
+      void navigate({ to: "/checkout", search: { from: "pro3", ...search }, replace: true });
       return;
     }
     if (search.checkout === "1") {
@@ -50,5 +54,5 @@ function HomePage() {
     }
   }, [hydrated, logado, state.assinante, search, navigate]);
 
-  return <LandingPage search={search} />;
+  return <Pro3LandingPage search={search} />;
 }
