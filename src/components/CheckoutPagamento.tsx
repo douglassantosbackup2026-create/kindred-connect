@@ -163,6 +163,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                       </div>
                       <p className="text-sm font-black tabular-nums text-primary">{config.preco}</p>
                     </div>
+                    <p className="mt-3 text-2xl font-black tabular-nums text-foreground">{parcelado}</p>
+                    <p className="text-xs text-muted-foreground">à vista {total}</p>
                   </div>
 
                   <dl className="mt-4 space-y-2 text-sm">
