@@ -26,6 +26,17 @@ function precoComDesconto(centavos: number, percent: number) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function brl(valor: number) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+/** "12x de R$ 16,42" quando há parcelamento; senão o valor à vista. */
+function parceladoLabel(centavos: number, percent: number, maxParcelas: number) {
+  const totalValor = Math.max(1, Math.round((centavos / 100) * (1 - percent / 100) * 100) / 100);
+  if (maxParcelas <= 1) return brl(totalValor);
+  return `${maxParcelas}x de ${brl(Math.round((totalValor / maxParcelas) * 100) / 100)}`;
+}
+
 function CardSecao({
   icone: Icone,
   titulo,
