@@ -5,6 +5,13 @@ import { CheckoutOferta } from "@/components/CheckoutOferta";
 import { pedirLoginCheckout } from "@/components/CheckoutAuth";
 import { CheckoutVoltar } from "@/components/CheckoutVoltar";
 import { SelosConfianca } from "@/components/landing/SelosConfianca";
+import {
+  FaixaSegura,
+  GarantiaBloco,
+  ProvaSocialCheckout,
+  RodapeConfianca,
+  UrgenciaCheckout,
+} from "@/components/checkout/CheckoutTrust";
 import { CAMPANHA } from "@/data/campanha-copy";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { PLANO_PADRAO, type CheckoutSearch } from "@/lib/checkout";
@@ -17,6 +24,17 @@ import { cn } from "@/lib/utils";
 function precoComDesconto(centavos: number, percent: number) {
   const valor = Math.max(1, Math.round((centavos / 100) * (1 - percent / 100) * 100) / 100);
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function brl(valor: number) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+/** "12x de R$ 16,42" quando há parcelamento; senão o valor à vista. */
+function parceladoLabel(centavos: number, percent: number, maxParcelas: number) {
+  const totalValor = Math.max(1, Math.round((centavos / 100) * (1 - percent / 100) * 100) / 100);
+  if (maxParcelas <= 1) return brl(totalValor);
+  return `${maxParcelas}x de ${brl(Math.round((totalValor / maxParcelas) * 100) / 100)}`;
 }
 
 function CardSecao({
@@ -66,6 +84,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const copy = CAMPANHA.planos.itens.find((p) => p.id === plano);
   const abrirAuto = search.checkout === "1" || Boolean(search.from && search.from !== "auth" && search.from !== "landing");
   const total = desconto > 0 ? precoComDesconto(config.precoCentavos, desconto) : config.preco;
+  const titulo = `Liberar o plano ${config.nome.toLowerCase()}`;
+  const parcelado = parceladoLabel(config.precoCentavos, desconto, config.maxParcelas);
+
 
   const escolherPlano = (id: string) => {
     void navigate({
@@ -77,6 +98,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-muted/30 pb-28 text-foreground lg:pb-16">
+      <UrgenciaCheckout />
       <header className="relative border-b border-border/60 bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <CheckoutVoltar from={search.from} />
@@ -97,9 +119,10 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
           )}
         </div>
       </header>
+      <FaixaSegura />
 
       <div className="relative mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-        <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Liberar o plano de 12 meses</h1>
+        <h1 className="text-3xl font-black tracking-tight sm:text-4xl">{titulo}</h1>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           {copy ? `${copy.nome} · ${copy.preco} · ${copy.equivalente}` : "Pix ou cartão. Acesso na aprovação."}
         </p>
@@ -118,7 +141,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
             if (id !== plano) escolherPlano(id);
           }}
         >
-          {({ dados, pagamento, cta, cupomCode }) => (
+          {({ dados, pagamento, cta, cupom, cupomCode }) => (
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
               <div className="space-y-4">
                 <CardSecao icone={CreditCard} titulo="Seu plano">
@@ -141,6 +164,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     ))}
                   </div>
                 </CardSecao>
+                <ProvaSocialCheckout className="lg:hidden" />
                 <CardSecao icone={User} titulo="Informações pessoais">
                   {dados}
                 </CardSecao>
@@ -163,6 +187,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                       </div>
                       <p className="text-sm font-black tabular-nums text-primary">{config.preco}</p>
                     </div>
+                    <p className="mt-3 text-2xl font-black tabular-nums text-foreground">{parcelado}</p>
+                    <p className="text-xs text-muted-foreground">à vista {total}</p>
                   </div>
 
                   <dl className="mt-4 space-y-2 text-sm">
@@ -185,6 +211,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     Equivale a {copy?.equivalente ?? config.nota}
                   </p>
                   {copy?.parcelas ? <p className="text-xs text-muted-foreground">{copy.parcelas}</p> : null}
+                  {cupom}
+
 
                   <div className="mt-5 hidden lg:block">{cta}</div>
                   <p className="mt-3 text-center text-[11px] text-muted-foreground">{CAMPANHA.garantia.curta}</p>
@@ -206,6 +234,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     <SelosConfianca />
                   </div>
                 </section>
+                <GarantiaBloco className="mt-4" />
+                <ProvaSocialCheckout className="mt-4 hidden lg:block" />
               </aside>
 
               <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-soft-lg backdrop-blur lg:hidden">
@@ -220,6 +250,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
             </div>
           )}
         </CheckoutOferta>
+        <RodapeConfianca />
       </div>
     </main>
   );
