@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { usePlayer } from "@/lib/player-store";
 import { TopBar } from "@/components/landing/TopBar";
 import { DepoimentosSection } from "@/components/landing/DepoimentosSection";
-import { AppShowcase } from "@/components/landing/AppShowcase";
+import { AppShowcaseCarousel } from "@/components/landing/AppShowcaseCarousel";
 import { CountdownOferta } from "@/components/landing/CountdownOferta";
 import { whatsappSupportHref } from "@/lib/product-config";
 
