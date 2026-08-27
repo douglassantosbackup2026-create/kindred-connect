@@ -5,6 +5,13 @@ import { CheckoutOferta } from "@/components/CheckoutOferta";
 import { pedirLoginCheckout } from "@/components/CheckoutAuth";
 import { CheckoutVoltar } from "@/components/CheckoutVoltar";
 import { SelosConfianca } from "@/components/landing/SelosConfianca";
+import {
+  FaixaSegura,
+  GarantiaBloco,
+  ProvaSocialCheckout,
+  RodapeConfianca,
+  UrgenciaCheckout,
+} from "@/components/checkout/CheckoutTrust";
 import { CAMPANHA } from "@/data/campanha-copy";
 import { PLANOS_ASSINATURA } from "@/data/training";
 import { PLANO_PADRAO, type CheckoutSearch } from "@/lib/checkout";
