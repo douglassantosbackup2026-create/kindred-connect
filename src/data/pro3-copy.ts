@@ -14,6 +14,12 @@ export const PRO3_COPY = {
     selo: "MÉTODO JOGADOR PRO · +2.469 JOGADORES TREINANDO",
     headline: ["TREINE EM CASA,", "EVOLUA COMO", "JOGADOR PRO"],
     sub: "A jornada guiada que já leva +2.469 jogadores do zero ao Elite treinando de 10 a 20 minutos por dia, sem campo, sem academia e sem improviso. A partir de R$16,42 por mês.",
+    bullets: [
+      "Mais domínio",
+      "Mais dribles",
+      "Mais passes certos",
+      "Mais confiança para fazer gols",
+    ],
     cta: "Quero ser Jogador PRO",
     ctaSecundario: "Ver planos",
     ctaPlano: "anual" as const,

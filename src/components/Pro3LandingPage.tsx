@@ -121,6 +121,15 @@ export function Pro3LandingPage({ search }: { search: LandingSearch }) {
 
             <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{PRO3_COPY.hero.sub}</p>
 
+            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground sm:text-base">
+              {PRO3_COPY.hero.bullets.map((b) => (
+                <li key={b} className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+                  {b}
+                </li>
+              ))}
+            </ul>
+
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Button
                 size="lg"
