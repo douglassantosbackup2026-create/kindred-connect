@@ -98,6 +98,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-muted/30 pb-28 text-foreground lg:pb-16">
+      <UrgenciaCheckout />
       <header className="relative border-b border-border/60 bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <CheckoutVoltar from={search.from} />
