@@ -206,6 +206,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     <SelosConfianca />
                   </div>
                 </section>
+                <GarantiaBloco className="mt-4" />
+                <ProvaSocialCheckout className="mt-4 hidden lg:block" />
               </aside>
 
               <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-soft-lg backdrop-blur lg:hidden">
