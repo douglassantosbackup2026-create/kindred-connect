@@ -222,6 +222,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
             </div>
           )}
         </CheckoutOferta>
+        <RodapeConfianca />
       </div>
     </main>
   );
