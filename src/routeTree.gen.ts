@@ -24,6 +24,7 @@ import { Route as PlanoRouteImport } from './routes/plano'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as ProRouteImport } from './routes/pro'
 import { Route as Pro2RouteImport } from './routes/pro2'
+import { Route as Pro3RouteImport } from './routes/pro3'
 import { Route as ProgressoRouteImport } from './routes/progresso'
 import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -110,6 +111,11 @@ const Pro2Route = Pro2RouteImport.update({
   path: '/pro2',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Pro3Route = Pro3RouteImport.update({
+  id: '/pro3',
+  path: '/pro3',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgressoRoute = ProgressoRouteImport.update({
   id: '/progresso',
   path: '/progresso',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/planos': typeof PlanosRoute
   '/pro': typeof ProRoute
   '/pro2': typeof Pro2Route
+  '/pro3': typeof Pro3Route
   '/progresso': typeof ProgressoRoute
   '/ranking': typeof RankingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/planos': typeof PlanosRoute
   '/pro': typeof ProRoute
   '/pro2': typeof Pro2Route
+  '/pro3': typeof Pro3Route
   '/progresso': typeof ProgressoRoute
   '/ranking': typeof RankingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/planos': typeof PlanosRoute
   '/pro': typeof ProRoute
   '/pro2': typeof Pro2Route
+  '/pro3': typeof Pro3Route
   '/progresso': typeof ProgressoRoute
   '/ranking': typeof RankingRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/pro'
     | '/pro2'
+    | '/pro3'
     | '/progresso'
     | '/ranking'
     | '/reset-password'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/pro'
     | '/pro2'
+    | '/pro3'
     | '/progresso'
     | '/ranking'
     | '/reset-password'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/planos'
     | '/pro'
     | '/pro2'
+    | '/pro3'
     | '/progresso'
     | '/ranking'
     | '/reset-password'
@@ -341,6 +353,7 @@ export interface RootRouteChildren {
   PlanosRoute: typeof PlanosRoute
   ProRoute: typeof ProRoute
   Pro2Route: typeof Pro2Route
+  Pro3Route: typeof Pro3Route
   ProgressoRoute: typeof ProgressoRoute
   RankingRoute: typeof RankingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Pro2RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pro3': {
+      id: '/pro3'
+      path: '/pro3'
+      fullPath: '/pro3'
+      preLoaderRoute: typeof Pro3RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/progresso': {
       id: '/progresso'
       path: '/progresso'
@@ -563,6 +583,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosRoute: PlanosRoute,
   ProRoute: ProRoute,
   Pro2Route: Pro2Route,
+  Pro3Route: Pro3Route,
   ProgressoRoute: ProgressoRoute,
   RankingRoute: RankingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
