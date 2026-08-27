@@ -97,9 +97,10 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
           )}
         </div>
       </header>
+      <FaixaSegura />
 
       <div className="relative mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-        <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Liberar o plano de 12 meses</h1>
+        <h1 className="text-3xl font-black tracking-tight sm:text-4xl">{titulo}</h1>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           {copy ? `${copy.nome} · ${copy.preco} · ${copy.equivalente}` : "Pix ou cartão. Acesso na aprovação."}
         </p>
