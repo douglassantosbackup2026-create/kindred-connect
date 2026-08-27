@@ -185,6 +185,8 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     Equivale a {copy?.equivalente ?? config.nota}
                   </p>
                   {copy?.parcelas ? <p className="text-xs text-muted-foreground">{copy.parcelas}</p> : null}
+                  {cupom}
+
 
                   <div className="mt-5 hidden lg:block">{cta}</div>
                   <p className="mt-3 text-center text-[11px] text-muted-foreground">{CAMPANHA.garantia.curta}</p>
