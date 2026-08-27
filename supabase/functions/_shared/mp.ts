@@ -3,9 +3,10 @@ import { hmacSha256Hex, secretsEqual, sha256Hex } from "./crypto.ts";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const PLANOS: Record<string, { nome: string; amount: number; maxInstallments: number }> = {
-  mensal: { nome: "Mensal", amount: 47, maxInstallments: 1 },
-  semestral: { nome: "Semestral", amount: 147, maxInstallments: 6 },
-  anual: { nome: "Anual", amount: 197, maxInstallments: 12 },
+  // MODO TESTE: valores originais 47 / 147 / 197 com parcelas 1 / 6 / 12 — restaurar após os testes de compra
+  mensal: { nome: "Mensal", amount: 1, maxInstallments: 1 },
+  semestral: { nome: "Semestral", amount: 1, maxInstallments: 1 },
+  anual: { nome: "Anual", amount: 1, maxInstallments: 1 },
 
 };
 

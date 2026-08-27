@@ -504,15 +504,16 @@ export const PLANO_FLAT = PLANO.flatMap((s) =>
   })),
 );
 
+// MODO TESTE: preços originais R$47 / R$147 / R$197 (4700/14700/19700 centavos, parcelas 1/6/12) — restaurar após os testes de compra
 export const PLANOS_ASSINATURA = [
   {
     id: "mensal",
     nome: "Mensal",
-    preco: "R$47",
+    preco: "R$1",
     periodo: "/mês",
     destaque: false,
     nota: "Sem fidelidade",
-    precoCentavos: 4700,
+    precoCentavos: 100,
     intervalo: "month" as const,
     intervaloCount: 1,
     maxParcelas: 1,
@@ -520,26 +521,26 @@ export const PLANOS_ASSINATURA = [
   {
     id: "semestral",
     nome: "Semestral",
-    preco: "R$147",
+    preco: "R$1",
     periodo: "/6 meses",
     destaque: true,
-    nota: "Mais vendido — R$24,50/mês",
-    precoCentavos: 14700,
+    nota: "Mais vendido",
+    precoCentavos: 100,
     intervalo: "month" as const,
     intervaloCount: 6,
-    maxParcelas: 6,
+    maxParcelas: 1,
   },
   {
     id: "anual",
     nome: "Anual",
-    preco: "R$197",
+    preco: "R$1",
     periodo: "/ano",
     destaque: false,
-    nota: "Melhor valor — R$16,42/mês",
-    precoCentavos: 19700,
+    nota: "Melhor valor",
+    precoCentavos: 100,
     intervalo: "year" as const,
     intervaloCount: 1,
-    maxParcelas: 12,
+    maxParcelas: 1,
   },
 ];
 
