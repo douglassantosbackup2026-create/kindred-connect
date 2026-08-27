@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { usePlayer } from "@/lib/player-store";
 import { TopBar } from "@/components/landing/TopBar";
 import { DepoimentosSection } from "@/components/landing/DepoimentosSection";
-import { AppShowcase } from "@/components/landing/AppShowcase";
+import { AppShowcaseCarousel } from "@/components/landing/AppShowcaseCarousel";
 import { CountdownOferta } from "@/components/landing/CountdownOferta";
 import { whatsappSupportHref } from "@/lib/product-config";
 
@@ -121,7 +121,7 @@ export function Pro3LandingPage({ search }: { search: LandingSearch }) {
           <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{PRO3_COPY.hero.sub}</p>
 
           <div className="mx-auto mt-8 max-w-3xl">
-            <AppShowcase />
+            <AppShowcaseCarousel />
           </div>
 
           <ul className="mx-auto mt-8 flex max-w-2xl flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-foreground sm:text-base">

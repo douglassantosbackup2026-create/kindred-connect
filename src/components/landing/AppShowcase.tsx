@@ -33,7 +33,7 @@ export function AppShowcase() {
   );
 }
 
-function Phone({
+export function Phone({
   src,
   alt,
   legenda,
