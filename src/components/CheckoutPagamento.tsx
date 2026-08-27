@@ -66,6 +66,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const copy = CAMPANHA.planos.itens.find((p) => p.id === plano);
   const abrirAuto = search.checkout === "1" || Boolean(search.from && search.from !== "auth" && search.from !== "landing");
   const total = desconto > 0 ? precoComDesconto(config.precoCentavos, desconto) : config.preco;
+  const titulo = `Liberar o plano ${config.nome.toLowerCase()}`;
+  const parcelado = parceladoLabel(config.precoCentavos, desconto, config.maxParcelas);
+
 
   const escolherPlano = (id: string) => {
     void navigate({
