@@ -141,6 +141,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     ))}
                   </div>
                 </CardSecao>
+                <ProvaSocialCheckout className="lg:hidden" />
                 <CardSecao icone={User} titulo="Informações pessoais">
                   {dados}
                 </CardSecao>
