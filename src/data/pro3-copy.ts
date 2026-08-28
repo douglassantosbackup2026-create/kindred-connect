@@ -28,7 +28,7 @@ export const PRO3_COPY = {
   },
 
   problema: {
-    eyebrow: "01 / PROBLEMA",
+    eyebrow: "PROBLEMA",
     title: "Cansado de treinar e sentir que não evolui?",
     body: "Você sabe que algo precisa mudar. Sente isso todo jogo, quando a bola chega e o corpo não responde como você queria. Mas sem um plano, cada semana que passa é mais tempo perdido treinando no escuro — e mais jogos em que você não mostra nem metade do que poderia.",
     bullets: [
@@ -51,12 +51,12 @@ export const PRO3_COPY = {
   ],
 
   comparativo: {
-    eyebrow: "02 / COMPARATIVO",
+    eyebrow: "COMPARATIVO",
     title: "Quanto você já gastou tentando evoluir no futebol?",
     sub: "A maioria dos jogadores gasta muito e treina pouco. Veja a diferença:",
     itens: [
       {
-        tag: "01 / ESCOLINHA",
+        tag: "ESCOLINHA",
         icone: "🏫",
         nome: "ESCOLINHA OU TIME",
         preco: "R$150 a R$300 por mês",
@@ -64,7 +64,7 @@ export const PRO3_COPY = {
         ok: false,
       },
       {
-        tag: "02 / PERSONAL",
+        tag: "PERSONAL",
         icone: "🧑‍🏫",
         nome: "PREPARADOR PARTICULAR",
         preco: "R$100+ por sessão",
@@ -83,22 +83,22 @@ export const PRO3_COPY = {
   },
 
   processo: {
-    eyebrow: "03 / PROCESSO",
+    eyebrow: "PROCESSO",
     title: "Como funciona? 3 passos simples.",
     sub: "Sem complicação. Você entra, abre o treino do dia e faz.",
     passos: [
       {
-        n: "01",
+        n: "1",
         titulo: "GARANTA SEU ACESSO",
         body: "Escolha seu plano e pague por Pix ou cartão. O acesso é liberado na aprovação, em minutos.",
       },
       {
-        n: "02",
+        n: "2",
         titulo: "ABRA O TREINO DO DIA",
         body: "O app já mostra o que treinar hoje: exercícios, tempo e execução guiada. Você só aperta play.",
       },
       {
-        n: "03",
+        n: "3",
         titulo: "EVOLUA E ACOMPANHE",
         body: "Streak, XP, patentes e histórico salvos na nuvem. Você vê a evolução acontecendo treino após treino.",
       },
