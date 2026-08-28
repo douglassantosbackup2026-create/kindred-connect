@@ -11,18 +11,19 @@ export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): LandingSearch => validateLandingSearch(search),
   head: () => ({
     meta: [
-      { title: "Treine em casa e evolua como Jogador PRO — a partir de R$16,42/mês" },
+      { title: "Treino de futebol em casa: drible, domínio e chute em 15 min/dia" },
       {
         name: "description",
         content:
-          "Jornada guiada de 12 meses para treinar em casa em 10 a 20 minutos por dia. +2.469 jogadores, biblioteca completa, progresso na nuvem e 14 dias de garantia.",
+          "Treine futebol em casa de 10 a 20 minutos por dia: drible, domínio, chute, passe, agilidade e força. Plano guiado de 12 meses, +2.469 jogadores e 14 dias de garantia.",
       },
-      { property: "og:title", content: "Treine em casa e evolua como Jogador PRO" },
+      { property: "og:title", content: "Treino de futebol em casa para driblar, dominar e chutar melhor" },
       {
         property: "og:description",
         content:
-          "Plano pronto, treino do dia no app e evolução acompanhada. A partir de R$16,42/mês no plano anual, com 14 dias de garantia.",
+          "Plano pronto no app, treino do dia em 10 a 20 minutos e evolução acompanhada. A partir de R$16,42/mês no plano anual, com 14 dias de garantia.",
       },
+
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://jogadorprosystem.lovable.app/" },
       { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },

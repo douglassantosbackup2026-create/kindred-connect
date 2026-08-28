@@ -163,8 +163,36 @@ export function Pro3LandingPage({ search }: { search: LandingSearch }) {
         </div>
       </section>
 
-      {/* 01 Problema */}
+      {/* O que você vai treinar */}
       <Section tone="card">
+        <Eyebrow>{PRO3_COPY.habilidades.eyebrow}</Eyebrow>
+        <h2 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-4xl">
+          {PRO3_COPY.habilidades.title}
+        </h2>
+        <p className="mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base">{PRO3_COPY.habilidades.sub}</p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {PRO3_COPY.habilidades.itens.map((h) => (
+            <div key={h.titulo} className="rounded-2xl border border-border/60 bg-background/60 p-5 shadow-soft">
+              <span className="text-2xl" aria-hidden="true">
+                {h.icone}
+              </span>
+              <p className="mt-3 text-base font-black uppercase tracking-[0.12em] text-primary">{h.titulo}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{h.body}</p>
+            </div>
+          ))}
+        </div>
+        <Button
+          size="lg"
+          className="mt-8 h-14 w-full text-base font-extrabold sm:w-auto sm:min-w-[300px]"
+          onClick={() => irParaCheckout(planoAtivo)}
+        >
+          {PRO3_COPY.hero.cta} →
+        </Button>
+      </Section>
+
+      {/* Problema */}
+      <Section>
+
         <Eyebrow>{PRO3_COPY.problema.eyebrow}</Eyebrow>
         <h2 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-4xl">
           {PRO3_COPY.problema.title}

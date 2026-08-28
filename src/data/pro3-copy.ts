@@ -1,7 +1,7 @@
 /** Copy da landing de alta conversão em /pro3. Independente de CAMPANHA, PRO_COPY e PRO2_COPY. */
 export const PRO3_COPY = {
   brand: "Jogador PRO System",
-  footerTagline: "microtreinos guiados para evoluir no jogo",
+  footerTagline: "treinos de futebol em casa, de 10 a 20 minutos por dia",
 
   topo: {
     destaque: "CONDIÇÃO DE LANÇAMENTO",
@@ -11,30 +11,45 @@ export const PRO3_COPY = {
   },
 
   hero: {
-    selo: "MÉTODO JOGADOR PRO · +2.469 JOGADORES TREINANDO",
-    headline: ["TREINE EM CASA,", "EVOLUA COMO", "JOGADOR PRO"],
-    sub: "A jornada guiada que já leva +2.469 jogadores do zero ao Elite treinando de 10 a 20 minutos por dia, sem campo, sem academia e sem improviso. A partir de R$16,42 por mês.",
+    selo: "TREINO DE FUTEBOL EM CASA · +2.469 JOGADORES TREINANDO",
+    headline: ["TREINO DE FUTEBOL", "EM CASA PARA DRIBLAR,", "DOMINAR E CHUTAR MELHOR"],
+    sub: "10 a 20 minutos por dia, sem sair de casa, sem campo e sem academia. Plano pronto no app: você abre e treina. A partir de R$16,42 por mês.",
     bullets: [
-      "Mais domínio",
-      "Mais dribles",
-      "Mais passes certos",
-      "Mais confiança para fazer gols",
+      "Dribles que funcionam no jogo",
+      "Domínio e primeiro toque",
+      "Chute com força e direção",
+      "Agilidade e explosão",
+      "Físico para aguentar os 90 minutos",
     ],
-    cta: "Quero ser Jogador PRO",
+    cta: "Quero começar a treinar hoje",
     ctaSecundario: "Ver planos",
     ctaPlano: "anual" as const,
     selos: ["ACESSO IMEDIATO", "14 DIAS DE GARANTIA", "CANCELE QUANDO QUISER", "2.469+ ALUNOS"],
     notaIdade: "A partir de 14 anos. Abaixo disso, com acompanhamento de um responsável.",
   },
 
+  habilidades: {
+    eyebrow: "O QUE VOCÊ VAI TREINAR",
+    title: "Os fundamentos que decidem jogo — treinados em casa",
+    sub: "Cada bloco tem exercícios prontos, com tempo e execução guiada. Nada de exercício solto.",
+    itens: [
+      { icone: "⚽", titulo: "DRIBLE", body: "Dribles e mudanças de direção que funcionam contra marcador de verdade." },
+      { icone: "🎯", titulo: "DOMÍNIO", body: "Primeiro toque e recepção sob pressão, com a bola sempre no seu pé." },
+      { icone: "💥", titulo: "CHUTE", body: "Força, direção e finalização — o gesto certo, repetido do jeito certo." },
+      { icone: "🤝", titulo: "PASSE", body: "Passe curto, longo e condução para acertar a saída de bola." },
+      { icone: "⚡", titulo: "AGILIDADE", body: "Exercícios de agilidade e explosão para sair na frente na primeira arrancada." },
+      { icone: "🏋️", titulo: "FORÇA E CORE", body: "Força, core e pliometria em casa para não cansar antes do fim do jogo." },
+    ],
+  },
+
   problema: {
     eyebrow: "PROBLEMA",
-    title: "Cansado de treinar e sentir que não evolui?",
+    title: "Você treina, treina e continua o mesmo jogador?",
     body: "Você sabe que algo precisa mudar. Sente isso todo jogo, quando a bola chega e o corpo não responde como você queria. Mas sem um plano, cada semana que passa é mais tempo perdido treinando no escuro — e mais jogos em que você não mostra nem metade do que poderia.",
     bullets: [
-      "Trava no mesmo drible há meses, mesmo treinando por conta",
+      "Tenta o mesmo drible há meses e ele nunca sai no jogo",
       "Não tem campo, academia ou preparador por perto",
-      "Abre o YouTube, faz um exercício diferente por dia e não sai do lugar",
+      "Assiste vídeo solto no YouTube, faz um exercício diferente por dia e não sai do lugar",
       "Cansa antes do fim do jogo e sente que perde o jogo no físico",
       "Vê outros jogadores evoluindo e pensa: por que comigo não acontece?",
       "Treina sem sequência, sem saber se aquilo leva a algum lugar",
@@ -46,7 +61,7 @@ export const PRO3_COPY = {
   numeros: [
     { valor: "2.469+", label: "JOGADORES TREINANDO" },
     { valor: "52", label: "SEMANAS DE JORNADA" },
-    { valor: "4", label: "MESOCICLOS GUIADOS" },
+    { valor: "4", label: "FASES DE EVOLUÇÃO" },
     { valor: "R$16,42", label: "POR MÊS NO ANUAL" },
   ],
 
@@ -115,7 +130,7 @@ export const PRO3_COPY = {
         icone: "🗺️",
         tag: "CARRO-CHEFE",
         titulo: "Jornada guiada de 12 meses",
-        body: "52 semanas em 4 mesociclos — Fundação, Domínio, Potência e Elite. Você nunca mais pergunta o que treinar hoje.",
+        body: "52 semanas em 4 fases: base, controle de bola, explosão e nível de jogo. Você nunca mais pergunta o que treinar hoje.",
       },
       {
         icone: "📚",
@@ -192,7 +207,7 @@ export const PRO3_COPY = {
         preco: "R$147",
         periodo: "por 6 meses",
         parcelas: "Equivale a R$24,50/mês · em até 6x no cartão",
-        inclui: ["Acesso completo", "Ciclos de Fundação e Domínio", "Garantia de 14 dias"],
+        inclui: ["Acesso completo", "Fases de base e controle de bola", "Garantia de 14 dias"],
         cta: "Quero começar agora — R$147",
       },
       {
@@ -262,6 +277,26 @@ export const PRO3_COPY = {
           "Os treinos de força, explosão, resistência e mobilidade servem para qualquer posição, inclusive goleiro. Não existe, hoje, uma trilha exclusiva de fundamentos de goleiro.",
       },
       {
+        pergunta: "Serve para quem é iniciante?",
+        resposta:
+          "Serve. A jornada começa pela fase de base, com exercícios simples e execução explicada passo a passo. Você evolui na ordem certa, sem pular etapa.",
+      },
+      {
+        pergunta: "Funciona para quem já joga em time ou escolinha?",
+        resposta:
+          "Sim. O sistema é o treino extra que a maioria dos jogadores não faz: você complementa os treinos do time em casa, nos dias em que não tem coletivo.",
+      },
+      {
+        pergunta: "Preciso de bola para treinar?",
+        resposta:
+          "A bola ajuda nos blocos de drible, domínio, passe e chute. Os blocos de força, core, agilidade e explosão são feitos sem bola nenhuma.",
+      },
+      {
+        pergunta: "Tenho 14 anos, posso usar?",
+        resposta:
+          "Pode. A partir de 14 anos o acesso é liberado normalmente; abaixo disso, com acompanhamento de um responsável.",
+      },
+      {
         pergunta: "Quais são as formas de pagamento?",
         resposta: "Pix ou cartão, com parcelamento em até 6x no semestral e 12x no plano anual.",
       },
@@ -293,7 +328,7 @@ export const PRO3_COPY = {
     valorLabel: "Valor cheio do anual: R$564",
     precoLinha: "Hoje por R$197",
     precoSub: "ou 12x de R$16,42 no cartão",
-    cta: "Quero ser Jogador PRO",
+    cta: "Quero começar a treinar hoje",
     ctaSecundario: "Ver planos",
     seguranca: "🔒 Pagamento 100% seguro · Reembolso em até 14 dias · Acesso imediato",
     selos: ["🔒 PAGAMENTO SEGURO", "✓ GARANTIA 14 DIAS", "⚡ ACESSO IMEDIATO", "☁️ PROGRESSO NA NUVEM"],
