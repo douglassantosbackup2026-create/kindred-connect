@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { CreditCard, Lock, ShieldCheck, User } from "lucide-react";
 import { CheckoutOferta } from "@/components/CheckoutOferta";
