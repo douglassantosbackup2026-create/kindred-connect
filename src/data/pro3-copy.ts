@@ -107,7 +107,7 @@ export const PRO3_COPY = {
   },
 
   conteudo: {
-    eyebrow: "04 / CONTEÚDO",
+    eyebrow: "CONTEÚDO",
     title: "Tudo que você recebe para nunca mais treinar no escuro",
     sub: "Um sistema completo de treino em casa, dentro de um único acesso.",
     itens: [
@@ -161,7 +161,7 @@ export const PRO3_COPY = {
   },
 
   oferta: {
-    eyebrow: "05 / A OFERTA",
+    eyebrow: "A OFERTA",
     title: "Escolha seu plano e comece hoje",
     sub: "Mesmo acesso completo em todos os planos. Sem fidelidade, cancele quando quiser.",
     recebeLabel: "Você recebe, em qualquer plano:",
@@ -210,7 +210,7 @@ export const PRO3_COPY = {
   },
 
   resultados: {
-    eyebrow: "06 / RESULTADOS",
+    eyebrow: "RESULTADOS",
     title: "O que muda quando você treina com um plano",
     sub: "Mensagens reais de alunos que treinam no dia a dia, muitos deles em casa.",
     rodape: "Mais de 2.469 jogadores já treinam com o sistema.",
@@ -223,7 +223,7 @@ export const PRO3_COPY = {
   },
 
   faq: {
-    eyebrow: "07 / DÚVIDAS",
+    eyebrow: "DÚVIDAS",
     title: "Ainda tem dúvidas?",
     sub: "Normal. Aqui estão as respostas para as perguntas mais comuns:",
     itens: [
