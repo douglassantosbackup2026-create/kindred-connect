@@ -147,9 +147,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
           refCode={search.ref}
           abrirAoMontar={abrirAuto}
           onCupomChange={onCupomChange}
-          onPlanoChange={(id) => {
-            if (id !== plano) escolherPlano(id);
-          }}
+          onPlanoChange={onPlanoChange}
         >
           {({ dados, pagamento, cta, cupom, cupomCode }) => (
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
