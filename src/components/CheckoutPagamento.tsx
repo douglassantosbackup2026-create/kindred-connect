@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { CreditCard, Lock, ShieldCheck, User } from "lucide-react";
 import { CheckoutOferta } from "@/components/CheckoutOferta";
@@ -68,17 +68,21 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const onCupomChange = useCallback((percent: number) => setDesconto(percent), []);
   const zap = whatsappSupportHref("Oi! Quero tirar uma dúvida antes de assinar o Jogador PRO.");
 
+  const searchRef = useRef(search);
+  searchRef.current = search;
+  const origem = search.utm_campaign ?? search.from ?? "direct";
+  const from = search.from ?? "";
+
+  // Depende só de primitivos: com o objeto `search` inteiro o efeito refaz
+  // disparos a cada render e polui o Pixel.
   useEffect(() => {
-    captureUtmFromSearch(search);
+    captureUtmFromSearch(searchRef.current);
     trackMetaDedup("ViewContent", {
       content_name: "checkout_mercadopago",
-      content_category: search.utm_campaign ?? search.from ?? "direct",
+      content_category: origem,
     });
-    trackMetaCustom("CheckoutPageView", {
-      plano,
-      from: search.from ?? "",
-    });
-  }, [search, plano]);
+    trackMetaCustom("CheckoutPageView", { plano, from });
+  }, [origem, from, plano]);
 
   const config = PLANOS_ASSINATURA.find((p) => p.id === plano) ?? PLANOS_ASSINATURA[1]!;
   const copy = CAMPANHA.planos.itens.find((p) => p.id === plano);
@@ -88,13 +92,19 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const parcelado = parceladoLabel(config.precoCentavos, desconto, config.maxParcelas);
 
 
-  const escolherPlano = (id: string) => {
-    void navigate({
-      to: "/checkout",
-      search: { ...search, plano: id },
-      replace: true,
-    });
-  };
+  const escolherPlano = useCallback(
+    (id: string) => {
+      if (id === searchRef.current.plano) return;
+      void navigate({
+        to: "/checkout",
+        search: { ...searchRef.current, plano: id },
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const onPlanoChange = useCallback((id: string) => escolherPlano(id), [escolherPlano]);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-muted/30 pb-28 text-foreground lg:pb-16">
@@ -137,9 +147,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
           refCode={search.ref}
           abrirAoMontar={abrirAuto}
           onCupomChange={onCupomChange}
-          onPlanoChange={(id) => {
-            if (id !== plano) escolherPlano(id);
-          }}
+          onPlanoChange={onPlanoChange}
         >
           {({ dados, pagamento, cta, cupom, cupomCode }) => (
             <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem]">
