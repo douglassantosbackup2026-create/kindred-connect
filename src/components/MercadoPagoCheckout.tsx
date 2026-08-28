@@ -123,6 +123,18 @@ export function MercadoPagoCheckout({
     setPixQr(lerPixQr());
   }, []);
 
+  // Trocar de plano muda valor e parcelamento: o Brick precisa ser remontado
+  // uma única vez com a nova configuração (o SDK não reage a props).
+  const planoMontadoRef = useRef(planoId);
+  useEffect(() => {
+    if (planoMontadoRef.current === planoId) return;
+    planoMontadoRef.current = planoId;
+    setPronto(false);
+    setErroBrick(null);
+    setBrick(null);
+    setBrickId(novoId());
+  }, [planoId]);
+
   // Device fingerprint oficial do Mercado Pago: reduz recusas por antifraude (cc_rejected_high_risk).
   useEffect(() => {
     if (typeof document === "undefined") return;
