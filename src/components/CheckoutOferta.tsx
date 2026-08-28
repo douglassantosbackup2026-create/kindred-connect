@@ -97,17 +97,25 @@ export function CheckoutOferta({
   const [docs, setDocs] = useState<{ cpf: string | null; phone: string | null } | null>(null);
   const docsProntos = !logado || docs !== null;
 
+  // Callbacks do pai podem ser inline (nova identidade a cada render).
+  // Guardamos em refs para que os efeitos dependam só de valores primitivos —
+  // do contrário, notificar o pai re-renderiza e dispara o efeito de novo (loop infinito).
+  const onPlanoChangeRef = useRef(onPlanoChange);
+  onPlanoChangeRef.current = onPlanoChange;
+  const onCupomChangeRef = useRef(onCupomChange);
+  onCupomChangeRef.current = onCupomChange;
+
   useEffect(() => {
     if (planoInicial) setEscolhido(planoInicial);
   }, [planoInicial]);
 
   useEffect(() => {
-    onPlanoChange?.(escolhido);
-  }, [escolhido, onPlanoChange]);
+    onPlanoChangeRef.current?.(escolhido);
+  }, [escolhido]);
 
   useEffect(() => {
-    onCupomChange?.(cupomAplicado?.discount ?? 0, cupomAplicado?.code ?? null);
-  }, [cupomAplicado, onCupomChange]);
+    onCupomChangeRef.current?.(cupomAplicado?.discount ?? 0, cupomAplicado?.code ?? null);
+  }, [cupomAplicado]);
 
   useEffect(() => {
     if (!logado) {
