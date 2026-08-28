@@ -92,13 +92,19 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const parcelado = parceladoLabel(config.precoCentavos, desconto, config.maxParcelas);
 
 
-  const escolherPlano = (id: string) => {
-    void navigate({
-      to: "/checkout",
-      search: { ...search, plano: id },
-      replace: true,
-    });
-  };
+  const escolherPlano = useCallback(
+    (id: string) => {
+      if (id === searchRef.current.plano) return;
+      void navigate({
+        to: "/checkout",
+        search: { ...searchRef.current, plano: id },
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  const onPlanoChange = useCallback((id: string) => escolherPlano(id), [escolherPlano]);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-muted/30 pb-28 text-foreground lg:pb-16">
