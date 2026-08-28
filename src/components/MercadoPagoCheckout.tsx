@@ -215,6 +215,9 @@ export function MercadoPagoCheckout({
           affiliate_ref,
           coupon_code: couponCode || null,
           idempotency_key: intentKeyRef.current,
+          device_id:
+            (window as unknown as { MP_DEVICE_SESSION_ID?: string }).MP_DEVICE_SESSION_ID ?? null,
+
           meta: {
             fbp: fbp ? decodeURIComponent(fbp) : null,
             fbc: getFbc() ?? null,
