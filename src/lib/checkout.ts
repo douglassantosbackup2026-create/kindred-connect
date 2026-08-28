@@ -139,9 +139,13 @@ export function traduzErroPagamento(raw: string | null | undefined): string {
   if (low === "payment_failed" || low === "payment_mismatch" || low === "error") {
     return "Não foi possível confirmar o pagamento. Tente Pix ou outro cartão.";
   }
+  if (low.includes("high_risk") || low.includes("blacklist") || low.includes("fraud")) {
+    return "O Mercado Pago recusou por segurança. Tente pagar com Pix ou usar outro cartão.";
+  }
   if (low.includes("insufficient") || low.includes("cc_rejected_insufficient")) {
     return "Saldo insuficiente neste cartão. Tente Pix ou outro cartão.";
   }
+
   if (low.includes("security_code") || low.includes("cvv")) {
     return "Código de segurança inválido. Confira o CVV e tente de novo.";
   }
