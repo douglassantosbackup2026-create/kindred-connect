@@ -121,15 +121,19 @@ Deno.serve(async (req) => {
       `${plano}|${amount}|${couponCode ?? ""}|${janela}`,
     );
 
+    const deviceId = typeof body.device_id === "string" && body.device_id ? body.device_id : "";
+
     const mpRes = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
         "X-Idempotency-Key": idempotencyKey,
+        ...(deviceId ? { "X-meli-session-id": deviceId } : {}),
       },
       body: JSON.stringify(paymentBody),
     });
+
 
     const payment = await mpRes.json();
     if (!mpRes.ok) {

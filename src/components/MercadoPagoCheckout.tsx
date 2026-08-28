@@ -123,6 +123,19 @@ export function MercadoPagoCheckout({
     setPixQr(lerPixQr());
   }, []);
 
+  // Device fingerprint oficial do Mercado Pago: reduz recusas por antifraude (cc_rejected_high_risk).
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (document.getElementById("mp-device-js")) return;
+    const s = document.createElement("script");
+    s.id = "mp-device-js";
+    s.src = "https://www.mercadopago.com/v2/security.js";
+    s.setAttribute("view", "checkout");
+    s.async = true;
+    document.body.appendChild(s);
+  }, []);
+
+
   useEffect(() => {
     if (!noCliente || publicKey) return;
     void carregarChave();
@@ -202,6 +215,9 @@ export function MercadoPagoCheckout({
           affiliate_ref,
           coupon_code: couponCode || null,
           idempotency_key: intentKeyRef.current,
+          device_id:
+            (window as unknown as { MP_DEVICE_SESSION_ID?: string }).MP_DEVICE_SESSION_ID ?? null,
+
           meta: {
             fbp: fbp ? decodeURIComponent(fbp) : null,
             fbc: getFbc() ?? null,
