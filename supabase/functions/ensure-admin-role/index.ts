@@ -1,3 +1,10 @@
+/**
+ * ensure-admin-role
+ * Quem chama: rotas /admin (beforeLoad)
+ * JWT: verify_jwt=true + requireUser; allowlist Deno.env ADMIN_EMAILS
+ * Validação: e-mail confirmado; sem body
+ * Erros: Unauthorized / email_not_confirmed — se ADMIN_EMAILS faltar, ninguém é promovido
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { jsonResponse, optionsResponse } from "../_shared/cors.ts";
 import { createAdminClient, requireUser } from "../_shared/auth.ts";

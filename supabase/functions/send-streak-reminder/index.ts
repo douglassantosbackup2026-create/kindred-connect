@@ -1,12 +1,15 @@
+/**
+ * send-streak-reminder
+ * Quem chama: pg_cron send-streak-reminder-daily
+ * JWT: off; auth = Bearer CRON_SECRET (Dashboard ou Vault cron_secret)
+ * Validação: assinantes ativos no horário do reminder_hour
+ * Erros: RESEND_API_KEY not configured
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { requireCronSecret, createAdminClient } from "../_shared/auth.ts";
 import { jsonResponse } from "../_shared/cors.ts";
 import { sendResendEmail, appUrl, escapeHtml } from "../_shared/email.ts";
 
-/**
- * Lembrete offline de streak via e-mail (Resend).
- * Auth: Authorization Bearer CRON_SECRET
- */
 Deno.serve(async (req) => {
   const denied = await requireCronSecret(req);
   if (denied) return denied;

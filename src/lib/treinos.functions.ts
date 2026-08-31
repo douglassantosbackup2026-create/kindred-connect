@@ -1,10 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getTreino, PLANO_FLAT } from "@/data/training";
 import { acessoProAtivo } from "@/lib/acesso";
 import { planoKeyLiberada, treinouPlanoHoje } from "@/lib/liberacao";
 
-type ConcluirInput = { treinoId: string; planoKey?: string | null };
+const PLANO_KEY_RE = /^(c-[a-z0-9-]+-\d+|m-\d+|retorno-\d{4}-\d{2}-\d{2})$/;
 
 function hojeBR() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
@@ -12,9 +13,19 @@ function hojeBR() {
 
 function planoKeyValido(key: string) {
   if (PLANO_FLAT.some((p) => p.key === key)) return true;
-  // chaves geradas dinamicamente pelo app (ciclos, manutenção, retorno)
-  return /^(c-[a-z0-9-]+-\d+|m-\d+|retorno-\d{4}-\d{2}-\d{2})$/.test(key);
+  return PLANO_KEY_RE.test(key);
 }
+
+const concluirSchema = z.object({
+  treinoId: z.string().min(1).max(80),
+  planoKey: z
+    .string()
+    .max(60)
+    .nullable()
+    .optional()
+    .transform((v) => (v && v.length > 0 ? v : null))
+    .refine((v) => v == null || planoKeyValido(v), "planoKey inválido"),
+});
 
 /**
  * Registra a conclusão de um treino no servidor.
@@ -23,17 +34,7 @@ function planoKeyValido(key: string) {
  */
 export const concluirTreinoServer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: ConcluirInput) => {
-    if (!input || typeof input.treinoId !== "string" || input.treinoId.length > 80) {
-      throw new Error("treinoId inválido");
-    }
-    const planoKey =
-      typeof input.planoKey === "string" && input.planoKey.length > 0 ? input.planoKey : null;
-    if (planoKey && (planoKey.length > 60 || !planoKeyValido(planoKey))) {
-      throw new Error("planoKey inválido");
-    }
-    return { treinoId: input.treinoId, planoKey };
-  })
+  .inputValidator((input) => concluirSchema.parse(input))
   .handler(async ({ data, context }) => {
     const treino = getTreino(data.treinoId);
     if (!treino) throw new Error("Treino não encontrado");

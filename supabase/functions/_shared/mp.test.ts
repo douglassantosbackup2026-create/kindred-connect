@@ -10,6 +10,7 @@ import {
 } from "./mp.ts";
 import { escapeHtml } from "./html.ts";
 import { hmacSha256Hex } from "./crypto.ts";
+import { parseProcessPaymentBody } from "./payment-body.ts";
 
 describe("process-payment contract helpers", () => {
   it("rejeita plano inválido", () => {
@@ -110,5 +111,38 @@ describe("mercadopago-webhook signature", () => {
 describe("escapeHtml", () => {
   it("escapa nome em e-mail", () => {
     expect(escapeHtml(`<img src=x onerror=alert(1)>`)).not.toContain("<img");
+  });
+});
+
+describe("process-payment body contract", () => {
+  it("rejeita plano inválido no parser", () => {
+    const parsed = parseProcessPaymentBody({ plano: "vip", formData: { token: "t" } });
+    expect(parsed).toEqual({ error: "invalid_plano" });
+  });
+
+  it("normaliza cupom e ignora chaves extras", () => {
+    const parsed = parseProcessPaymentBody({
+      plano: "semestral",
+      coupon_code: "  promo10 ",
+      capture: false,
+      notification_url: "https://evil.example",
+      utm: { utm_source: "meta", extra: "drop" },
+      formData: { token: "tok", installments: 12, coupon_amount: 1 },
+    });
+    expect("error" in parsed).toBe(false);
+    if ("error" in parsed) return;
+    expect(parsed.coupon_code).toBe("PROMO10");
+    expect(parsed.plano).toBe("semestral");
+    expect(parsed.utm.utm_source).toBe("meta");
+    expect((parsed.utm as { extra?: string }).extra).toBeUndefined();
+  });
+
+  it("limita parcelas ao teto do plano", () => {
+    const semestral = pickMpPaymentFields({ installments: 12, payment_method_id: "visa" }, PLANOS.semestral.maxInstallments);
+    expect(semestral.installments).toBe(6);
+    const anual = pickMpPaymentFields({ installments: 24, payment_method_id: "visa" }, PLANOS.anual.maxInstallments);
+    expect(anual.installments).toBe(12);
+    const mensal = pickMpPaymentFields({ installments: 6, payment_method_id: "visa" }, PLANOS.mensal.maxInstallments);
+    expect(mensal.installments).toBe(1);
   });
 });

@@ -1,14 +1,16 @@
+/**
+ * send-checkout-recovery
+ * Quem chama: pg_cron send-checkout-recovery-hourly
+ * JWT: off; auth = Bearer CRON_SECRET (Dashboard ou Vault cron_secret)
+ * Validação: intents 45min–24h sem purchased_at
+ * Erros: RESEND_API_KEY not configured — sem dump de destinatários
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { requireCronSecret, createAdminClient } from "../_shared/auth.ts";
 import { jsonResponse } from "../_shared/cors.ts";
 import { sendResendEmail, appUrl, escapeHtml } from "../_shared/email.ts";
 
 const PLANOS_OK = new Set(["mensal", "semestral", "anual"]);
-
-/**
- * Recovery de checkout abandonado (45 min–24 h).
- * Auth: Authorization Bearer CRON_SECRET
- */
 Deno.serve(async (req) => {
   const denied = await requireCronSecret(req);
   if (denied) return denied;

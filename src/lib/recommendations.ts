@@ -41,25 +41,6 @@ export function labelObjetivo(objetivo: string | null | undefined): string | nul
   return map[objetivo] ?? null;
 }
 
-/** Treinos alinhados ao objetivo/posição (catálogo pago). */
-export function treinosRecomendados(
-  objetivo: string | null | undefined,
-  posicao?: string | null,
-  limit = 3,
-): Treino[] {
-  const cat = categoriaPorObjetivo(objetivo);
-  let pool = [...TREINOS];
-  if (posicao && posicao !== "qualquer") {
-    const byPos = pool.filter(
-      (t) => !t.posicoes?.length || t.posicoes.includes(posicao) || t.posicoes.includes("qualquer"),
-    );
-    if (byPos.length) pool = byPos;
-  }
-  if (!cat) return pool.slice(0, limit);
-  const matched = pool.filter((t) => t.categorias.includes(cat));
-  return (matched.length ? matched : pool).slice(0, limit);
-}
-
 export function prefereModoRapido(disponibilidade: string | null | undefined): boolean {
   return disponibilidade === "10";
 }

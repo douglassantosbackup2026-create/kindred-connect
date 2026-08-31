@@ -116,6 +116,15 @@ function AdminVideos() {
   );
 }
 
+export type VideoRowProps = {
+  label: string;
+  sub: string;
+  treinoId: string;
+  exercicioNome: string | null;
+  registro: TreinoVideo | null;
+  onChange: () => Promise<void>;
+};
+
 function VideoRow({
   label,
   sub,
@@ -123,14 +132,7 @@ function VideoRow({
   exercicioNome,
   registro,
   onChange,
-}: {
-  label: string;
-  sub: string;
-  treinoId: string;
-  exercicioNome: string | null;
-  registro: TreinoVideo | null;
-  onChange: () => Promise<void>;
-}) {
+}: VideoRowProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [linkAberto, setLinkAberto] = useState(false);

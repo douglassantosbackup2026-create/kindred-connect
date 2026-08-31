@@ -92,6 +92,28 @@ function AdminDashboard() {
       </section>
 
       <section className="mt-6 rounded-2xl border border-border bg-card p-5">
+        <h2 className="text-sm font-bold text-foreground">Checkout → Pix → treino D0 (7d)</h2>
+        <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+          <li>
+            Intents (CheckoutStep):{" "}
+            <span className="font-bold text-foreground">{stats?.checkoutD0?.started ?? 0}</span>
+          </li>
+          <li>
+            Pix/cartão aprovado:{" "}
+            <span className="font-bold text-foreground">
+              {stats?.checkoutD0?.purchased ?? 0} ({stats?.checkoutD0?.purchasedRate ?? 0}%)
+            </span>
+          </li>
+          <li>
+            1º treino no mesmo dia:{" "}
+            <span className="font-bold text-foreground">
+              {stats?.checkoutD0?.d0 ?? 0} ({stats?.checkoutD0?.d0Rate ?? 0}%)
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-bold text-foreground">Funil por UTM (30d)</h2>

@@ -1,6 +1,13 @@
+/**
+ * mercadopago-webhook
+ * Quem chama: Mercado Pago (notificações de pagamento)
+ * JWT: off (verify_jwt=false) — auth real = HMAC x-signature
+ * Validação: refetch do pagamento na API MP; entitlement via grantProAccess
+ * Erros: invalid_signature / payment fetch failed — sem dump do provedor
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createAdminClient, resolveSecret } from "../_shared/auth.ts";
-import { extenderAcesso } from "../_shared/acesso.ts";
+import { grantProAccess } from "../_shared/entitlement.ts";
 import { sendCapi, hashIdentifier, hashPhoneBr, pickClientIp, aplicarNomeUserData, aplicarCountryBr } from "../_shared/capi.ts";
 import { verifyMpWebhookSignature } from "../_shared/mp.ts";
 
@@ -81,26 +88,14 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       const mesmoPagamento = perfilAntes?.mp_payment_id === String(payment.id);
-      await admin
-        .from("profiles")
-        .update({
-          assinante: true,
-          plano,
-          ...(mesmoPagamento ? {} : { assinante_until: extenderAcesso(perfilAntes?.assinante_until, plano) }),
-          mp_payment_id: String(payment.id),
-          mp_payer_id: payment.payer?.id ? String(payment.payer.id) : null,
-          paused_until: null,
-          pause_reason: null,
-          pause_used_at: null,
-          cancelled_at: null,
-          cancel_reason: null,
-        })
-        .eq("id", userId);
-
-      await admin
-        .from("checkout_intents")
-        .update({ purchased_at: new Date().toISOString(), plano })
-        .eq("user_id", userId);
+      await grantProAccess(admin, {
+        userId,
+        plano,
+        paymentId: String(payment.id),
+        payerId: payment.payer?.id ? String(payment.payer.id) : null,
+        untilAtual: perfilAntes?.assinante_until,
+        extendUntil: !mesmoPagamento,
+      });
 
       const capiToken = Deno.env.get("META_CAPI_ACCESS_TOKEN");
       if (capiToken) {

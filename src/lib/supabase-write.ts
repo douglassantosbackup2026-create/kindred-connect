@@ -4,9 +4,11 @@ import { getErrorMessage } from "@/lib/utils";
 
 const QUEUE_KEY = "jogador-pro-write-queue-v1";
 
+export type ClientWriteTable = "profiles" | "sessoes" | "weekly_scores";
+
 export type PendingWrite = {
   id: string;
-  table: string;
+  table: ClientWriteTable;
   op: "insert" | "update" | "upsert";
   payload: Record<string, unknown>;
   match?: Record<string, unknown>;
@@ -58,7 +60,7 @@ type WriteBuilder = {
 };
 
 async function executar(item: PendingWrite): Promise<WriteResult> {
-  const q = supabase.from(item.table as never) as unknown as WriteBuilder;
+  const q = supabase.from(item.table) as unknown as WriteBuilder;
   if (item.op === "insert") return await q.insert(item.payload);
   if (item.op === "upsert") {
     return await q.upsert(item.payload, item.onConflict ? { onConflict: item.onConflict } : undefined);

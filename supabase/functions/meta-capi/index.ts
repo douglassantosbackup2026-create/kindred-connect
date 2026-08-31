@@ -1,3 +1,10 @@
+/**
+ * meta-capi
+ * Quem chama: Pixel do front (origem allowlist)
+ * JWT: off; Purchase/Subscribe exigem sessão ou META_CAPI_APP_SECRET
+ * Validação: EVENTOS_PERMITIDOS; localhost só com ALLOW_LOCALHOST_CAPI=1
+ * Erros: origem não permitida / evento inválido; token missing → skipped 200
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createUserClient } from "../_shared/auth.ts";
 import {
@@ -14,7 +21,7 @@ const ORIGENS_PERMITIDAS = [
   /^https:\/\/[a-z0-9-]+\.lovable\.app$/,
   /^https:\/\/[a-z0-9-]+\.lovable\.dev$/,
   /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
-  /^http:\/\/localhost(:\d+)?$/,
+  ...(Deno.env.get("ALLOW_LOCALHOST_CAPI") === "1" ? [/^http:\/\/localhost(:\d+)?$/] : []),
 ];
 
 const EVENTOS_PERMITIDOS = new Set([

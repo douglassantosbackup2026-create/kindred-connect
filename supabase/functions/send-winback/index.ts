@@ -1,12 +1,15 @@
+/**
+ * send-winback
+ * Quem chama: pg_cron send-winback-daily
+ * JWT: off; auth = Bearer CRON_SECRET (Dashboard ou Vault cron_secret)
+ * Validação: cancelados D3/D7
+ * Erros: RESEND_API_KEY not configured
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { requireCronSecret, createAdminClient } from "../_shared/auth.ts";
 import { jsonResponse } from "../_shared/cors.ts";
 import { sendResendEmail, appUrl, escapeHtml } from "../_shared/email.ts";
 
-/**
- * Win-back D3/D7 pós-cancel — e-mail via Resend.
- * Auth: Authorization Bearer CRON_SECRET
- */
 Deno.serve(async (req) => {
   const denied = await requireCronSecret(req);
   if (denied) return denied;

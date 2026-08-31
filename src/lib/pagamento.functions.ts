@@ -1,6 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { extenderAcesso } from "@/lib/acesso";
+import { grantProAccess } from "@/lib/entitlement";
+import type { Json } from "@/integrations/supabase/types";
+
+export type MpPayment = {
+  id?: string | number;
+  status?: string;
+  external_reference?: string;
+  metadata?: Record<string, unknown>;
+  payer?: { id?: string | number; email?: string };
+  transaction_amount?: number;
+};
 
 /**
  * "Já paguei — atualizar agora": consulta o Mercado Pago direto e libera o PRO
@@ -48,24 +58,24 @@ export const sincronizarPagamento = createServerFn({ method: "POST" })
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (!res.ok) continue;
-      const payment = (await res.json()) as Record<string, any>;
+      const payment = (await res.json()) as MpPayment;
 
-      const metadata = (payment["metadata"] ?? {}) as Record<string, unknown>;
+      const metadata = payment.metadata ?? {};
       const pertence =
-        metadata["supabase_user_id"] === userId || payment["external_reference"] === userId;
+        metadata["supabase_user_id"] === userId || payment.external_reference === userId;
       if (!pertence) continue;
 
-      const plano = typeof metadata["plano"] === "string" ? (metadata["plano"] as string) : "semestral";
-      const pagamentoStatus = String(payment["status"] ?? "unknown");
+      const plano = typeof metadata["plano"] === "string" ? metadata["plano"] : "semestral";
+      const pagamentoStatus = String(payment.status ?? "unknown");
       if (status === "not_found") status = pagamentoStatus;
 
       await supabaseAdmin.from("payment_events").upsert(
         {
           user_id: userId,
-          stripe_event_id: `mp-${payment["id"]}-${pagamentoStatus}`,
+          stripe_event_id: `mp-${payment.id}-${pagamentoStatus}`,
           event_type: `payment.${pagamentoStatus}`,
           plano,
-          payload: payment,
+          payload: payment as unknown as Json,
         },
         { onConflict: "stripe_event_id" },
       );
@@ -77,29 +87,15 @@ export const sincronizarPagamento = createServerFn({ method: "POST" })
           .eq("id", userId)
           .maybeSingle();
 
-        const mesmoPagamento = perfilAntes?.mp_payment_id === String(payment["id"]);
-        await supabaseAdmin
-          .from("profiles")
-          .update({
-            assinante: true,
-            plano,
-            ...(mesmoPagamento
-              ? {}
-              : { assinante_until: extenderAcesso(perfilAntes?.assinante_until, plano) }),
-            mp_payment_id: String(payment["id"]),
-            mp_payer_id: payment["payer"]?.id ? String(payment["payer"].id) : null,
-            paused_until: null,
-            pause_reason: null,
-            pause_used_at: null,
-            cancelled_at: null,
-            cancel_reason: null,
-          })
-          .eq("id", userId);
-
-        await supabaseAdmin
-          .from("checkout_intents")
-          .update({ purchased_at: new Date().toISOString(), plano })
-          .eq("user_id", userId);
+        const mesmoPagamento = perfilAntes?.mp_payment_id === String(payment.id);
+        await grantProAccess(supabaseAdmin, {
+          userId,
+          plano,
+          paymentId: String(payment.id),
+          payerId: payment.payer?.id ? String(payment.payer.id) : null,
+          untilAtual: perfilAntes?.assinante_until ?? null,
+          extendUntil: !mesmoPagamento,
+        });
 
         status = "approved";
         planoAtivo = plano;

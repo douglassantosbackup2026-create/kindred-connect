@@ -1,4 +1,3 @@
-import { Zap } from "lucide-react";
 import { CAMPANHA } from "@/data/campanha-copy";
 import planoAsset from "@/assets/app-plano.png.asset.json";
 import dashboardAsset from "@/assets/app-dashboard.png.asset.json";
@@ -70,36 +69,6 @@ export function Phone({
         {legenda}
       </figcaption>
     </figure>
-  );
-}
-
-export function ModoRapidoCard({ onCta }: { onCta: () => void }) {
-  return (
-    <div className="mt-8 overflow-hidden rounded-[1.5rem] border border-primary/30 bg-card p-6 shadow-soft sm:p-8">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-        <div className="min-w-0">
-          <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
-            <Zap className="h-4 w-4" /> {CAMPANHA.modoRapido.eyebrow}
-          </p>
-          <h3 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-            {CAMPANHA.modoRapido.title}
-          </h3>
-          <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
-            {CAMPANHA.modoRapido.body}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onCta}
-          className="w-full shrink-0 rounded-[1.25rem] border border-primary/40 bg-primary/10 px-6 py-5 text-left transition-colors hover:bg-primary/15 lg:w-auto"
-        >
-          <span className="block text-xs font-bold uppercase tracking-widest text-primary">Botão no app</span>
-          <span className="mt-1 block text-lg font-black text-foreground">
-            {CAMPANHA.modoRapido.botao}
-          </span>
-        </button>
-      </div>
-    </div>
   );
 }
 

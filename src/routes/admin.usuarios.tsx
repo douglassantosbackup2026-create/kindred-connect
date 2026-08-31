@@ -22,28 +22,34 @@ function AdminUsuarios() {
   const loader = useCallback(() => fetchAdminUsers(busca), [busca]);
   const { rows, loading, reload } = useAdminTable(loader);
 
-  const toggleAssinante = async (row: AdminUserRow) => {
-    try {
-      await updateAdminUser(row.id, {
-        assinante: !row.assinante,
-        plano: !row.assinante ? row.plano ?? "semestral" : null,
-      });
-      toast.success(!row.assinante ? "Assinatura liberada" : "Assinatura removida");
-      reload();
-    } catch (e) {
-      toast.error(getErrorMessage(e, "Falha ao atualizar"));
-    }
-  };
+  const toggleAssinante = useCallback(
+    async (row: AdminUserRow) => {
+      try {
+        await updateAdminUser(row.id, {
+          assinante: !row.assinante,
+          plano: !row.assinante ? row.plano ?? "semestral" : null,
+        });
+        toast.success(!row.assinante ? "Assinatura liberada" : "Assinatura removida");
+        reload();
+      } catch (e) {
+        toast.error(getErrorMessage(e, "Falha ao atualizar"));
+      }
+    },
+    [reload],
+  );
 
-  const toggleRole = async (row: AdminUserRow) => {
-    try {
-      await setAdminRole({ data: { userId: row.id, role: row.role === "admin" ? "user" : "admin" } });
-      toast.success(row.role === "admin" ? "Admin removido" : "Admin concedido");
-      reload();
-    } catch (e) {
-      toast.error(getErrorMessage(e, "Falha ao atualizar role"));
-    }
-  };
+  const toggleRole = useCallback(
+    async (row: AdminUserRow) => {
+      try {
+        await setAdminRole({ data: { userId: row.id, role: row.role === "admin" ? "user" : "admin" } });
+        toast.success(row.role === "admin" ? "Admin removido" : "Admin concedido");
+        reload();
+      } catch (e) {
+        toast.error(getErrorMessage(e, "Falha ao atualizar role"));
+      }
+    },
+    [reload],
+  );
 
   return (
     <AdminShell title="Usuários" subtitle="Perfis, assinatura e papéis">

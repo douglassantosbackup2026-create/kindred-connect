@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Pro3LandingPage } from "@/components/Pro3LandingPage";
-import { validateLandingSearch, type LandingSearch } from "@/components/LandingPage";
+import { validateLandingSearch, type LandingSearch } from "@/lib/checkout";
 import { usePlayer } from "@/lib/player-store";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 

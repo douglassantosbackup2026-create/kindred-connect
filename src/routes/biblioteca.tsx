@@ -5,7 +5,7 @@ import { AppShell } from "@/components/AppShell";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { TreinoCard } from "@/components/TreinoCard";
 
-import { CATEGORIAS, POSICOES, TREINOS, type Categoria } from "@/data/training";
+import { CATEGORIAS, POSICOES, TREINOS, type Categoria, type Nivel } from "@/data/training";
 import { usePlayer } from "@/lib/player-store";
 import { categoriaPorObjetivo, labelObjetivo, scoreRecomendacao } from "@/lib/recommendations";
 import { trackMetaCustom } from "@/lib/meta-pixel";
@@ -21,7 +21,7 @@ const ORDENS: [Ordem, string][] = [
   ["feitos", "Mais feitos"],
 ];
 
-const PESO_NIVEL: Record<string, number> = { Iniciante: 1, "Intermediário": 2, "Avançado": 3, PRO: 4 };
+const PESO_NIVEL: Record<Nivel, number> = { Iniciante: 1, Intermediário: 2, Avançado: 3, PRO: 4 };
 
 export const Route = createFileRoute("/biblioteca")({
   errorComponent: RouteError,

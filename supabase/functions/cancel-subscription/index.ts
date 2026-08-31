@@ -1,3 +1,10 @@
+/**
+ * cancel-subscription
+ * Quem chama: perfil (assinante autenticado)
+ * JWT: verify_jwt=true + requireUser; exige perfil.assinante
+ * Validação: action ∈ cancel | pause | resume | downgrade_mensal
+ * Erros: códigos curtos (not_subscriber, already_paused) — sem detalhe interno
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { jsonResponse, optionsResponse } from "../_shared/cors.ts";
 import { createAdminClient, requireUser } from "../_shared/auth.ts";

@@ -1,11 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Trophy } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { RankingLista } from "@/components/RankingLista";
 import { Button } from "@/components/ui/button";
-import { inicioSemanaBR } from "@/lib/date";
-import { fetchRankingSemanal } from "@/lib/ranking";
+import { useRankingSemanal } from "@/hooks/use-ranking-semanal";
 import { useAuth } from "@/lib/use-auth";
 import { usePlayer } from "@/lib/player-store";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
@@ -19,24 +17,14 @@ export const Route = createFileRoute("/ranking")({
   component: RankingPage,
 });
 
-function weekStartIso() {
-  return inicioSemanaBR();
-}
-
 function RankingPage() {
   const { state, treinoDeHoje, proximoPlano } = usePlayer();
   const { user } = useAuth();
-  const week = weekStartIso();
   const {
-    data: rows = [],
+    rows,
     isError,
     isLoading,
-  } = useQuery({
-    queryKey: ["ranking-semanal", week],
-    queryFn: () => fetchRankingSemanal(week, 20),
-    enabled: state.assinante,
-    staleTime: 60_000,
-  });
+  } = useRankingSemanal(state.assinante);
 
   if (!state.assinante) {
     return (

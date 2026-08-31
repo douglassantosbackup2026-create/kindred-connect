@@ -1,34 +1,21 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { Check, ShieldCheck, X } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { PRO_COPY } from "@/data/pro-copy";
-import { captureUtmFromSearch } from "@/lib/utm";
-import { searchCheckout, type LandingSearch } from "@/lib/checkout";
-import { trackMetaCustom, trackMetaDedup } from "@/lib/meta-pixel";
+import { type LandingSearch } from "@/lib/checkout";
 import { cn } from "@/lib/utils";
 import { usePlayer } from "@/lib/player-store";
 import { TopBar } from "@/components/landing/TopBar";
 import { DepoimentosSection } from "@/components/landing/DepoimentosSection";
 import { SelosConfianca } from "@/components/landing/SelosConfianca";
 import { AppShowcase } from "@/components/landing/AppShowcase";
-import { whatsappSupportHref } from "@/lib/product-config";
-
-const faqJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: PRO_COPY.faq.itens.map((f) => ({
-    "@type": "Question",
-    name: f.pergunta,
-    acceptedAnswer: { "@type": "Answer", text: f.resposta },
-  })),
-});
+import {
+  Eyebrow,
+  LandingFaq,
+  LandingFooter,
+  Section,
+  StickyCta,
+} from "@/components/landing/LandingShell";
+import { useLandingCheckout } from "@/hooks/use-landing-checkout";
 
 function rolarParaPlanos() {
   document.getElementById("planos-pro")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -36,49 +23,12 @@ function rolarParaPlanos() {
 
 export function ProLandingPage({ search }: { search: LandingSearch }) {
   const { logado } = usePlayer();
-  const navigate = useNavigate();
-  const [planoAtivo, setPlanoAtivo] = useState<string>(search.plano ?? PRO_COPY.heroCtaPlano);
-  const zap = whatsappSupportHref("Oi! Quero tirar uma dúvida sobre o Jogador PRO.");
-
-  useEffect(() => {
-    captureUtmFromSearch(search);
-    trackMetaDedup("ViewContent", {
-      content_name: "landing_pro",
-      content_category: search.utm_campaign ?? "organic",
-    });
-    trackMetaCustom("LandingView", {
-      pagina: "pro",
-      utm_source: search.utm_source ?? "",
-      utm_campaign: search.utm_campaign ?? "",
-    });
-  }, [search]);
-
-  const irParaCheckout = useCallback(
-    (plano?: string) => {
-      const alvo = plano ?? planoAtivo ?? PRO_COPY.heroCtaPlano;
-      setPlanoAtivo(alvo);
-      trackMetaDedup("InitiateCheckout", {
-        content_name: alvo,
-        currency: "BRL",
-        num_items: 1,
-      });
-      void navigate({
-        to: "/checkout",
-        search: searchCheckout({
-          from: "pro",
-          plano: alvo,
-          ref: search.ref,
-          teaser: search.teaser,
-          utm_source: search.utm_source,
-          utm_medium: search.utm_medium,
-          utm_campaign: search.utm_campaign,
-          utm_content: search.utm_content,
-          utm_term: search.utm_term,
-        }),
-      });
-    },
-    [navigate, search, planoAtivo],
+  const { planoAtivo, irParaCheckout, zap } = useLandingCheckout(
+    "pro",
+    search,
+    PRO_COPY.heroCtaPlano,
   );
+
 
   const precoAtivo =
     PRO_COPY.planos.itens.find((p) => p.id === planoAtivo)?.preco ?? PRO_COPY.planos.itens[0]!.preco;
@@ -418,26 +368,11 @@ export function ProLandingPage({ search }: { search: LandingSearch }) {
 
       {/* FAQ */}
       <Section>
-        <Eyebrow>{PRO_COPY.faq.eyebrow}</Eyebrow>
-        <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">{PRO_COPY.faq.title}</h2>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd }} />
-        <Accordion
-          type="single"
-          collapsible
-          className="mt-8 w-full max-w-3xl"
-          onValueChange={(v) => {
-            if (v) trackMetaCustom("FaqOpen", { pergunta: v });
-          }}
-        >
-          {PRO_COPY.faq.itens.map((f) => (
-            <AccordionItem key={f.pergunta} value={f.pergunta}>
-              <AccordionTrigger className="text-left text-sm font-bold sm:text-base">
-                {f.pergunta}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">{f.resposta}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <LandingFaq
+          eyebrow={PRO_COPY.faq.eyebrow}
+          title={PRO_COPY.faq.title}
+          itens={PRO_COPY.faq.itens}
+        />
       </Section>
 
       {/* Fechamento */}
@@ -460,66 +395,13 @@ export function ProLandingPage({ search }: { search: LandingSearch }) {
         <p className="mt-3 text-sm text-muted-foreground">{PRO_COPY.final.hint}</p>
       </Section>
 
-      <footer className="relative border-t border-border px-5 py-8 text-center text-xs text-muted-foreground">
-        <p>
-          {PRO_COPY.brand} — {PRO_COPY.footerTagline}
-        </p>
-        <p className="mt-2">
-          <Link to="/escolinhas" className="font-semibold text-primary underline-offset-4 hover:underline">
-            Treina uma escolinha? Fale com a gente
-          </Link>
-          {zap ? (
-            <>
-              {" · "}
-              <a
-                href={zap}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-primary underline-offset-4 hover:underline"
-              >
-                WhatsApp
-              </a>
-            </>
-          ) : null}
-        </p>
-      </footer>
+      <LandingFooter brand={PRO_COPY.brand} tagline={PRO_COPY.footerTagline} zap={zap} />
 
-      {/* Sticky mobile CTA */}
-      <div className="animate-in slide-in-from-bottom-4 fixed inset-x-0 bottom-0 z-50 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] duration-500 md:hidden">
-        <div className="rounded-[1.5rem] border border-border/60 bg-card/95 p-3 shadow-soft-lg backdrop-blur">
-          <Button
-            size="lg"
-            className="h-12 w-full text-sm font-extrabold"
-            onClick={() => irParaCheckout(planoAtivo)}
-          >
-            {PRO_COPY.heroCta} · {precoAtivo}
-          </Button>
-          <p className="mt-2 text-center text-[11px] text-muted-foreground">{PRO_COPY.garantia.curta}</p>
-        </div>
-      </div>
+      <StickyCta
+        label={`${PRO_COPY.heroCta} · ${precoAtivo}`}
+        hint={PRO_COPY.garantia.curta}
+        onClick={() => irParaCheckout(planoAtivo)}
+      />
     </main>
-  );
-}
-
-function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">{children}</p>;
-}
-
-function Section({
-  children,
-  tone = "default",
-  id,
-}: {
-  children: ReactNode;
-  tone?: "default" | "card";
-  id?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className={cn("relative", tone === "card" && "border-y border-border/50 bg-card/70")}
-    >
-      <div className="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">{children}</div>
-    </section>
   );
 }

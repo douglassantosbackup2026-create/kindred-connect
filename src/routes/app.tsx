@@ -12,8 +12,9 @@ import { diaBROffset } from "@/lib/date";
 import { MESES_PLANO, PLANO, TOTAL_MESES_PLANO } from "@/data/training";
 import { useEsperaLiberacao } from "@/hooks/use-liberacao";
 
-import { labelObjetivo, prefereModoRapido, treinoRapido } from "@/lib/recommendations";
+import { labelObjetivo, prefereModoRapido } from "@/lib/recommendations";
 import { DashboardStats } from "@/components/DashboardStats";
+import { useModoRapido } from "@/hooks/use-modo-rapido";
 
 export const Route = createFileRoute("/app")({
   errorComponent: RouteError,
@@ -53,6 +54,7 @@ function Home() {
     totalTreinos,
     retomarAssinatura,
   } = usePlayer();
+  const { irModoRapido } = useModoRapido();
   const espera = useEsperaLiberacao();
   const navigate = useNavigate();
   const semanaPlanoAtual = PLANO.find((s) => s.semana === semanaAtual);
@@ -72,17 +74,7 @@ function Home() {
     }
   }, [hydrated, state.assinante, state.onboardingDone, navigate]);
 
-  const modoRapido = () => {
-    if (!state.assinante) {
-      void navigate({
-        to: "/checkout",
-        search: { from: "home", teaser: "Modo rápido disponível no PRO" },
-      });
-      return;
-    }
-    const escolhido = treinoRapido(state.objetivo, state.posicao, state.ultimoTreinoId);
-    void navigate({ to: "/treino/$treinoId", params: { treinoId: escolhido.id } });
-  };
+  const modoRapido = () => irModoRapido("home");
 
   const treinoBloqueado =
     treinoDeHoje && !canAccessTreino(state.assinante, treinoDeHoje.id, proximoPlano?.key);

@@ -1,18 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-
-function fmtBR(d: Date) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(d);
-}
-
-/** Segunda-feira da semana atual no fuso de São Paulo (YYYY-MM-DD). */
-export function inicioSemanaBR(): string {
-  const hoje = new Date(`${fmtBR(new Date())}T12:00:00Z`);
-  const dow = hoje.getUTCDay(); // 0 = domingo
-  const delta = dow === 0 ? 6 : dow - 1;
-  hoje.setUTCDate(hoje.getUTCDate() - delta);
-  return hoje.toISOString().slice(0, 10);
-}
+import { inicioSemanaBR } from "@/lib/date";
 
 function diffDias(a: string, b: string) {
   return Math.round((Date.parse(`${a}T00:00:00Z`) - Date.parse(`${b}T00:00:00Z`)) / 86400000);

@@ -11,7 +11,9 @@ As Edge Functions leem **primeiro** o env do Dashboard e, se vazio, o **Vault** 
 | `CRON_SECRET` | `cron_secret` | `send-winback`, `send-streak-reminder`, `send-checkout-recovery` + jobs `pg_net` |
 | `MERCADOPAGO_WEBHOOK_SECRET` | `mercadopago_webhook_secret` | HMAC `x-signature` do webhook MP |
 
-`cron_secret` já está no Vault. Os crons funcionam mesmo sem o secret no Dashboard.
+`cron_secret` está no Vault (criado se faltava). Os jobs `pg_net` usam esse valor. Se `CRON_SECRET` também existir no Dashboard, as functions aceitam **qualquer um dos dois**.
+
+`ADMIN_EMAILS` só existe no Dashboard (não dá para gravar via SQL). Sem ele, `ensure-admin-role` nunca promove ninguém — o painel `/admin` fica inacessível até o dono colar o e-mail confirmado, separado por vírgula.
 
 Webhook MP: copie o secret em Your integrations → Webhooks e grave no Vault (substitui o valor de QA, se houver):
 

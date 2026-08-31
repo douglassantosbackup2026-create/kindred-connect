@@ -18,16 +18,26 @@ import { motionDaCapa } from "@/data/exercise-motions";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { Confetti, CountUp, LevelBar, playSuccessSound } from "@/components/RewardBurst";
 import { patenteDe, xpDoTreino, xpTotal } from "@/lib/gamificacao";
-import { treinoRapido } from "@/lib/recommendations";
 import { getErrorMessage } from "@/lib/utils";
+import { useModoRapido } from "@/hooks/use-modo-rapido";
+import { requireAssinanteBeforeLoad } from "@/lib/route-guards";
 
 
 export const Route = createFileRoute("/treino/$treinoId")({
+  ssr: false,
   errorComponent: RouteError,
   notFoundComponent: RouteNotFound,
   validateSearch: (search: Record<string, unknown>): { plano?: string | undefined } => ({
     plano: typeof search["plano"] === "string" ? (search["plano"] as string) : undefined,
   }),
+  beforeLoad: async ({ params, search }) => {
+    await requireAssinanteBeforeLoad({
+      from: "treino",
+      teaser: "Assine para treinar com o player guiado",
+      treinoId: params.treinoId,
+      planoKey: search.plano ?? null,
+    });
+  },
   head: () => ({
     meta: [
       { title: "Treino em execução — Jogador PRO System" },
@@ -87,6 +97,7 @@ function TreinoPage() {
     planoConcluidos,
     treinouHojePlano,
   } = usePlayer();
+  const { escolherTreinoRapido } = useModoRapido(treinoId);
   const treino = getTreino(treinoId);
   const videosCadastrados = useTreinoVideos(treinoId);
 
@@ -383,7 +394,7 @@ function TreinoPage() {
     const streakNow = Math.max(streak, 1);
     const showShare = !isFirst && (streakNow >= 7 || plano === "2-5");
     const shareMilestone = plano === "2-5" ? "semana2" : streakNow >= 7 ? "streak7" : "geral";
-    const extraRapido = treinoRapido(state.objetivo, state.posicao, treino.id);
+    const extraRapido = escolherTreinoRapido();
     const xpGanho = xpDoTreino(treino.duracaoMin);
     const xpAcumulado = xpTotal(state.sessoes);
     const patente = patenteDe(xpAcumulado);

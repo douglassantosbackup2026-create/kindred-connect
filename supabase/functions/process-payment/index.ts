@@ -1,7 +1,15 @@
+/**
+ * process-payment
+ * Quem chama: Brick do checkout (cliente autenticado)
+ * JWT: verify_jwt=true + requireUser
+ * Validação: parseProcessPaymentBody (plano/cupom) + pickMpPaymentFields
+ * Erros: códigos curtos (invalid_plano, payment_failed) — sem stack do Mercado Pago
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { jsonResponse, optionsResponse } from "../_shared/cors.ts";
 import { createAdminClient, requireUser } from "../_shared/auth.ts";
-import { extenderAcesso } from "../_shared/acesso.ts";
+import { grantProAccess } from "../_shared/entitlement.ts";
+import { parseProcessPaymentBody } from "../_shared/payment-body.ts";
 import { sendCapi, hashIdentifier, hashPhoneBr, pickClientIpFromRequest, aplicarNomeUserData, aplicarCountryBr } from "../_shared/capi.ts";
 import {
   PLANOS,
@@ -23,14 +31,13 @@ Deno.serve(async (req) => {
     if (auth instanceof Response) return auth;
     const { user } = auth;
 
-    const body = await req.json();
-    const plano = String(body.plano ?? "semestral");
+    const parsed = parseProcessPaymentBody(await req.json().catch(() => null));
+    if ("error" in parsed) return jsonResponse({ error: parsed.error }, 400);
+    const { plano, coupon_code: couponRaw, affiliate_ref: affiliateIn, utm, meta: metaAttr, formRaw, idempotency_key: clientKey, device_id: deviceId } = parsed;
     const cfg = PLANOS[plano];
     if (!cfg) return jsonResponse({ error: "invalid_plano" }, 400);
 
-    const utm = (body.utm ?? {}) as Record<string, string | undefined>;
-    let affiliateRef = typeof body.affiliate_ref === "string" ? body.affiliate_ref : null;
-    const couponRaw = typeof body.coupon_code === "string" ? body.coupon_code.trim().toUpperCase() : "";
+    let affiliateRef = affiliateIn;
 
     const admin = createAdminClient();
 
@@ -53,13 +60,8 @@ Deno.serve(async (req) => {
 
     const amount = Math.max(1, Math.round(cfg.amount * (1 - discountPercent / 100) * 100) / 100);
 
-    const rawForm =
-      body.formData && typeof body.formData === "object"
-        ? (body.formData as Record<string, unknown>)
-        : (body as Record<string, unknown>);
-    const formData = pickMpPaymentFields(rawForm, cfg.maxInstallments);
+    const formData = pickMpPaymentFields(formRaw, cfg.maxInstallments);
 
-    const metaAttr = (body.meta ?? {}) as Record<string, string | undefined>;
     const clientUa = metaAttr.client_user_agent ?? req.headers.get("user-agent") ?? undefined;
     const clientIp = pickClientIpFromRequest(req, metaAttr.client_ip);
     const checkoutTime = Number(metaAttr.checkout_time) || Math.floor(Date.now() / 1000);
@@ -113,15 +115,12 @@ Deno.serve(async (req) => {
       paymentBody.date_of_expiration = new Date(Date.now() + 30 * 60 * 1000).toISOString();
     }
 
-    const clientKey = typeof body.idempotency_key === "string" ? body.idempotency_key : "";
     const janela = Math.floor(Date.now() / 120_000);
     const idempotencyKey = await buildIdempotencyKey(
       user.id,
       clientKey,
       `${plano}|${amount}|${couponCode ?? ""}|${janela}`,
     );
-
-    const deviceId = typeof body.device_id === "string" && body.device_id ? body.device_id : "";
 
     const mpRes = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
@@ -178,27 +177,14 @@ Deno.serve(async (req) => {
     );
 
     if (payment.status === "approved") {
-      await admin
-        .from("profiles")
-        .update({
-          assinante: true,
-          plano,
-          assinante_until: extenderAcesso(perfilAntes?.assinante_until, plano),
-          mp_payment_id: String(payment.id),
-          mp_payer_id: payment.payer?.id ? String(payment.payer.id) : null,
-          referred_by: affiliateRef,
-          paused_until: null,
-          pause_reason: null,
-          pause_used_at: null,
-          cancelled_at: null,
-          cancel_reason: null,
-        })
-        .eq("id", user.id);
-
-      await admin
-        .from("checkout_intents")
-        .update({ purchased_at: new Date().toISOString(), plano })
-        .eq("user_id", user.id);
+      await grantProAccess(admin, {
+        userId: user.id,
+        plano,
+        paymentId: String(payment.id),
+        payerId: payment.payer?.id ? String(payment.payer.id) : null,
+        referredBy: affiliateRef,
+        untilAtual: perfilAntes?.assinante_until,
+      });
 
       if (couponCode) {
         const { data: redeemed } = await admin.rpc("redeem_coupon", { p_code: couponCode });

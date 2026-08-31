@@ -47,15 +47,19 @@ export async function resolveSecret(
 
 /**
  * Gate para crons: `Authorization: Bearer <CRON_SECRET>`.
- * Sem secret no env nem no Vault a função recusa (fail-closed).
+ * Aceita o valor do Dashboard OU o do Vault (pg_net usa o Vault).
+ * Sem nenhum dos dois a função recusa (fail-closed).
  */
 export async function requireCronSecret(req: Request): Promise<Response | null> {
-  const expected = await resolveSecret("CRON_SECRET", "cron_secret");
-  if (!expected) return jsonResponse({ error: "CRON_SECRET not configured" }, 500);
+  const fromEnv = (Deno.env.get("CRON_SECRET") ?? "").trim();
+  const fromVault = (await readVaultSecret("cron_secret")).trim();
+  const candidates = [...new Set([fromEnv, fromVault].filter(Boolean))];
+  if (!candidates.length) return jsonResponse({ error: "CRON_SECRET not configured" }, 500);
   const auth = req.headers.get("Authorization") ?? "";
   const provided = auth.toLowerCase().startsWith("bearer ") ? auth.slice(7).trim() : "";
-  if (!provided || !(await secretsEqual(provided, expected))) {
-    return jsonResponse({ error: "Unauthorized" }, 401);
+  if (!provided) return jsonResponse({ error: "Unauthorized" }, 401);
+  for (const expected of candidates) {
+    if (await secretsEqual(provided, expected)) return null;
   }
-  return null;
+  return jsonResponse({ error: "Unauthorized" }, 401);
 }

@@ -7,7 +7,7 @@ import { ProgressRing } from "@/components/ProgressRing";
 import { Button } from "@/components/ui/button";
 import { CONQUISTAS } from "@/data/training";
 import { usePlayer } from "@/lib/player-store";
-import { diaBROffset, inicioSemanaBR } from "@/lib/date";
+import { diaBROffset } from "@/lib/date";
 import { supabase } from "@/integrations/supabase/client";
 import { cn, getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
@@ -15,8 +15,8 @@ import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { safeWrite } from "@/lib/supabase-write";
 import { patenteDe, xpTotal } from "@/lib/gamificacao";
 import { RankingLista } from "@/components/RankingLista";
-import { fetchRankingSemanal } from "@/lib/ranking";
 import { useAuth } from "@/lib/use-auth";
+import { useRankingSemanal } from "@/hooks/use-ranking-semanal";
 
 export const Route = createFileRoute("/progresso")({
   errorComponent: RouteError,
@@ -29,10 +29,6 @@ export const Route = createFileRoute("/progresso")({
   }),
   component: ProgressoPage,
 });
-
-function weekStartIso() {
-  return inicioSemanaBR();
-}
 
 type Score = {
   week_start: string;
@@ -71,18 +67,13 @@ function ProgressoPage() {
         .limit(12);
       if (error) {
         toast.error("Não deu para carregar os scores da semana");
-        throw error;
+        return [] as Score[];
       }
       return (rows ?? []) as Score[];
     },
   });
   const { user } = useAuth();
-  const { data: rankingRows = [] } = useQuery({
-    queryKey: ["ranking-semanal", weekStartIso()],
-    enabled: state.assinante,
-    staleTime: 60_000,
-    queryFn: () => fetchRankingSemanal(weekStartIso(), 20),
-  });
+  const { week, rows: rankingRows } = useRankingSemanal(state.assinante);
   const xp = xpTotal(state.sessoes);
   const patente = patenteDe(xp);
   const minhaPosicao = rankingRows.find((r) =>
@@ -117,7 +108,7 @@ function ProgressoPage() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-      const week_start = weekStartIso();
+      const week_start = week;
       const payload = { user_id: user.id, week_start, explosao, controle, resistencia, jogou };
       const ok = await safeWrite(
         "score da semana",

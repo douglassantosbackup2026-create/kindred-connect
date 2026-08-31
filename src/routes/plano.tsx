@@ -17,10 +17,17 @@ import { cn } from "@/lib/utils";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { useEsperaLiberacao } from "@/hooks/use-liberacao";
 import { posicaoPlano } from "@/lib/liberacao";
+import { requireAssinanteBeforeLoad } from "@/lib/route-guards";
 
 export const Route = createFileRoute("/plano")({
+  ssr: false,
   errorComponent: RouteError,
   notFoundComponent: RouteNotFound,
+  beforeLoad: () =>
+    requireAssinanteBeforeLoad({
+      from: "plano",
+      teaser: "Assine para ver a jornada guiada de 12 meses",
+    }),
   head: () => ({
     meta: [
       { title: "Jornada guiada de 12 meses — Jogador PRO System" },

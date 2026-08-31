@@ -44,3 +44,62 @@ export const setAdminRole = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true as const, role: data.role };
   });
+
+export type CheckoutD0Funil = {
+  started: number;
+  purchased: number;
+  purchasedRate: number;
+  d0: number;
+  d0Rate: number;
+};
+
+/** CheckoutStep (intent) → Pix aprovado → 1º treino no mesmo dia. Service role: RLS own-only. */
+export const fetchCheckoutD0Funil = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({}).parse(data ?? {}))
+  .handler(async ({ context }): Promise<CheckoutD0Funil> => {
+    await garantirAdmin(context.supabase);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const since = new Date();
+    since.setDate(since.getDate() - 7);
+    const iso7 = since.toISOString();
+
+    const { data: intents } = await supabaseAdmin
+      .from("checkout_intents")
+      .select("user_id, started_at, purchased_at")
+      .gte("started_at", iso7)
+      .limit(2000);
+
+    const started = intents?.length ?? 0;
+    const purchasedRows = (intents ?? []).filter((i) => i.purchased_at);
+    const purchased = purchasedRows.length;
+    const userIds = [...new Set(purchasedRows.map((i) => i.user_id))];
+    let d0 = 0;
+
+    if (userIds.length) {
+      const { data: sess } = await supabaseAdmin
+        .from("sessoes")
+        .select("user_id, created_at, data")
+        .in("user_id", userIds)
+        .limit(4000);
+      const byUser = new Map<string, number[]>();
+      for (const s of sess ?? []) {
+        const list = byUser.get(s.user_id) ?? [];
+        list.push(new Date(s.created_at || `${s.data}T12:00:00.000Z`).getTime());
+        byUser.set(s.user_id, list);
+      }
+      for (const row of purchasedRows) {
+        const payAt = new Date(row.purchased_at!).getTime();
+        const times = byUser.get(row.user_id) ?? [];
+        if (times.some((t) => t >= payAt && t <= payAt + 24 * 3600 * 1000)) d0 += 1;
+      }
+    }
+
+    return {
+      started,
+      purchased,
+      purchasedRate: started ? Math.round((purchased / started) * 100) : 0,
+      d0,
+      d0Rate: purchased ? Math.round((d0 / purchased) * 100) : 0,
+    };
+  });

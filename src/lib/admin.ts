@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { asPlanoAssinatura, type PlanoAssinatura } from "@/lib/acesso";
 
 export type AdminRole = "admin" | "user";
 
@@ -6,7 +7,7 @@ export type AdminUserRow = {
   id: string;
   nome: string;
   assinante: boolean;
-  plano: string | null;
+  plano: PlanoAssinatura | null;
   role: AdminRole;
   created_at: string;
   email?: string | null;
@@ -67,7 +68,7 @@ export async function fetchAdminStats() {
   since30.setDate(since30.getDate() - 30);
   const iso30 = since30.toISOString();
 
-  const [users, sessoes, payments, assinantes, pagamentos7, cancelados, clicks, cohortPayments] =
+  const [users, sessoes, payments, assinantes, pagamentos7, cancelados, clicks, cohortPayments, checkoutD0] =
     await Promise.all([
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("sessoes").select("id", { count: "exact", head: true }),
@@ -90,6 +91,9 @@ export async function fetchAdminStats() {
         .gte("created_at", iso30)
         .order("created_at", { ascending: true })
         .limit(500),
+      import("@/lib/admin.functions")
+        .then((m) => m.fetchCheckoutD0Funil({ data: {} }))
+        .catch(() => ({ started: 0, purchased: 0, purchasedRate: 0, d0: 0, d0Rate: 0 })),
     ]);
 
   const events7 = pagamentos7.data ?? [];
@@ -198,13 +202,24 @@ export async function fetchAdminStats() {
       d7Rate: elegivelD7 ? Math.round((d7Total / elegivelD7) * 100) : 0,
     },
     funilPorUtm,
+    checkoutD0: checkoutD0 ?? {
+      started: 0,
+      purchased: 0,
+      purchasedRate: 0,
+      d0: 0,
+      d0Rate: 0,
+    },
   };
 }
 
 export async function fetchAdminUsers(q = "") {
   const { searchAdminUsers } = await import("@/lib/admin.functions");
   const rows = await searchAdminUsers({ data: { q } });
-  return (rows ?? []) as AdminUserRow[];
+  return (rows ?? []).map((r) => ({
+    ...r,
+    plano: asPlanoAssinatura(r.plano),
+    role: r.role === "admin" ? ("admin" as const) : ("user" as const),
+  }));
 }
 
 export async function fetchAdminSessoes() {
@@ -245,7 +260,7 @@ export function exportFunilCsv(rows: FunilUtmRow[]) {
 
 export async function updateAdminUser(
   id: string,
-  patch: { assinante?: boolean; plano?: string | null; nome?: string },
+  patch: { assinante?: boolean; plano?: PlanoAssinatura | null; nome?: string },
 ) {
   const { error } = await supabase.from("profiles").update(patch).eq("id", id);
   if (error) throw error;
