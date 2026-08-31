@@ -2,10 +2,11 @@ import { Clock, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CAMPANHA } from "@/data/campanha-copy";
 import { TREINOS } from "@/data/training";
+import { ExerciseMotion } from "@/components/ExerciseMotion";
+import { motionDaCapa } from "@/data/exercise-motions";
 
 /** Cards com treinos reais do catálogo — prova de conteúdo antes do preço. */
 export function PreviewTreinos({ onCta }: { onCta: () => void }) {
-  const imagens = CAMPANHA.preview.imagens;
   const treinos = CAMPANHA.preview.ids
     .map((id) => TREINOS.find((t) => t.id === id))
     .filter((t): t is (typeof TREINOS)[number] => Boolean(t));
@@ -13,22 +14,20 @@ export function PreviewTreinos({ onCta }: { onCta: () => void }) {
   return (
     <>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {treinos.map((treino, i) => (
+        {treinos.map((treino) => (
           <article
             key={treino.id}
             className="overflow-hidden rounded-2xl border border-border/60 bg-card/70 shadow-soft"
           >
             <div className="relative aspect-video overflow-hidden bg-background/60">
-              <img
-                src={imagens[i % imagens.length]}
-                alt={`Treino ${treino.nome}`}
-                loading="lazy"
-                width={640}
-                height={360}
-                decoding="async"
-                className="h-full w-full object-cover opacity-80"
+              <ExerciseMotion
+                motionId={motionDaCapa(treino.id)}
+                nome={treino.nome}
+                demo={treino.exercicios[0]?.demo ?? "cardio"}
+                compact
+                className="rounded-none border-0"
               />
-              <span className="absolute inset-0 flex items-center justify-center">
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <PlayCircle className="h-9 w-9 text-primary drop-shadow" />
               </span>
               <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">
@@ -51,7 +50,11 @@ export function PreviewTreinos({ onCta }: { onCta: () => void }) {
         ))}
       </div>
       <div className="mt-8">
-        <Button size="lg" className="h-14 w-full text-base font-extrabold sm:w-auto sm:min-w-[260px]" onClick={onCta}>
+        <Button
+          size="lg"
+          className="h-14 w-full text-base font-extrabold sm:w-auto sm:min-w-[260px]"
+          onClick={onCta}
+        >
           {CAMPANHA.preview.cta}
         </Button>
       </div>

@@ -168,3 +168,838 @@
     box-shadow: var(--shadow-soft-lg);
   }
 }
+
+/* Loops ilustrados de exercício (substituto leve de GIF). */
+.exm-stage,
+.exm-travel {
+  transform-box: fill-box;
+  transform-origin: 0 0;
+}
+.exm-athlete,
+.exm-torso,
+.exm-head,
+.exm-arm-l,
+.exm-arm-r,
+.exm-leg-l,
+.exm-leg-r,
+.exm-shin-l,
+.exm-shin-r,
+.exm-ball {
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+.exm-leg-l,
+.exm-leg-r {
+  transform-origin: center top;
+}
+.exm-arm-l,
+.exm-arm-r {
+  transform-origin: center top;
+}
+.exm-athlete {
+  transform-origin: center bottom;
+}
+.exm-pose-stand {
+  transform: translate(200px, 112px);
+}
+.exm-pose-plank {
+  transform: translate(200px, 150px) rotate(-90deg);
+}
+.exm-pose-side {
+  transform: translate(200px, 148px) rotate(-90deg);
+}
+.exm-pose-back {
+  transform: translate(200px, 168px) rotate(90deg);
+}
+.exm-pose-prone {
+  transform: translate(200px, 168px) rotate(-90deg);
+}
+.exm-flip {
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+.exm[data-motion="hip_mobility"] .exm-leg-l {
+  animation: exm-hip 1.8s ease-in-out infinite;
+}
+.exm[data-motion="hip_mobility"] .exm-torso {
+  animation: exm-sway 1.8s ease-in-out infinite;
+}
+.exm[data-motion="squat"] .exm-athlete {
+  animation: exm-squat-body 1.5s ease-in-out infinite;
+}
+.exm[data-motion="squat"] .exm-leg-l,
+.exm[data-motion="squat"] .exm-leg-r {
+  animation: exm-squat-legs 1.5s ease-in-out infinite;
+}
+.exm[data-motion="squat_jump"] .exm-athlete {
+  animation: exm-squat-jump 1.2s ease-in-out infinite;
+}
+.exm[data-motion="bulgarian"] .exm-athlete {
+  animation: exm-squat-body 1.7s ease-in-out infinite;
+}
+.exm[data-motion="bulgarian"] .exm-leg-r {
+  animation: exm-bulgarian-back 1.7s ease-in-out infinite;
+}
+.exm[data-motion="lunge"] .exm-leg-l {
+  animation: exm-lunge-front 1.6s ease-in-out infinite;
+}
+.exm[data-motion="lunge"] .exm-leg-r {
+  animation: exm-lunge-back 1.6s ease-in-out infinite;
+}
+.exm[data-motion="lunge"] .exm-athlete {
+  animation: exm-lunge-body 1.6s ease-in-out infinite;
+}
+.exm[data-motion="lunge_jump"] .exm-athlete {
+  animation: exm-lunge-jump 1.1s ease-in-out infinite;
+}
+.exm[data-motion="lunge_jump"] .exm-leg-l {
+  animation: exm-lunge-front 1.1s ease-in-out infinite;
+}
+.exm[data-motion="calf_raise"] .exm-athlete {
+  animation: exm-calf 1.1s ease-in-out infinite;
+}
+.exm[data-motion="glute_bridge"] .exm-athlete {
+  animation: exm-bridge 1.6s ease-in-out infinite;
+}
+.exm[data-motion="wall_sit"] .exm-athlete {
+  animation: exm-hold 2.4s ease-in-out infinite;
+}
+.exm[data-motion="plank"] .exm-athlete,
+.exm[data-motion="plank"] .exm-torso {
+  animation: exm-plank-pulse 2s ease-in-out infinite;
+}
+.exm[data-motion="side_plank"] .exm-athlete,
+.exm[data-motion="side_plank_left"] .exm-athlete {
+  animation: exm-plank-pulse 2.2s ease-in-out infinite;
+}
+.exm[data-motion="plank_tap"] .exm-arm-r {
+  animation: exm-tap 1.1s ease-in-out infinite;
+}
+.exm[data-motion="plank_tap"] .exm-torso {
+  animation: exm-plank-pulse 1.1s ease-in-out infinite;
+}
+.exm[data-motion="dynamic_plank"] .exm-leg-l {
+  animation: exm-knee-in 0.9s ease-in-out infinite;
+}
+.exm[data-motion="rower"] .exm-torso {
+  animation: exm-rower 1.4s ease-in-out infinite;
+}
+.exm[data-motion="rower"] .exm-leg-l,
+.exm[data-motion="rower"] .exm-leg-r {
+  animation: exm-rower-legs 1.4s ease-in-out infinite;
+}
+.exm[data-motion="lower_abs"] .exm-leg-l,
+.exm[data-motion="lower_abs"] .exm-leg-r {
+  animation: exm-leg-raise 1.5s ease-in-out infinite;
+}
+.exm[data-motion="superman"] .exm-arm-l,
+.exm[data-motion="superman"] .exm-arm-r,
+.exm[data-motion="superman"] .exm-leg-l,
+.exm[data-motion="superman"] .exm-leg-r {
+  animation: exm-superman 1.8s ease-in-out infinite;
+}
+.exm[data-motion="jog"] .exm-athlete {
+  animation: exm-bounce 0.45s ease-in-out infinite;
+}
+.exm[data-motion="jog"] .exm-leg-l {
+  animation: exm-run-l 0.45s ease-in-out infinite;
+}
+.exm[data-motion="jog"] .exm-leg-r {
+  animation: exm-run-r 0.45s ease-in-out infinite;
+}
+.exm[data-motion="jog"] .exm-arm-l {
+  animation: exm-run-r 0.45s ease-in-out infinite;
+}
+.exm[data-motion="jog"] .exm-arm-r {
+  animation: exm-run-l 0.45s ease-in-out infinite;
+}
+.exm[data-motion="high_knees"] .exm-athlete {
+  animation: exm-bounce 0.32s ease-in-out infinite;
+}
+.exm[data-motion="high_knees"] .exm-leg-l {
+  animation: exm-knees-l 0.32s ease-in-out infinite;
+}
+.exm[data-motion="high_knees"] .exm-leg-r {
+  animation: exm-knees-r 0.32s ease-in-out infinite;
+}
+.exm[data-motion="jumping_jack"] .exm-arm-l {
+  animation: exm-jack-arm-l 0.7s ease-in-out infinite;
+}
+.exm[data-motion="jumping_jack"] .exm-arm-r {
+  animation: exm-jack-arm-r 0.7s ease-in-out infinite;
+}
+.exm[data-motion="jumping_jack"] .exm-leg-l {
+  animation: exm-jack-leg-l 0.7s ease-in-out infinite;
+}
+.exm[data-motion="jumping_jack"] .exm-leg-r {
+  animation: exm-jack-leg-r 0.7s ease-in-out infinite;
+}
+.exm[data-motion="jumping_jack"] .exm-athlete {
+  animation: exm-bounce 0.7s ease-in-out infinite;
+}
+.exm[data-motion="sprint"] .exm-athlete {
+  animation: exm-bounce 0.22s ease-in-out infinite;
+}
+.exm[data-motion="sprint"] .exm-leg-l {
+  animation: exm-run-l 0.22s ease-in-out infinite;
+}
+.exm[data-motion="sprint"] .exm-leg-r {
+  animation: exm-run-r 0.22s ease-in-out infinite;
+}
+.exm[data-motion="sprint"] .exm-arm-l {
+  animation: exm-run-r 0.22s ease-in-out infinite;
+}
+.exm[data-motion="sprint"] .exm-arm-r {
+  animation: exm-run-l 0.22s ease-in-out infinite;
+}
+.exm[data-motion="shuttle"] .exm-travel {
+  animation: exm-shuttle 1.4s ease-in-out infinite;
+}
+.exm[data-motion="shuttle"] .exm-leg-l {
+  animation: exm-run-l 0.35s ease-in-out infinite;
+}
+.exm[data-motion="shuttle"] .exm-leg-r {
+  animation: exm-run-r 0.35s ease-in-out infinite;
+}
+.exm[data-motion="lateral_skip"] .exm-travel {
+  animation: exm-lateral 0.8s ease-in-out infinite;
+}
+.exm[data-motion="lateral_skip"] .exm-leg-l {
+  animation: exm-knees-l 0.4s ease-in-out infinite;
+}
+.exm[data-motion="walk"] .exm-leg-l {
+  animation: exm-run-l 0.9s ease-in-out infinite;
+}
+.exm[data-motion="walk"] .exm-leg-r {
+  animation: exm-run-r 0.9s ease-in-out infinite;
+}
+.exm[data-motion="walk"] .exm-arm-l {
+  animation: exm-run-r 0.9s ease-in-out infinite;
+}
+.exm[data-motion="walk"] .exm-arm-r {
+  animation: exm-run-l 0.9s ease-in-out infinite;
+}
+.exm[data-motion="breathing"] .exm-torso {
+  animation: exm-breathe 2.4s ease-in-out infinite;
+}
+.exm[data-motion="breathing"] .exm-head {
+  animation: exm-breathe-head 2.4s ease-in-out infinite;
+}
+.exm[data-motion="posterior_stretch"] .exm-torso {
+  animation: exm-fold 2.2s ease-in-out infinite;
+}
+.exm[data-motion="shoulder_mobility"] .exm-arm-r {
+  animation: exm-arm-circle 1.6s linear infinite;
+}
+.exm[data-motion="shoulder_mobility"] .exm-arm-l {
+  animation: exm-arm-circle 1.6s linear infinite reverse;
+}
+.exm[data-motion="warmup_dynamic"] .exm-leg-l {
+  animation: exm-hip 1.2s ease-in-out infinite;
+}
+.exm[data-motion="warmup_dynamic"] .exm-arm-r {
+  animation: exm-arm-swing 1.2s ease-in-out infinite;
+}
+.exm[data-motion="ball_taps"] .exm-leg-r {
+  animation: exm-tap-foot 0.55s ease-in-out infinite;
+}
+.exm[data-motion="ball_taps"] .exm-ball {
+  animation: exm-ball-tap 0.55s ease-in-out infinite;
+}
+.exm[data-motion="sole_rolls"] .exm-ball {
+  animation: exm-ball-roll 0.9s ease-in-out infinite;
+}
+.exm[data-motion="sole_rolls"] .exm-leg-r {
+  animation: exm-sole 0.9s ease-in-out infinite;
+}
+.exm[data-motion="zigzag_dribble"] .exm-travel {
+  animation: exm-dribble-path 1.6s ease-in-out infinite;
+}
+.exm[data-motion="zigzag_dribble"] .exm-ball {
+  animation: exm-ball-dribble 0.4s ease-in-out infinite;
+}
+.exm[data-motion="zigzag_dribble"] .exm-leg-l {
+  animation: exm-run-l 0.4s ease-in-out infinite;
+}
+.exm[data-motion="zigzag_dribble"] .exm-leg-r {
+  animation: exm-run-r 0.4s ease-in-out infinite;
+}
+.exm[data-motion="wall_control"] .exm-ball {
+  animation: exm-ball-wall 1.2s ease-in-out infinite;
+}
+.exm[data-motion="wall_control"] .exm-leg-r {
+  animation: exm-pass-kick 1.2s ease-in-out infinite;
+}
+.exm[data-motion="pass"] .exm-leg-r {
+  animation: exm-pass-kick 0.9s ease-in-out infinite;
+}
+.exm[data-motion="pass"] .exm-ball {
+  animation: exm-ball-pass 0.9s ease-in-out infinite;
+}
+.exm[data-motion="finish"] .exm-leg-r {
+  animation: exm-shot 1s ease-in-out infinite;
+}
+.exm[data-motion="finish"] .exm-ball {
+  animation: exm-ball-shot 1s ease-in-out infinite;
+}
+.exm[data-motion="finish"] .exm-torso {
+  animation: exm-shot-lean 1s ease-in-out infinite;
+}
+.exm[data-motion="cut_45"] .exm-travel {
+  animation: exm-cut 1.1s ease-in-out infinite;
+}
+.exm[data-motion="gk_dive"] .exm-athlete {
+  animation: exm-dive 1.5s ease-in-out infinite;
+}
+.exm[data-motion="jump_land"] .exm-athlete {
+  animation: exm-jump-land 1.15s ease-in-out infinite;
+}
+.exm[data-motion="box_jump"] .exm-athlete {
+  animation: exm-box-jump 1.3s ease-in-out infinite;
+}
+.exm[data-motion="lateral_jump"] .exm-travel {
+  animation: exm-lat-jump 0.85s ease-in-out infinite;
+}
+.exm[data-motion="lateral_jump"] .exm-athlete {
+  animation: exm-bounce 0.85s ease-in-out infinite;
+}
+
+@keyframes exm-hip {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-42deg);
+  }
+}
+@keyframes exm-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+@keyframes exm-squat-body {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+}
+@keyframes exm-squat-legs {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.72);
+  }
+}
+@keyframes exm-squat-jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(16px);
+  }
+  55% {
+    transform: translateY(-34px);
+  }
+  75% {
+    transform: translateY(6px);
+  }
+}
+@keyframes exm-bulgarian-back {
+  0%,
+  100% {
+    transform: rotate(28deg) translate(8px, -4px);
+  }
+  50% {
+    transform: rotate(38deg) translate(10px, 6px);
+  }
+}
+@keyframes exm-lunge-front {
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+  50% {
+    transform: rotate(-32deg);
+  }
+}
+@keyframes exm-lunge-back {
+  0%,
+  100% {
+    transform: rotate(22deg);
+  }
+  50% {
+    transform: rotate(34deg);
+  }
+}
+@keyframes exm-lunge-body {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-12px, 12px);
+  }
+}
+@keyframes exm-lunge-jump {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(-10px, 14px);
+  }
+  60% {
+    transform: translate(0, -26px);
+  }
+}
+@keyframes exm-calf {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes exm-bridge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+@keyframes exm-hold {
+  0%,
+  100% {
+    transform: translateY(16px) scaleY(0.82);
+  }
+  50% {
+    transform: translateY(18px) scaleY(0.8);
+  }
+}
+@keyframes exm-plank-pulse {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+@keyframes exm-tap {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-70deg) translate(6px, -8px);
+  }
+}
+@keyframes exm-knee-in {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-55deg);
+  }
+}
+@keyframes exm-rower {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-28deg);
+  }
+}
+@keyframes exm-rower-legs {
+  0%,
+  100% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-20deg);
+  }
+}
+@keyframes exm-leg-raise {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-50deg);
+  }
+}
+@keyframes exm-superman {
+  0%,
+  100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+@keyframes exm-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes exm-run-l {
+  0%,
+  100% {
+    transform: rotate(28deg);
+  }
+  50% {
+    transform: rotate(-32deg);
+  }
+}
+@keyframes exm-run-r {
+  0%,
+  100% {
+    transform: rotate(-28deg);
+  }
+  50% {
+    transform: rotate(32deg);
+  }
+}
+@keyframes exm-knees-l {
+  0%,
+  100% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(-55deg);
+  }
+}
+@keyframes exm-knees-r {
+  0%,
+  100% {
+    transform: rotate(-55deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes exm-jack-arm-l {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(110deg);
+  }
+}
+@keyframes exm-jack-arm-r {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-110deg);
+  }
+}
+@keyframes exm-jack-leg-l {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-28deg);
+  }
+}
+@keyframes exm-jack-leg-r {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(28deg);
+  }
+}
+@keyframes exm-shuttle {
+  0%,
+  100% {
+    transform: translateX(-48px);
+  }
+  50% {
+    transform: translateX(48px);
+  }
+}
+@keyframes exm-lateral {
+  0%,
+  100% {
+    transform: translateX(-20px);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+}
+@keyframes exm-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.12);
+  }
+}
+@keyframes exm-breathe-head {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes exm-fold {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(52deg);
+  }
+}
+@keyframes exm-arm-circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes exm-arm-swing {
+  0%,
+  100% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-80deg);
+  }
+}
+@keyframes exm-tap-foot {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-25deg);
+  }
+}
+@keyframes exm-ball-tap {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-6px, -16px);
+  }
+}
+@keyframes exm-ball-roll {
+  0%,
+  100% {
+    transform: translate(-10px, 0);
+  }
+  50% {
+    transform: translate(12px, 0);
+  }
+}
+@keyframes exm-sole {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes exm-dribble-path {
+  0%,
+  100% {
+    transform: translate(-36px, 0);
+  }
+  25% {
+    transform: translate(0, -8px);
+  }
+  50% {
+    transform: translate(36px, 0);
+  }
+  75% {
+    transform: translate(0, -8px);
+  }
+}
+@keyframes exm-ball-dribble {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4px, -10px);
+  }
+}
+@keyframes exm-ball-wall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(92px, -28px);
+  }
+}
+@keyframes exm-pass-kick {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-40deg);
+  }
+}
+@keyframes exm-ball-pass {
+  0%,
+  25% {
+    transform: translate(0, 0);
+  }
+  70% {
+    transform: translate(110px, -18px);
+  }
+  100% {
+    transform: translate(110px, -18px);
+  }
+}
+@keyframes exm-shot {
+  0%,
+  25% {
+    transform: rotate(12deg);
+  }
+  45% {
+    transform: rotate(-50deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes exm-ball-shot {
+  0%,
+  40% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(80px, -70px);
+  }
+}
+@keyframes exm-shot-lean {
+  0%,
+  40% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes exm-cut {
+  0% {
+    transform: translateX(-30px) rotate(0deg);
+  }
+  45% {
+    transform: translateX(10px) rotate(0deg);
+  }
+  60% {
+    transform: translateX(8px) rotate(-25deg);
+  }
+  100% {
+    transform: translateX(40px) rotate(-8deg);
+  }
+}
+@keyframes exm-dive {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  45% {
+    transform: translate(68px, 38px) rotate(70deg);
+  }
+  70% {
+    transform: translate(68px, 38px) rotate(70deg);
+  }
+}
+@keyframes exm-jump-land {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(14px);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  70% {
+    transform: translateY(6px);
+  }
+}
+@keyframes exm-box-jump {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(0, 16px);
+  }
+  50% {
+    transform: translate(28px, -42px);
+  }
+  70% {
+    transform: translate(48px, -26px);
+  }
+}
+@keyframes exm-lat-jump {
+  0%,
+  100% {
+    transform: translateX(-28px);
+  }
+  50% {
+    transform: translateX(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exm .exm-athlete,
+  .exm .exm-torso,
+  .exm .exm-head,
+  .exm .exm-arm-l,
+  .exm .exm-arm-r,
+  .exm .exm-leg-l,
+  .exm .exm-leg-r,
+  .exm .exm-shin-l,
+  .exm .exm-shin-r,
+  .exm .exm-ball,
+  .exm .exm-stage,
+  .exm .exm-travel {
+    animation: none !important;
+  }
+}

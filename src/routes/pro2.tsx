@@ -44,7 +44,7 @@ function Pro2Page() {
       return;
     }
     if (logado && !state.assinante) {
-      void navigate({ to: "/checkout", search: { from: "pro", ...search }, replace: true });
+      void navigate({ to: "/checkout", search: { from: "pro2", ...search }, replace: true });
       return;
     }
     if (search.checkout === "1") {

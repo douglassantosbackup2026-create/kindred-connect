@@ -5,22 +5,26 @@ import { BotaoSair } from "@/components/BotaoSair";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { to: "/app", label: "Home", icon: Home },
-  { to: "/plano", label: "Plano", icon: CalendarDays },
-  { to: "/biblioteca", label: "Treinos", icon: Dumbbell },
-  { to: "/progresso", label: "Evolução", icon: TrendingUp },
-  { to: "/perfil", label: "Perfil", icon: User, badgeKey: "perfil" as const },
+  { to: "/app", label: "Home", icon: Home, always: true },
+  { to: "/plano", label: "Plano", icon: CalendarDays, minTreinos: 3 },
+  { to: "/biblioteca", label: "Extras", icon: Dumbbell, minTreinos: 3 },
+  { to: "/progresso", label: "Evolução", icon: TrendingUp, always: true },
+  { to: "/perfil", label: "Perfil", icon: User, badgeKey: "perfil" as const, always: true },
 ] as const;
 
-
 function NavLinks({ orientation }: { orientation: "horizontal" | "vertical" }) {
-  const { logado, assinante } = usePlayerNav();
+  const { logado, assinante, totalTreinos } = usePlayerNav();
   const showPerfilBadge = !logado || !assinante;
   const vertical = orientation === "vertical";
+  const visiveis = items.filter((item) =>
+    "always" in item && item.always
+      ? true
+      : totalTreinos >= ("minTreinos" in item ? item.minTreinos : 0),
+  );
 
   return (
     <>
-      {items.map(({ to, label, icon: Icon, ...rest }) => {
+      {visiveis.map(({ to, label, icon: Icon, ...rest }) => {
         const badge = "badgeKey" in rest && rest.badgeKey === "perfil" && showPerfilBadge;
         return (
           <Link
@@ -44,7 +48,10 @@ function NavLinks({ orientation }: { orientation: "horizontal" | "vertical" }) {
             <span className="relative">
               <Icon className="h-5 w-5" />
               {badge ? (
-                <span className="absolute -right-1 -top-0.5 h-2 w-2 rounded-full bg-primary" aria-hidden />
+                <span
+                  className="absolute -right-1 -top-0.5 h-2 w-2 rounded-full bg-primary"
+                  aria-hidden
+                />
               ) : null}
             </span>
             {label}
@@ -69,7 +76,9 @@ export function BottomNav() {
       {/* Desktop */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-sidebar-border bg-sidebar px-4 py-6 shadow-soft md:flex">
         <div className="mb-8 px-2">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Jogador PRO</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+            Jogador PRO
+          </p>
           <p className="mt-1 text-sm font-semibold text-foreground">System</p>
         </div>
         <nav className="flex flex-1 flex-col gap-1 pl-1">

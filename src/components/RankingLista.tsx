@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type RankingRow = {
+  userId?: string;
   nome: string;
   treinos: number;
   minutos: number;
@@ -14,16 +15,25 @@ export type RankingRow = {
 export function RankingLista({
   rows,
   meuNome,
+  meuUserId,
   emptyCta,
 }: {
   rows: RankingRow[];
-  meuNome?: string;
-  emptyCta?: { to: "/treino/$treinoId"; params: { treinoId: string }; search: { plano: string }; label: string } | null;
+  meuNome?: string | undefined;
+  meuUserId?: string | undefined;
+  emptyCta?: {
+    to: "/treino/$treinoId";
+    params: { treinoId: string };
+    search: { plano: string };
+    label: string;
+  } | null;
 }) {
   if (rows.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center">
-        <p className="text-sm text-muted-foreground">Ainda sem entradas esta semana. Complete um treino para entrar na liga.</p>
+        <p className="text-sm text-muted-foreground">
+          Ainda sem entradas esta semana. Complete um treino para entrar na liga.
+        </p>
         {emptyCta ? (
           <Button asChild className="mt-4 w-full font-extrabold">
             <Link to={emptyCta.to} params={emptyCta.params} search={emptyCta.search}>
@@ -38,10 +48,13 @@ export function RankingLista({
   return (
     <ul className="space-y-2">
       {rows.map((r) => {
-        const eu = Boolean(meuNome && r.nome === meuNome);
+        const eu = Boolean(
+          (meuUserId && r.userId && r.userId === meuUserId) ||
+          (!meuUserId && meuNome && r.nome === meuNome),
+        );
         return (
           <li
-            key={`${r.posicao}-${r.nome}`}
+            key={`${r.userId ?? r.nome}-${r.posicao}`}
             className={cn(
               "flex items-center justify-between rounded-2xl border px-4 py-3 shadow-soft",
               eu ? "border-primary/40 bg-primary/10" : "border-border/60 bg-card",

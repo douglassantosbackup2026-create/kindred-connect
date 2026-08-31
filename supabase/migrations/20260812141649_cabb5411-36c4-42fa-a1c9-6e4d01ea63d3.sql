@@ -1,1 +1,0 @@
-UPDATE public.profiles SET role = 'admin', updated_at = now() WHERE id = '69714b2e-d47f-494d-9efb-e8c12ce5f5a4';

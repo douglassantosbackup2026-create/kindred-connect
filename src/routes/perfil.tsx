@@ -12,10 +12,7 @@ import { cn, getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 import { diaBROffset } from "@/lib/date";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
-import {
-  enviarSugestaoAnonima,
-  enviarSugestaoLogado,
-} from "@/lib/sugestoes.functions";
+import { enviarSugestaoAnonima, enviarSugestaoLogado } from "@/lib/sugestoes.functions";
 import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/perfil")({
@@ -24,7 +21,10 @@ export const Route = createFileRoute("/perfil")({
   head: () => ({
     meta: [
       { title: "Perfil do jogador — Jogador PRO System" },
-      { name: "description", content: "Seu nome, nível atual, plano ativo e preferências da conta." },
+      {
+        name: "description",
+        content: "Seu nome, nível atual, plano ativo e preferências da conta.",
+      },
       { property: "og:title", content: "Perfil do jogador" },
       { property: "og:description", content: "Gerencie seu nível, plano e dados de treino." },
     ],
@@ -57,6 +57,7 @@ function PerfilPage() {
     isAdmin,
     treinoDeHoje,
     proximoPlano,
+    setReminderHour,
   } = usePlayer();
   const [mostrarCancel, setMostrarCancel] = useState(false);
   const [motivo, setMotivo] = useState<string | null>(null);
@@ -135,7 +136,9 @@ function PerfilPage() {
           className="mb-4 flex items-center justify-between rounded-[1.25rem] border border-primary/30 bg-primary/10 px-4 py-3 shadow-soft"
         >
           <span>
-            <span className="block text-sm font-extrabold text-foreground">Treino de hoje ainda aberto</span>
+            <span className="block text-sm font-extrabold text-foreground">
+              Treino de hoje ainda aberto
+            </span>
             <span className="block text-xs text-muted-foreground">{treinoDeHoje.nome}</span>
           </span>
         </Link>
@@ -156,7 +159,8 @@ function PerfilPage() {
         ) : (
           <>
             <p className="mt-2 text-xs text-muted-foreground">
-              Você está como visitante. Crie sua conta para sincronizar treinos e streak em qualquer aparelho.
+              Você está como visitante. Crie sua conta para sincronizar treinos e streak em qualquer
+              aparelho.
             </p>
             <Button asChild className="mt-4 h-12 w-full font-extrabold">
               <Link to="/auth" search={{}}>
@@ -171,12 +175,15 @@ function PerfilPage() {
         <Label htmlFor="nome" className="text-xs uppercase tracking-widest text-muted-foreground">
           Seu nome
         </Label>
-        <Input id="nome" value={state.nome} onChange={(e) => setNome(e.target.value)} className="mt-2" />
+        <Input
+          id="nome"
+          value={state.nome}
+          onChange={(e) => setNome(e.target.value)}
+          className="mt-2"
+        />
       </section>
 
       <SomToggle />
-
-
 
       <section className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Assinatura</p>
@@ -189,8 +196,8 @@ function PerfilPage() {
           </p>
         ) : null}
         <p className="mt-2 text-xs text-muted-foreground">
-          Garantia de 14 dias: peça o reembolso pelo e-mail da conta ou pelo suporte. Cancelamento sem multa — o
-          acesso vale até o fim do período pago.
+          Garantia de 14 dias: peça o reembolso pelo e-mail da conta ou pelo suporte. Cancelamento
+          sem multa — o acesso vale até o fim do período pago.
         </p>
         {isPaused && pauseLabel ? (
           <div className="mt-3 rounded-xl border border-primary/30 bg-primary/10 p-3">
@@ -222,7 +229,11 @@ function PerfilPage() {
 
         {state.assinante ? (
           !mostrarCancel ? (
-            <Button variant="outline" className="mt-4 w-full" onClick={() => setMostrarCancel(true)}>
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={() => setMostrarCancel(true)}
+            >
               Cancelar assinatura
             </Button>
           ) : (
@@ -257,7 +268,9 @@ function PerfilPage() {
                   onClick={() => {
                     setMostrarCancel(false);
                     setMotivo(null);
-                    toast.success("Boa escolha", { description: "Sua assinatura PRO segue ativa." });
+                    toast.success("Boa escolha", {
+                      description: "Sua assinatura PRO segue ativa.",
+                    });
                   }}
                 >
                   Manter PRO
@@ -301,48 +314,80 @@ function PerfilPage() {
       </section>
 
       <section className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">Lembrete de streak</p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Avisamos neste aparelho por volta das 20h se o app estiver aberto. O e-mail de streak também sai no horário
-          do lembrete, mesmo com o app fechado.
+        <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          Lembrete de streak
         </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          O e-mail sai no horário escolhido, mesmo com o app fechado. Neste aparelho, o aviso local
+          dispara na mesma hora se o app estiver aberto.
+        </p>
+        <div className="mt-4 grid grid-cols-5 gap-2">
+          {[18, 19, 20, 21, 22].map((h) => (
+            <button
+              key={h}
+              type="button"
+              onClick={() => {
+                setReminderHour(h);
+                toast.success(`Lembrete às ${h}h`);
+              }}
+              className={cn(
+                "rounded-xl border px-2 py-2.5 text-sm font-extrabold",
+                state.reminderHour === h
+                  ? "border-primary bg-primary/10 text-foreground"
+                  : "border-border/60 bg-secondary/50 text-muted-foreground",
+              )}
+            >
+              {h}h
+            </button>
+          ))}
+        </div>
         <Button
           variant="outline"
           className="mt-4 w-full"
           onClick={() => {
             void requestStreakReminderPermission().then((perm) => {
               if (perm === "granted") {
-                scheduleStreakReminder(state.nome, streak);
+                scheduleStreakReminder(state.nome, streak, state.reminderHour);
                 toast.success("Lembrete neste aparelho ativado", {
-                  description: "Avisamos por volta das 20h se o app estiver aberto.",
+                  description: `Avisamos por volta das ${state.reminderHour}h se o app estiver aberto.`,
                 });
               } else if (perm === "denied") {
                 toast.error("Notificações bloqueadas no navegador");
               } else {
-                toast.message("Neste aparelho não há notificação local — o e-mail de streak continua valendo.");
+                toast.message(
+                  "Neste aparelho não há notificação local — o e-mail de streak continua valendo.",
+                );
               }
             });
           }}
         >
-          Ativar lembrete
+          Ativar aviso neste aparelho
         </Button>
       </section>
       <SugestoesSection nome={state.nome} email={email} logado={logado} />
 
       <section className="mt-4 rounded-[1.5rem] border border-destructive/25 bg-card p-5 shadow-soft">
-        <p className="text-xs font-bold uppercase tracking-widest text-destructive">Zona de perigo</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-destructive">
+          Zona de perigo
+        </p>
         <p className="mt-2 text-xs text-muted-foreground">
           {logado
             ? "Zerar apaga o progresso local deste aparelho. O histórico na nuvem pode permanecer."
             : "Zerar apaga streak, treinos e dados salvos neste dispositivo. Não dá para desfazer."}
         </p>
         {!confirmReset ? (
-          <Button variant="ghost" className="mt-3 w-full text-destructive" onClick={() => setConfirmReset(true)}>
+          <Button
+            variant="ghost"
+            className="mt-3 w-full text-destructive"
+            onClick={() => setConfirmReset(true)}
+          >
             Zerar progresso
           </Button>
         ) : (
           <div className="mt-3 space-y-2">
-            <p className="text-xs font-semibold text-destructive">Tem certeza? Isso não pode ser desfeito.</p>
+            <p className="text-xs font-semibold text-destructive">
+              Tem certeza? Isso não pode ser desfeito.
+            </p>
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={() => setConfirmReset(false)}>
                 Voltar
@@ -386,7 +431,9 @@ function SomToggle() {
     <section className="mt-4 flex items-center justify-between gap-3 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
       <div>
         <p className="text-sm font-bold text-foreground">Som de conclusão</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">Efeito sonoro ao finalizar um treino.</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          Efeito sonoro ao finalizar um treino.
+        </p>
       </div>
       <Button type="button" variant={mudo ? "outline" : "default"} onClick={alternar}>
         {mudo ? "Ativar" : "Desativar"}

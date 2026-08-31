@@ -14,9 +14,11 @@ import { toast } from "sonner";
 import { requestStreakReminderPermission, scheduleStreakReminder } from "@/lib/streak-reminder";
 import { shareProgress } from "@/lib/share-progress";
 import { useTreinoVideos } from "@/lib/treino-videos";
+import { motionDaCapa } from "@/data/exercise-motions";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { Confetti, CountUp, LevelBar, playSuccessSound } from "@/components/RewardBurst";
 import { patenteDe, xpDoTreino, xpTotal } from "@/lib/gamificacao";
+import { treinoRapido } from "@/lib/recommendations";
 import { getErrorMessage } from "@/lib/utils";
 
 
@@ -340,7 +342,7 @@ function TreinoPage() {
     setConcluido(true);
     playSuccessSound();
     void requestStreakReminderPermission().then((perm) => {
-      if (perm === "granted") scheduleStreakReminder(state.nome, Math.max(streak, 1));
+      if (perm === "granted") scheduleStreakReminder(state.nome, Math.max(streak, 1), state.reminderHour);
     });
 
   };
@@ -379,8 +381,9 @@ function TreinoPage() {
     const next = proximoPlano;
     const isFirst = totalTreinos <= 1;
     const streakNow = Math.max(streak, 1);
-    const showShare = streakNow >= 7 || plano === "2-5";
+    const showShare = !isFirst && (streakNow >= 7 || plano === "2-5");
     const shareMilestone = plano === "2-5" ? "semana2" : streakNow >= 7 ? "streak7" : "geral";
+    const extraRapido = treinoRapido(state.objetivo, state.posicao, treino.id);
     const xpGanho = xpDoTreino(treino.duracaoMin);
     const xpAcumulado = xpTotal(state.sessoes);
     const patente = patenteDe(xpAcumulado);
@@ -469,12 +472,15 @@ function TreinoPage() {
             </div>
           ) : null}
 
-          <p className="mt-4 text-sm text-muted-foreground">
-            {treino.nome} registrado. Volte amanhã para manter a sequência.
-          </p>
+          {isFirst ? (
+            <p className="mt-4 text-sm text-muted-foreground">Primeiro treino no histórico. Amanhã o plano continua.</p>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">
+              {treino.nome} registrado. Volte amanhã para manter a sequência.
+            </p>
+          )}
 
-
-          {isFirst || !sentimento ? (
+          {!isFirst && !sentimento ? (
             <div className="mt-6 w-full rounded-2xl border border-border/60 bg-card p-4 text-left shadow-soft">
               <p className="text-sm font-bold text-foreground">Como você se sentiu?</p>
               <p className="mt-1 text-xs text-muted-foreground">Isso ajuda a personalizar seu plano.</p>
@@ -532,7 +538,7 @@ function TreinoPage() {
             </div>
           ) : null}
 
-          {next ? (
+          {!isFirst && next ? (
             <div className="mt-6 w-full rounded-2xl border border-border/60 bg-card p-4 text-left shadow-soft">
               <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Amanhã</p>
               <p className="mt-1 text-sm font-extrabold text-foreground">
@@ -542,7 +548,7 @@ function TreinoPage() {
             </div>
           ) : null}
 
-          {mostrarAuth ? (
+          {!isFirst && mostrarAuth ? (
             <div className="mt-4 w-full rounded-2xl border border-border bg-card p-4 text-left">
               <p className="text-sm font-bold text-foreground">Salve seu progresso</p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -568,14 +574,29 @@ function TreinoPage() {
           ) : null}
 
           <div className="mt-8 flex w-full flex-col gap-2">
-            {next ? (
+            {isFirst ? (
               <Button asChild size="lg" className="h-14 text-base font-extrabold">
-                <Link to="/app">Ver treino de amanhã</Link>
+                <Link to="/app">Pronto — ir para a home</Link>
               </Button>
-            ) : null}
-            <Button asChild variant="outline" className="h-12">
-              <Link to="/progresso">Ver minha evolução</Link>
-            </Button>
+            ) : (
+              <>
+                {plano ? (
+                  <Button asChild size="lg" className="h-14 text-base font-extrabold">
+                    <Link to="/treino/$treinoId" params={{ treinoId: extraRapido.id }}>
+                      <Zap className="h-4 w-4" /> Quer mais 10 min?
+                    </Link>
+                  </Button>
+                ) : null}
+                {next ? (
+                  <Button asChild size="lg" variant={plano ? "outline" : "default"} className={plano ? "h-12" : "h-14 text-base font-extrabold"}>
+                    <Link to="/plano">Ver treino de amanhã</Link>
+                  </Button>
+                ) : null}
+                <Button asChild variant="outline" className="h-12">
+                  <Link to="/progresso">Ver minha evolução</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -608,17 +629,22 @@ function TreinoPage() {
           </span>
         </div>
 
-        {videosCadastrados[""] ? (
-          <div className="mt-5 overflow-hidden rounded-[1.75rem] border border-border/60 bg-card p-4 shadow-soft sm:p-5">
-            <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-primary">
-              Sessão completa
-            </p>
-            <ExerciseDemo demo="bola" nome={treino.nome} guia={false} videoUrl={videosCadastrados[""] as string} />
-          </div>
-        ) : null}
+        <div className="mt-5 overflow-hidden rounded-[1.75rem] border border-border/60 bg-card p-4 shadow-soft sm:p-5">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-primary">
+            Sessão
+          </p>
+          <ExerciseDemo
+            demo={treino.exercicios[0]?.demo ?? "cardio"}
+            nome={treino.nome}
+            guia={false}
+            motionId={motionDaCapa(treino.id)}
+            {...(videosCadastrados[""] ? { videoUrl: videosCadastrados[""] as string } : {})}
+          />
+        </div>
 
         <div className="mt-5 overflow-hidden rounded-[1.75rem] border border-border/60 bg-card p-4 shadow-soft sm:p-5">
           <ExerciseDemo
+            key={atual.nome}
             demo={atual.demo ?? "cardio"}
             nome={atual.nome}
             {...(() => {

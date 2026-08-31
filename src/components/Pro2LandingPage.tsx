@@ -65,7 +65,7 @@ export function Pro2LandingPage({ search }: { search: LandingSearch }) {
       void navigate({
         to: "/checkout",
         search: searchCheckout({
-          from: "landing",
+          from: "pro2",
           plano: alvo,
           ref: search.ref,
           teaser: search.teaser,

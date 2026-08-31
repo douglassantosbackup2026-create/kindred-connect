@@ -1,21 +1,24 @@
 import { hojeBR, horaBR } from "@/lib/date";
 const REMINDER_KEY = "jogador-pro-streak-reminder";
 
-export async function requestStreakReminderPermission(): Promise<NotificationPermission | "unsupported"> {
+export async function requestStreakReminderPermission(): Promise<
+  NotificationPermission | "unsupported"
+> {
   if (typeof window === "undefined" || !("Notification" in window)) return "unsupported";
   if (Notification.permission === "granted") return "granted";
   if (Notification.permission === "denied") return "denied";
   return Notification.requestPermission();
 }
 
-export function scheduleStreakReminder(nome: string, streak: number) {
+export function scheduleStreakReminder(nome: string, streak: number, hour = 20) {
   if (typeof window === "undefined" || !("Notification" in window)) return;
   if (Notification.permission !== "granted") return;
+  const hora = Math.min(23, Math.max(6, Math.round(hour)));
 
   try {
     localStorage.setItem(
       REMINDER_KEY,
-      JSON.stringify({ nome, streak, scheduledAt: Date.now(), hour: 20 }),
+      JSON.stringify({ nome, streak, scheduledAt: Date.now(), hour: hora }),
     );
   } catch {
     /* ignore */
@@ -25,7 +28,7 @@ export function scheduleStreakReminder(nome: string, streak: number) {
   // e também registra intent para o próximo retorno ao app.
   const now = new Date();
   const target = new Date();
-  target.setHours(20, 0, 0, 0);
+  target.setHours(hora, 0, 0, 0);
   if (target.getTime() <= now.getTime()) {
     target.setDate(target.getDate() + 1);
   }
@@ -43,11 +46,16 @@ export function scheduleStreakReminder(nome: string, streak: number) {
   }, delay);
 }
 
-export function maybeNotifyStreakOnOpen(nome: string, streak: number, treinouHoje: boolean) {
+export function maybeNotifyStreakOnOpen(
+  nome: string,
+  streak: number,
+  treinouHoje: boolean,
+  reminderHour = 20,
+) {
   if (typeof window === "undefined" || !("Notification" in window)) return;
   if (Notification.permission !== "granted" || treinouHoje) return;
   const hour = horaBR();
-  if (hour < 18) return;
+  if (hour < reminderHour) return;
 
   const dayKey = `streak-nudge-${hojeBR()}`;
   try {
@@ -59,7 +67,10 @@ export function maybeNotifyStreakOnOpen(nome: string, streak: number, treinouHoj
 
   try {
     new Notification("Não quebre a sequência", {
-      body: streak > 0 ? `${nome}, seu streak de ${streak} dia(s) precisa de você hoje.` : `${nome}, bora treinar hoje?`,
+      body:
+        streak > 0
+          ? `${nome}, seu streak de ${streak} dia(s) precisa de você hoje.`
+          : `${nome}, bora treinar hoje?`,
       tag: "streak-nudge",
     });
   } catch {

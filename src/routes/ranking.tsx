@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Trophy } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { RankingLista, type RankingRow } from "@/components/RankingLista";
+import { RankingLista } from "@/components/RankingLista";
 import { Button } from "@/components/ui/button";
 import { inicioSemanaBR } from "@/lib/date";
-import { supabase } from "@/integrations/supabase/client";
+import { fetchRankingSemanal } from "@/lib/ranking";
+import { useAuth } from "@/lib/use-auth";
 import { usePlayer } from "@/lib/player-store";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 
@@ -24,25 +25,15 @@ function weekStartIso() {
 
 function RankingPage() {
   const { state, treinoDeHoje, proximoPlano } = usePlayer();
+  const { user } = useAuth();
   const week = weekStartIso();
-  const { data: rows = [], isError, isLoading } = useQuery({
+  const {
+    data: rows = [],
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ["ranking-semanal", week],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ranking_semanal")
-        .select("nome, treinos, minutos, streak_peak, posicao")
-        .eq("week_start", week)
-        .order("posicao", { ascending: true })
-        .limit(20);
-      if (error) throw error;
-      return (data ?? []).map((r) => ({
-        nome: r.nome ?? "Jogador",
-        treinos: r.treinos ?? 0,
-        minutos: r.minutos ?? 0,
-        streak_peak: r.streak_peak ?? 0,
-        posicao: r.posicao ?? 0,
-      })) satisfies RankingRow[];
-    },
+    queryFn: () => fetchRankingSemanal(week, 20),
     enabled: state.assinante,
     staleTime: 60_000,
   });
@@ -54,7 +45,10 @@ function RankingPage() {
           <Trophy className="mx-auto h-8 w-8 text-primary" />
           <p className="mt-3 text-sm text-muted-foreground">Ranking disponível para assinantes.</p>
           <Button asChild className="mt-4 w-full font-extrabold">
-            <Link to="/checkout" search={{ from: "ranking", teaser: "Entre na liga semanal dos assinantes PRO" }}>
+            <Link
+              to="/checkout"
+              search={{ from: "ranking", teaser: "Entre na liga semanal dos assinantes PRO" }}
+            >
               Assinar
             </Link>
           </Button>
@@ -63,7 +57,7 @@ function RankingPage() {
     );
   }
 
-  const minha = rows.find((r) => r.nome === state.nome);
+  const minha = rows.find((r) => (user?.id ? r.userId === user.id : r.nome === state.nome));
 
   return (
     <AppShell title="Ranking da semana" subtitle="Consistência entre assinantes PRO">
@@ -86,6 +80,7 @@ function RankingPage() {
         <RankingLista
           rows={rows}
           meuNome={state.nome}
+          meuUserId={user?.id}
           emptyCta={
             treinoDeHoje
               ? {
@@ -101,7 +96,11 @@ function RankingPage() {
 
       {rows.length > 0 && treinoDeHoje ? (
         <Button asChild className="mt-4 h-12 w-full font-extrabold">
-          <Link to="/treino/$treinoId" params={{ treinoId: treinoDeHoje.id }} search={{ plano: proximoPlano?.key ?? "" }}>
+          <Link
+            to="/treino/$treinoId"
+            params={{ treinoId: treinoDeHoje.id }}
+            search={{ plano: proximoPlano?.key ?? "" }}
+          >
             Treinar para subir
           </Link>
         </Button>

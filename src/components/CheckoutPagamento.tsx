@@ -18,7 +18,7 @@ import { PLANO_PADRAO, type CheckoutSearch } from "@/lib/checkout";
 import { whatsappSupportHref } from "@/lib/product-config";
 import { usePlayer } from "@/lib/player-store";
 import { captureUtmFromSearch } from "@/lib/utm";
-import { trackMetaCustom, trackMetaDedup } from "@/lib/meta-pixel";
+import { trackMetaCustom, trackMetaDedup, trackCheckoutStep } from "@/lib/meta-pixel";
 import { cn } from "@/lib/utils";
 
 function precoComDesconto(centavos: number, percent: number) {
@@ -63,7 +63,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
   const { logado } = usePlayer();
   const navigate = useNavigate();
   const plano =
-    search.plano && PLANOS_ASSINATURA.some((p) => p.id === search.plano) ? search.plano : PLANO_PADRAO;
+    search.plano && PLANOS_ASSINATURA.some((p) => p.id === search.plano)
+      ? search.plano
+      : PLANO_PADRAO;
   const [desconto, setDesconto] = useState(0);
   const onCupomChange = useCallback((percent: number) => setDesconto(percent), []);
   const zap = whatsappSupportHref("Oi! Quero tirar uma dúvida antes de assinar o Jogador PRO.");
@@ -82,15 +84,17 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
       content_category: origem,
     });
     trackMetaCustom("CheckoutPageView", { plano, from });
+    trackCheckoutStep("view", { plano, from });
   }, [origem, from, plano]);
 
   const config = PLANOS_ASSINATURA.find((p) => p.id === plano) ?? PLANOS_ASSINATURA[1]!;
   const copy = CAMPANHA.planos.itens.find((p) => p.id === plano);
-  const abrirAuto = search.checkout === "1" || Boolean(search.from && search.from !== "auth" && search.from !== "landing");
+  const abrirAuto =
+    search.checkout === "1" ||
+    Boolean(search.from && search.from !== "auth" && search.from !== "landing");
   const total = desconto > 0 ? precoComDesconto(config.precoCentavos, desconto) : config.preco;
   const titulo = `Liberar o plano ${config.nome.toLowerCase()}`;
   const parcelado = parceladoLabel(config.precoCentavos, desconto, config.maxParcelas);
-
 
   const escolherPlano = useCallback(
     (id: string) => {
@@ -112,7 +116,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
       <header className="relative border-b border-border/60 bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <CheckoutVoltar from={search.from} />
-          <p className="truncate text-sm font-black uppercase tracking-[0.16em] text-primary">{CAMPANHA.brand}</p>
+          <p className="truncate text-sm font-black uppercase tracking-[0.16em] text-primary">
+            {CAMPANHA.brand}
+          </p>
           {logado ? (
             <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
               <Lock className="h-3.5 w-3.5 text-primary" />
@@ -134,7 +140,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
       <div className="relative mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
         <h1 className="text-3xl font-black tracking-tight sm:text-4xl">{titulo}</h1>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          {copy ? `${copy.nome} · ${copy.preco} · ${copy.equivalente}` : "Pix ou cartão. Acesso na aprovação."}
+          {copy
+            ? `${copy.nome} · ${copy.preco} · ${copy.equivalente}`
+            : "Pix ou cartão. Acesso na aprovação."}
         </p>
         {search.teaser ? (
           <p className="mt-3 max-w-xl rounded-2xl border border-primary/25 bg-primary/10 px-4 py-3 text-sm font-semibold text-foreground">
@@ -166,7 +174,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                             : "border-border/60 bg-background hover:border-primary/50",
                         )}
                       >
-                        <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{p.nome}</p>
+                        <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                          {p.nome}
+                        </p>
                         <p className="mt-1 text-base font-black text-foreground">{p.preco}</p>
                       </button>
                     ))}
@@ -185,17 +195,23 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
 
               <aside className="lg:sticky lg:top-20">
                 <section className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft-lg sm:p-6">
-                  <h2 className="text-base font-extrabold text-foreground">Confirmação do pedido</h2>
+                  <h2 className="text-base font-extrabold text-foreground">
+                    Confirmação do pedido
+                  </h2>
 
                   <div className="mt-5 border-b border-border/60 pb-4">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-bold text-foreground">PRO {config.nome}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{copy?.periodo ?? config.periodo}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {copy?.periodo ?? config.periodo}
+                        </p>
                       </div>
                       <p className="text-sm font-black tabular-nums text-primary">{config.preco}</p>
                     </div>
-                    <p className="mt-3 text-2xl font-black tabular-nums text-foreground">{parcelado}</p>
+                    <p className="mt-3 text-2xl font-black tabular-nums text-foreground">
+                      {parcelado}
+                    </p>
                     <p className="text-xs text-muted-foreground">à vista {total}</p>
                   </div>
 
@@ -206,7 +222,9 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                     </div>
                     {desconto > 0 ? (
                       <div className="flex justify-between gap-3">
-                        <dt className="text-muted-foreground">Cupom{cupomCode ? ` ${cupomCode}` : ""}</dt>
+                        <dt className="text-muted-foreground">
+                          Cupom{cupomCode ? ` ${cupomCode}` : ""}
+                        </dt>
                         <dd className="font-semibold tabular-nums text-primary">−{desconto}%</dd>
                       </div>
                     ) : null}
@@ -218,12 +236,15 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
                   <p className="mt-1 text-xs font-semibold text-primary">
                     Equivale a {copy?.equivalente ?? config.nota}
                   </p>
-                  {copy?.parcelas ? <p className="text-xs text-muted-foreground">{copy.parcelas}</p> : null}
+                  {copy?.parcelas ? (
+                    <p className="text-xs text-muted-foreground">{copy.parcelas}</p>
+                  ) : null}
                   {cupom}
 
-
                   <div className="mt-5 hidden lg:block">{cta}</div>
-                  <p className="mt-3 text-center text-[11px] text-muted-foreground">{CAMPANHA.garantia.curta}</p>
+                  <p className="mt-3 text-center text-[11px] text-muted-foreground">
+                    {CAMPANHA.garantia.curta}
+                  </p>
                   <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
                     <ShieldCheck className="h-3.5 w-3.5 text-primary" />
                     Pagamento seguro · Pix ou cartão

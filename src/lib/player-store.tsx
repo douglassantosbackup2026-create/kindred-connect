@@ -40,6 +40,7 @@ export type PlayerState = {
   affiliateCode: string | null;
   pausedUntil: string | null;
   assinanteUntil: string | null;
+  reminderHour: number;
 };
 
 const initialState: PlayerState = {
@@ -56,6 +57,7 @@ const initialState: PlayerState = {
   affiliateCode: null,
   pausedUntil: null,
   assinanteUntil: null,
+  reminderHour: 20,
 };
 
 function hoje() {
@@ -107,6 +109,10 @@ function lerLocal(): PlayerState {
       plano: null,
       onboardingDone,
       sessoes: Array.isArray(parsed.sessoes) ? parsed.sessoes : [],
+      reminderHour:
+        typeof parsed.reminderHour === "number" && parsed.reminderHour >= 6 && parsed.reminderHour <= 23
+          ? parsed.reminderHour
+          : 20,
     };
 
   } catch {
@@ -161,6 +167,7 @@ type Ctx = {
   markAuthPromptSeen: () => void;
   /** True para visitante que ainda não dispensou o prompt de conta. */
   canPromptAuth: boolean;
+  setReminderHour: (hour: number) => void;
   refreshEntitlement: () => Promise<void>;
   reset: () => void;
   sair: () => Promise<void>;
@@ -173,8 +180,13 @@ type Ctx = {
 
 const PlayerContext = createContext<Ctx | null>(null);
 
-type NavSnap = { logado: boolean; assinante: boolean; isAdmin: boolean };
-const PlayerNavContext = createContext<NavSnap>({ logado: false, assinante: false, isAdmin: false });
+type NavSnap = { logado: boolean; assinante: boolean; isAdmin: boolean; totalTreinos: number };
+const PlayerNavContext = createContext<NavSnap>({
+  logado: false,
+  assinante: false,
+  isAdmin: false,
+  totalTreinos: 0,
+});
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
@@ -213,7 +225,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         supabase
           .from("profiles")
           .select(
-            "nome, assinante, assinante_until, onboarding_done, plano, role, objetivo, disponibilidade, posicao, affiliate_code, referred_by, paused_until",
+            "nome, assinante, assinante_until, onboarding_done, plano, role, objetivo, disponibilidade, posicao, affiliate_code, referred_by, paused_until, reminder_hour",
           )
           .eq("id", user.id)
           .maybeSingle(),
@@ -294,6 +306,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         posicao: perfil?.posicao ?? local.posicao,
         affiliateCode,
         pausedUntil: perfil?.paused_until ?? null,
+        reminderHour:
+          typeof perfil?.reminder_hour === "number" && perfil.reminder_hour >= 6 && perfil.reminder_hour <= 23
+            ? perfil.reminder_hour
+            : local.reminderHour,
       });
       try {
         if (perfil?.onboarding_done) localStorage.setItem(ONBOARDING_KEY, "1");
@@ -330,8 +346,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     const treinouHoje = state.sessoes.some((s) => s.data === hoje());
-    maybeNotifyStreakOnOpen(state.nome, calcStreak(state.sessoes), treinouHoje);
-  }, [hydrated, state.nome, state.sessoes]);
+    maybeNotifyStreakOnOpen(state.nome, calcStreak(state.sessoes), treinouHoje, state.reminderHour);
+  }, [hydrated, state.nome, state.sessoes, state.reminderHour]);
 
   const salvarNome = useCallback(
     (nome: string) => {
@@ -554,6 +570,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setState((s) => ({ ...s, nome }));
         salvarNome(nome);
       },
+      setReminderHour: (hour: number) => {
+        const reminderHour = Math.min(23, Math.max(6, Math.round(hour)));
+        setState((s) => ({ ...s, reminderHour }));
+        if (user) {
+          const payload = { id: user.id, reminder_hour: reminderHour };
+          void safeWrite(
+            "horário do lembrete",
+            () => supabase.from("profiles").upsert(payload, { onConflict: "id" }),
+            { table: "profiles", op: "upsert", payload, onConflict: "id" },
+          );
+        }
+      },
       completeOnboarding: ({ nome, objetivo, disponibilidade, posicao }) => {
         const nomeFinal = nome.trim() || "Jogador";
         setState((s) => ({
@@ -622,8 +650,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   ]);
 
   const navValue = useMemo<NavSnap>(
-    () => ({ logado, assinante: state.assinante, isAdmin: state.role === "admin" }),
-    [logado, state.assinante, state.role],
+    () => ({
+      logado,
+      assinante: state.assinante,
+      isAdmin: state.role === "admin",
+      totalTreinos: state.sessoes.length,
+    }),
+    [logado, state.assinante, state.role, state.sessoes.length],
   );
 
   return (

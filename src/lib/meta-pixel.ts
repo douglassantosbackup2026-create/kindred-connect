@@ -205,14 +205,20 @@ function setMatchingKey(key: string) {
   (window as unknown as { __jpsMetaMatch?: string }).__jpsMetaMatch = key;
 }
 
-async function fetchPerfilMeta(userId: string): Promise<{ phone?: string | undefined; nome?: string | undefined }> {
+async function fetchPerfilMeta(
+  userId: string,
+): Promise<{ phone?: string | undefined; nome?: string | undefined }> {
   if (perfilCache?.userId === userId) {
     return {
       phone: perfilCache.phone ? phoneE164Br(perfilCache.phone) : undefined,
       nome: perfilCache.nome ?? undefined,
     };
   }
-  const { data: perfil } = await supabase.from("profiles").select("phone, nome").eq("id", userId).maybeSingle();
+  const { data: perfil } = await supabase
+    .from("profiles")
+    .select("phone, nome")
+    .eq("id", userId)
+    .maybeSingle();
   perfilCache = { userId, phone: perfil?.phone ?? null, nome: perfil?.nome ?? null };
   return {
     phone: perfilCache.phone ? phoneE164Br(perfilCache.phone) : undefined,
@@ -292,7 +298,12 @@ export async function hydrateMetaIdentity() {
   applyAdvancedMatching(ident);
 }
 
-function firePixel(event: string, payload: MetaPayload | undefined, eventId: string | undefined, custom: boolean) {
+function firePixel(
+  event: string,
+  payload: MetaPayload | undefined,
+  eventId: string | undefined,
+  custom: boolean,
+) {
   if (typeof window === "undefined") return;
   try {
     const opts = eventId ? { eventID: eventId } : undefined;
@@ -310,6 +321,10 @@ export function trackMeta(event: string, payload?: MetaPayload, eventId?: string
 
 export function trackMetaCustom(event: string, payload?: MetaPayload, eventId?: string) {
   trackMetaDedup(event, payload, { custom: true, eventId });
+}
+
+export function trackCheckoutStep(step: string, extra?: MetaPayload) {
+  trackMetaCustom("CheckoutStep", { step, ...extra });
 }
 
 /**

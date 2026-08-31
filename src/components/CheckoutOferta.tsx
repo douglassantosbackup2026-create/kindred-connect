@@ -14,7 +14,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { PLANO_PADRAO, registrarCheckoutIntent } from "@/lib/checkout";
 import { cpfValido, phoneValido } from "@/lib/br-docs";
 import { usePlayer } from "@/lib/player-store";
-import { lembrarInitiateCheckout, newEventId, trackMetaDedup } from "@/lib/meta-pixel";
+import {
+  lembrarInitiateCheckout,
+  newEventId,
+  trackMetaDedup,
+  trackCheckoutStep,
+} from "@/lib/meta-pixel";
 import { cn } from "@/lib/utils";
 
 const CODE_RE = /^[A-Za-z0-9_-]{1,40}$/;
@@ -93,7 +98,9 @@ export function CheckoutOferta({
       return false;
     }
   });
-  const [cupomAplicado, setCupomAplicado] = useState<{ code: string; discount: number } | null>(null);
+  const [cupomAplicado, setCupomAplicado] = useState<{ code: string; discount: number } | null>(
+    null,
+  );
   const [docs, setDocs] = useState<{ cpf: string | null; phone: string | null } | null>(null);
   const docsProntos = !logado || docs !== null;
 
@@ -128,7 +135,11 @@ export function CheckoutOferta({
         const consulta = supabase.auth.getUser().then(async ({ data }) => {
           const id = data.user?.id;
           if (!id) return { cpf: null, phone: null };
-          const { data: perfil } = await supabase.from("profiles").select("cpf, phone").eq("id", id).maybeSingle();
+          const { data: perfil } = await supabase
+            .from("profiles")
+            .select("cpf, phone")
+            .eq("id", id)
+            .maybeSingle();
           return { cpf: perfil?.cpf ?? null, phone: perfil?.phone ?? null };
         });
         const limite = new Promise<{ cpf: null; phone: null }>((resolve) => {
@@ -195,7 +206,9 @@ export function CheckoutOferta({
               description: "Se você já pagou, aguarde alguns segundos — liberamos automaticamente.",
             });
           } else if (st === "rejected" || st === "cancelled") {
-            toast.error("Pagamento não aprovado", { description: "Tente novamente com outro método." });
+            toast.error("Pagamento não aprovado", {
+              description: "Tente novamente com outro método.",
+            });
           } else {
             toast.message("Status atualizado");
           }
@@ -207,8 +220,6 @@ export function CheckoutOferta({
     },
     [sincronizarMp, refreshEntitlement, irParaPro],
   );
-
-
 
   const checkoutTrackedRef = useRef(false);
   const abrirBrick = useCallback((plano: string) => {
@@ -229,8 +240,11 @@ export function CheckoutOferta({
       );
     }
     setMostrarBrick(true);
+    trackCheckoutStep("brick_open", { plano });
     void registrarCheckoutIntent(plano).catch(() => {
-      toast.message("Não deu para registrar o checkout", { description: "Você ainda pode pagar normalmente." });
+      toast.message("Não deu para registrar o checkout", {
+        description: "Você ainda pode pagar normalmente.",
+      });
     });
   }, []);
 
@@ -252,7 +266,9 @@ export function CheckoutOferta({
         return;
       }
       if (!logado || precisaDocs) {
-        document.getElementById("checkout-dados")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        document
+          .getElementById("checkout-dados")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
       abrirBrick(alvo);
@@ -295,7 +311,16 @@ export function CheckoutOferta({
       abrirBrick(escolhido);
       rolarParaOferta();
     }
-  }, [abrirAoMontar, authReady, logado, state.assinante, docsProntos, precisaDocs, abrirBrick, escolhido]);
+  }, [
+    abrirAoMontar,
+    authReady,
+    logado,
+    state.assinante,
+    docsProntos,
+    precisaDocs,
+    abrirBrick,
+    escolhido,
+  ]);
 
   useEffect(() => {
     if (!pendingPix || !logado || state.assinante) return;
@@ -362,16 +387,15 @@ export function CheckoutOferta({
     />
   );
 
-  const dados: ReactNode =
-    state.assinante ? (
-      <p className="text-sm text-muted-foreground">Sua assinatura PRO já está ativa.</p>
-    ) : !logado || precisaDocs ? (
-      authBlock
-    ) : (
-      <p className="text-sm text-muted-foreground">
-        Logado como <span className="font-semibold text-foreground">{email}</span>
-      </p>
-    );
+  const dados: ReactNode = state.assinante ? (
+    <p className="text-sm text-muted-foreground">Sua assinatura PRO já está ativa.</p>
+  ) : !logado || precisaDocs ? (
+    authBlock
+  ) : (
+    <p className="text-sm text-muted-foreground">
+      Logado como <span className="font-semibold text-foreground">{email}</span>
+    </p>
+  );
 
   const podePagar = logado && !precisaDocs && docsProntos;
 
@@ -389,9 +413,11 @@ export function CheckoutOferta({
         couponCode={cupomAplicado?.code ?? null}
         discountPercent={cupomAplicado?.discount ?? 0}
         onApproved={() => {
+          trackCheckoutStep("approved", { plano: escolhido });
           void refreshEntitlement().then(() => irParaPro());
         }}
         onPending={() => {
+          trackCheckoutStep("pix_pending", { plano: escolhido });
           marcarPixPendente(true);
           void refreshEntitlement();
         }}
@@ -403,18 +429,23 @@ export function CheckoutOferta({
     </p>
   ) : (
     <p className="text-sm text-muted-foreground">
-      Preencha seus dados e clique em <span className="font-semibold text-foreground">Finalizar pedido</span> para
-      liberar Pix e cartão.
+      Preencha seus dados e clique em{" "}
+      <span className="font-semibold text-foreground">Finalizar pedido</span> para liberar Pix e
+      cartão.
     </p>
   );
-
 
   const cta: ReactNode = state.assinante ? (
     <Button asChild size="lg" className="h-14 w-full text-base font-extrabold">
       <Link to="/app">Você já é PRO — ir para o app</Link>
     </Button>
   ) : !logado || precisaDocs ? (
-    <Button type="submit" form="checkout-dados" size="lg" className="h-14 w-full text-base font-extrabold">
+    <Button
+      type="submit"
+      form="checkout-dados"
+      size="lg"
+      className="h-14 w-full text-base font-extrabold"
+    >
       Finalizar pedido
     </Button>
   ) : mostrarBrick || pendingPix ? (
@@ -423,7 +454,9 @@ export function CheckoutOferta({
       size="lg"
       variant="outline"
       className="h-14 w-full text-base font-extrabold"
-      onClick={() => document.getElementById("pagamento")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+      onClick={() =>
+        document.getElementById("pagamento")?.scrollIntoView({ behavior: "smooth", block: "start" })
+      }
     >
       Conclua o pagamento ao lado
     </Button>
@@ -452,7 +485,11 @@ export function CheckoutOferta({
           dados,
           pagamento,
           cupom: (
-            <CupomCampo aplicado={cupomAplicado} onBuscar={buscarCupomAtivo} onAplicar={setCupomAplicado} />
+            <CupomCampo
+              aplicado={cupomAplicado}
+              onBuscar={buscarCupomAtivo}
+              onAplicar={setCupomAplicado}
+            />
           ),
           cta,
           desconto: cupomAplicado?.discount ?? 0,
@@ -481,9 +518,11 @@ export function CheckoutOferta({
               couponCode={cupomAplicado?.code ?? null}
               discountPercent={cupomAplicado?.discount ?? 0}
               onApproved={() => {
+                trackCheckoutStep("approved", { plano: escolhido });
                 void refreshEntitlement().then(() => irParaPro());
               }}
               onPending={() => {
+                trackCheckoutStep("pix_pending", { plano: escolhido });
                 marcarPixPendente(true);
                 void refreshEntitlement();
               }}
@@ -491,7 +530,12 @@ export function CheckoutOferta({
           </>
         ) : (
           <>
-            <p className={cn("mb-2 text-xs font-semibold text-muted-foreground", !page && "text-center")}>
+            <p
+              className={cn(
+                "mb-2 text-xs font-semibold text-muted-foreground",
+                !page && "text-center",
+              )}
+            >
               {CAMPANHA.pagamento}
             </p>
             <Button
@@ -505,7 +549,9 @@ export function CheckoutOferta({
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Preparando seu checkout…
                 </>
               ) : (
-                <>{CAMPANHA.oferta.cta} — {precoLabel}</>
+                <>
+                  {CAMPANHA.oferta.cta} — {precoLabel}
+                </>
               )}
             </Button>
             <p className={cn("mt-2 text-xs text-muted-foreground", !page && "text-center")}>

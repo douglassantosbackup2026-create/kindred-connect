@@ -68,13 +68,16 @@ function Home() {
 
   useEffect(() => {
     if (hydrated && state.assinante && !state.onboardingDone) {
-      void navigate({ to: "/onboarding" });
+      void navigate({ to: "/bem-vindo-pro" });
     }
   }, [hydrated, state.assinante, state.onboardingDone, navigate]);
 
   const modoRapido = () => {
     if (!state.assinante) {
-      void navigate({ to: "/checkout", search: { from: "home", teaser: "Modo rápido disponível no PRO" } });
+      void navigate({
+        to: "/checkout",
+        search: { from: "home", teaser: "Modo rápido disponível no PRO" },
+      });
       return;
     }
     const escolhido = treinoRapido(state.objetivo, state.posicao, state.ultimoTreinoId);
@@ -94,7 +97,7 @@ function Home() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-sm text-muted-foreground">
-          {state.assinante && !state.onboardingDone ? "Personalizando seu plano…" : "Carregando…"}
+          {state.assinante && !state.onboardingDone ? "Preparando seu Dia 1…" : "Carregando…"}
         </p>
       </div>
     );
@@ -118,14 +121,17 @@ function Home() {
         <p className="text-sm font-semibold text-muted-foreground">
           Treino de hoje concluído · libera em {espera}
         </p>
-        <div className="grid grid-cols-2 gap-2">
-          <Button asChild size="lg" variant="secondary" className="h-12 text-sm font-extrabold">
-            <Link to="/biblioteca">Biblioteca</Link>
-          </Button>
-          <Button asChild size="lg" variant="secondary" className="h-12 text-sm font-extrabold">
-            <Link to="/progresso">Progresso</Link>
-          </Button>
-        </div>
+        <Button size="lg" className="h-12 w-full text-sm font-extrabold" onClick={modoRapido}>
+          <Zap className="h-4 w-4" /> Quer mais 10 min?
+        </Button>
+        <Button
+          asChild
+          size="lg"
+          variant="secondary"
+          className="h-12 w-full text-sm font-extrabold"
+        >
+          <Link to="/progresso">Ver evolução</Link>
+        </Button>
       </div>
     ) : proximoLiberado ? (
       <Button asChild size="lg" className="h-14 w-full text-base font-extrabold">
@@ -164,8 +170,8 @@ function Home() {
         <div className="mb-4 rounded-[1.25rem] border border-border/60 bg-secondary/50 px-4 py-3 shadow-soft">
           <p className="text-sm font-extrabold text-foreground">Modo pausa ativo</p>
           <p className="text-xs text-muted-foreground">
-            Até {new Date(state.pausedUntil).toLocaleDateString("pt-BR")} · acesso PRO segue liberado · sem cobrança
-            extra
+            Até {new Date(state.pausedUntil).toLocaleDateString("pt-BR")} · acesso PRO segue
+            liberado · sem cobrança extra
           </p>
           <div className="mt-3 flex gap-2">
             <Button
@@ -185,11 +191,16 @@ function Home() {
       ) : precisaAssinar ? (
         <Link
           to="/checkout"
-          search={{ from: "home", teaser: "Assine para liberar o treino do dia e o plano completo" }}
+          search={{
+            from: "home",
+            teaser: "Assine para liberar o treino do dia e o plano completo",
+          }}
           className="mb-4 flex items-center justify-between gap-3 rounded-[1.25rem] border border-primary/30 bg-primary/10 px-4 py-3 shadow-soft"
         >
           <span>
-            <span className="block text-sm font-extrabold text-foreground">Assine para treinar</span>
+            <span className="block text-sm font-extrabold text-foreground">
+              Assine para treinar
+            </span>
             <span className="block text-xs text-muted-foreground">
               Acesso completo à jornada de 12 meses + biblioteca
             </span>
@@ -234,9 +245,13 @@ function Home() {
           <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
             {treinoDeHoje?.nome}
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">{treinoDeHoje?.descricao}</p>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
+            {treinoDeHoje?.descricao}
+          </p>
           {focoLabel ? (
-            <p className="mt-2 text-xs font-medium text-primary">Alinhado ao seu foco: {focoLabel}</p>
+            <p className="mt-2 text-xs font-medium text-primary">
+              Alinhado ao seu foco: {focoLabel}
+            </p>
           ) : null}
           <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 font-medium">
@@ -271,7 +286,9 @@ function Home() {
                 <Zap className="h-5 w-5" />
               </span>
               <span className="flex-1">
-                <span className="block text-sm font-bold text-foreground">Seu modo: 10 minutos</span>
+                <span className="block text-sm font-bold text-foreground">
+                  Seu modo: 10 minutos
+                </span>
                 <span className="block text-xs text-muted-foreground">
                   Baseado no tempo que você escolheu no onboarding
                 </span>
@@ -280,7 +297,9 @@ function Home() {
             </button>
           ) : (
             <details className="rounded-[1.5rem] border border-border/60 bg-card p-4 shadow-soft sm:p-5">
-              <summary className="cursor-pointer text-sm font-bold text-foreground">Tenho só 10 minutos hoje</summary>
+              <summary className="cursor-pointer text-sm font-bold text-foreground">
+                Tenho só 10 minutos hoje
+              </summary>
               <button
                 type="button"
                 onClick={modoRapido}
@@ -294,22 +313,34 @@ function Home() {
         </div>
       </div>
 
-      <section className="mt-5 grid gap-3 sm:grid-cols-3">
-        {[
-          { to: "/plano" as const, label: "Ver plano guiado" },
-          { to: "/biblioteca" as const, label: "Ver todos os treinos" },
-          { to: "/progresso" as const, label: "Ver minha evolução" },
-        ].map((a) => (
+      {totalTreinos >= 3 ? (
+        <section className="mt-5 grid gap-3 sm:grid-cols-3">
+          {[
+            { to: "/plano" as const, label: "Ver plano guiado" },
+            { to: "/biblioteca" as const, label: "Ver extras" },
+            { to: "/progresso" as const, label: "Ver minha evolução" },
+          ].map((a) => (
+            <Link
+              key={a.to}
+              to={a.to}
+              className="flex items-center justify-between rounded-2xl border border-border/60 bg-card px-4 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-colors hover:border-primary/40"
+            >
+              {a.label}
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </Link>
+          ))}
+        </section>
+      ) : (
+        <section className="mt-5">
           <Link
-            key={a.to}
-            to={a.to}
+            to="/progresso"
             className="flex items-center justify-between rounded-2xl border border-border/60 bg-card px-4 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-colors hover:border-primary/40"
           >
-            {a.label}
+            Ver minha evolução
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>
-        ))}
-      </section>
+        </section>
+      )}
 
       {ctaPrincipal ? (
         <div className="fixed inset-x-0 z-30 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden bottom-[4.75rem]">

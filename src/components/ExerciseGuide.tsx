@@ -74,7 +74,10 @@ export function ExerciseGuide({
             Guia de execução
           </span>
           <ChevronDown
-            className={cn("h-4 w-4 text-muted-foreground transition-transform", aberto && "rotate-180")}
+            className={cn(
+              "h-4 w-4 text-muted-foreground transition-transform",
+              aberto && "rotate-180",
+            )}
           />
         </button>
         {aberto ? (
@@ -93,7 +96,7 @@ export function ExerciseGuide({
           Guia de execução
         </p>
         <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-          Vídeo em breve
+          Demonstração ilustrada
         </span>
       </div>
       <Conteudo nome={nome} demo={demo} />

@@ -14,7 +14,9 @@ import { toast } from "sonner";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { safeWrite } from "@/lib/supabase-write";
 import { patenteDe, xpTotal } from "@/lib/gamificacao";
-import { RankingLista, type RankingRow } from "@/components/RankingLista";
+import { RankingLista } from "@/components/RankingLista";
+import { fetchRankingSemanal } from "@/lib/ranking";
+import { useAuth } from "@/lib/use-auth";
 
 export const Route = createFileRoute("/progresso")({
   errorComponent: RouteError,
@@ -74,30 +76,18 @@ function ProgressoPage() {
       return (rows ?? []) as Score[];
     },
   });
+  const { user } = useAuth();
   const { data: rankingRows = [] } = useQuery({
     queryKey: ["ranking-semanal", weekStartIso()],
     enabled: state.assinante,
     staleTime: 60_000,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("ranking_semanal")
-        .select("nome, treinos, minutos, streak_peak, posicao")
-        .eq("week_start", weekStartIso())
-        .order("posicao", { ascending: true })
-        .limit(20);
-      if (error) throw error;
-      return (data ?? []).map((r) => ({
-        nome: r.nome ?? "Jogador",
-        treinos: r.treinos ?? 0,
-        minutos: r.minutos ?? 0,
-        streak_peak: r.streak_peak ?? 0,
-        posicao: r.posicao ?? 0,
-      })) satisfies RankingRow[];
-    },
+    queryFn: () => fetchRankingSemanal(weekStartIso(), 20),
   });
   const xp = xpTotal(state.sessoes);
   const patente = patenteDe(xp);
-  const minhaPosicao = rankingRows.find((r) => r.nome === state.nome)?.posicao;
+  const minhaPosicao = rankingRows.find((r) =>
+    user?.id ? r.userId === user.id : r.nome === state.nome,
+  )?.posicao;
   const [explosao, setExplosao] = useState(3);
   const [controle, setControle] = useState(3);
   const [resistencia, setResistencia] = useState(3);
@@ -110,7 +100,10 @@ function ProgressoPage() {
   const ultimos7 = Array.from({ length: 7 }, (_, i) => {
     const iso = diaBROffset(-(6 - i));
     const dow = new Date(`${iso}T12:00:00Z`).getUTCDay();
-    return { label: ["D", "S", "T", "Q", "Q", "S", "S"][dow], ativo: state.sessoes.some((s) => s.data === iso) };
+    return {
+      label: ["D", "S", "T", "Q", "Q", "S", "S"][dow],
+      ativo: state.sessoes.some((s) => s.data === iso),
+    };
   });
 
   const salvarScore = async () => {
@@ -151,7 +144,10 @@ function ProgressoPage() {
             Streak, scores no campo e conquistas liberam após assinar.
           </p>
           <Button asChild size="lg" className="mt-6 h-12 w-full font-extrabold">
-            <Link to="/checkout" search={{ from: "progresso", teaser: "Streak, scores e conquistas liberam no PRO" }}>
+            <Link
+              to="/checkout"
+              search={{ from: "progresso", teaser: "Streak, scores e conquistas liberam no PRO" }}
+            >
               Ver planos
             </Link>
           </Button>
@@ -163,14 +159,14 @@ function ProgressoPage() {
   if (totalTreinos === 0) {
     return (
       <AppShell
-      title="Sua evolução"
-      subtitle={`Jogador ${nivel}`}
-      action={
-        <Button asChild variant="outline" className="h-10 rounded-full text-xs font-bold">
-          <Link to="/ranking">Ranking</Link>
-        </Button>
-      }
-    >
+        title="Sua evolução"
+        subtitle={`Jogador ${nivel}`}
+        action={
+          <Button asChild variant="outline" className="h-10 rounded-full text-xs font-bold">
+            <Link to="/ranking">Ranking</Link>
+          </Button>
+        }
+      >
         <div className="rounded-[1.75rem] border border-dashed border-border bg-card p-8 text-center shadow-soft">
           <Trophy className="mx-auto h-10 w-10 text-primary" />
           <h2 className="mt-4 text-xl font-extrabold text-foreground">Seu placar começa hoje</h2>
@@ -221,7 +217,11 @@ function ProgressoPage() {
           </div>
         </div>
         {treinoDeHoje ? (
-          <Button asChild size="lg" className="mt-6 h-12 w-full font-extrabold sm:mx-auto sm:max-w-sm">
+          <Button
+            asChild
+            size="lg"
+            className="mt-6 h-12 w-full font-extrabold sm:mx-auto sm:max-w-sm"
+          >
             <Link
               to="/treino/$treinoId"
               params={{ treinoId: treinoDeHoje.id }}
@@ -234,21 +234,19 @@ function ProgressoPage() {
       </section>
 
       <section className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
-        <h2 className="text-sm font-bold text-foreground">
-          Patente {patente.atual.emoji} {patente.atual.nome}
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {xp.toLocaleString("pt-BR")} XP
-          {patente.proxima ? ` · faltam ${patente.faltam.toLocaleString("pt-BR")} para ${patente.proxima.nome}` : " · patente máxima"}
-        </p>
-      </section>
-
-      <section className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-sm font-bold text-foreground">
             {minhaPosicao ? `Liga da semana · você #${minhaPosicao}` : "Liga da semana"}
+            {rankingRows.length ? (
+              <span className="ml-2 font-medium text-muted-foreground">
+                · {rankingRows.length} jogadores
+              </span>
+            ) : null}
           </h2>
-          <Link to="/ranking" className="text-xs font-bold text-primary underline underline-offset-4">
+          <Link
+            to="/ranking"
+            className="text-xs font-bold text-primary underline underline-offset-4"
+          >
             Ver ranking
           </Link>
         </div>
@@ -256,6 +254,7 @@ function ProgressoPage() {
           <RankingLista
             rows={rankingRows.slice(0, 5)}
             meuNome={state.nome}
+            meuUserId={user?.id}
             emptyCta={
               treinoDeHoje
                 ? {
@@ -270,8 +269,22 @@ function ProgressoPage() {
         </div>
       </section>
 
+      <section className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
+        <h2 className="text-sm font-bold text-foreground">
+          Patente {patente.atual.emoji} {patente.atual.nome}
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {xp.toLocaleString("pt-BR")} XP
+          {patente.proxima
+            ? ` · faltam ${patente.faltam.toLocaleString("pt-BR")} para ${patente.proxima.nome}`
+            : " · patente máxima"}
+        </p>
+      </section>
+
       <details className="mt-4 rounded-[1.5rem] border border-border/60 bg-card p-5 shadow-soft">
-        <summary className="cursor-pointer text-sm font-bold text-foreground">Score semanal no campo</summary>
+        <summary className="cursor-pointer text-sm font-bold text-foreground">
+          Score semanal no campo
+        </summary>
         <p className="mt-1 text-xs text-muted-foreground">
           Autoavaliação 1–5. Registro pessoal — não altera o treino do dia.
         </p>
@@ -299,14 +312,23 @@ function ProgressoPage() {
           <input type="checkbox" checked={jogou} onChange={(e) => setJogou(e.target.checked)} />
           Joguei bola esta semana
         </label>
-        <Button className="mt-4 w-full font-extrabold" disabled={salvando} onClick={() => void salvarScore()}>
+        <Button
+          className="mt-4 w-full font-extrabold"
+          disabled={salvando}
+          onClick={() => void salvarScore()}
+        >
           {salvando ? "Salvando…" : "Salvar score da semana"}
         </Button>
         {scores.length ? (
           <div className="mt-4 space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Histórico</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+              Histórico
+            </p>
             {scores.slice(-6).map((s) => (
-              <div key={s.week_start} className="flex justify-between rounded-xl bg-secondary/50 px-3 py-2 text-xs">
+              <div
+                key={s.week_start}
+                className="flex justify-between rounded-xl bg-secondary/50 px-3 py-2 text-xs"
+              >
                 <span className="text-muted-foreground">{s.week_start}</span>
                 <span className="font-semibold text-foreground">
                   E{s.explosao} · C{s.controle} · R{s.resistencia}
@@ -326,7 +348,9 @@ function ProgressoPage() {
               <span
                 className={cn(
                   "flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold",
-                  d.ativo ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground",
+                  d.ativo
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-muted-foreground",
                 )}
               >
                 {d.label}

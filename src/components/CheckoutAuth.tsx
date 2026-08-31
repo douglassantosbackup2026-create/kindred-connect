@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { checkoutEmailRedirect, garantirSessaoAposCadastro, traduzErroAuth } from "@/lib/checkout";
 import { forcaSenha } from "@/lib/auth-ui";
 import { cpfValido, maskCpf, maskPhone, phoneE164Br, phoneValido, soDigitos } from "@/lib/br-docs";
-import { trackMetaDedup } from "@/lib/meta-pixel";
+import { trackMetaDedup, trackCheckoutStep } from "@/lib/meta-pixel";
 import { getErrorMessage } from "@/lib/utils";
 
 const LOGIN_EVENT = "jps:checkout-login";
@@ -66,8 +66,14 @@ export function CheckoutAuth({
     return () => window.removeEventListener(LOGIN_EVENT, abrirLogin);
   }, []);
 
-  async function concluirComDocs(userId: string, nomeFinal: string, cpfDigits: string, phoneDigits: string) {
+  async function concluirComDocs(
+    userId: string,
+    nomeFinal: string,
+    cpfDigits: string,
+    phoneDigits: string,
+  ) {
     await salvarDocs(userId, nomeFinal, cpfDigits, phoneDigits);
+    trackCheckoutStep("docs");
     onDados?.({ nome: nomeFinal, cpf: cpfDigits, phone: phoneDigits });
     onAuthenticated();
   }
@@ -114,6 +120,7 @@ export function CheckoutAuth({
           { content_name: "checkout_signup", status: true },
           { email, phone: phoneE164Br(phoneDigits), nome },
         );
+        trackCheckoutStep("auth", { plano });
         let userId = data.session && data.user ? data.user.id : null;
         if (!userId) {
           const extra = await garantirSessaoAposCadastro(email, senha);
@@ -134,10 +141,15 @@ export function CheckoutAuth({
 
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
       if (error) throw error;
+      trackCheckoutStep("auth", { plano });
       const { data: auth } = await supabase.auth.getUser();
       const userId = auth.user?.id;
       if (!userId) throw new Error("Não foi possível confirmar a sessão.");
-      const { data: perfil } = await supabase.from("profiles").select("cpf, phone, nome").eq("id", userId).maybeSingle();
+      const { data: perfil } = await supabase
+        .from("profiles")
+        .select("cpf, phone, nome")
+        .eq("id", userId)
+        .maybeSingle();
       const cpfDigits = soDigitos(cpf) || perfil?.cpf || "";
       const phoneDigits = soDigitos(phone) || perfil?.phone || "";
       if (!cpfValido(cpfDigits) || !phoneValido(phoneDigits)) {
@@ -157,7 +169,11 @@ export function CheckoutAuth({
   }
 
   const titulo =
-    modo === "cadastro" ? "Crie sua conta para pagar" : modo === "login" ? "Entre para pagar" : "Complete seus dados";
+    modo === "cadastro"
+      ? "Crie sua conta para pagar"
+      : modo === "login"
+        ? "Entre para pagar"
+        : "Complete seus dados";
   const subtitulo =
     modo === "completar"
       ? "CPF e celular são usados no Pix e no comprovante."
@@ -301,7 +317,11 @@ export function CheckoutAuth({
       {modo === "login" ? (
         <p className="mt-2 text-[11px] text-muted-foreground">
           Esqueceu a senha?{" "}
-          <Link to="/auth" search={{ from: "checkout", plano }} className="font-semibold underline underline-offset-4">
+          <Link
+            to="/auth"
+            search={{ from: "checkout", plano }}
+            className="font-semibold underline underline-offset-4"
+          >
             Recuperar acesso
           </Link>
         </p>

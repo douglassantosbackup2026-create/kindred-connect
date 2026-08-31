@@ -1,39 +1,9 @@
 import { useEffect, useState } from "react";
 import { Play, VideoOff } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { urlVideoSegura, urlEmbedSegura } from "@/lib/video-url";
 import { ExerciseGuide } from "@/components/ExerciseGuide";
-
-
-const LABELS = {
-  mobilidade: "Mobilidade",
-  forca: "Força",
-  cardio: "Cardio",
-  core: "Core",
-  bola: "Bola",
-} as const;
-
-function Ilustracao({ demo, nome, aviso }: { demo: keyof typeof LABELS; nome: string; aviso: string }) {
-  return (
-    <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-3xl border border-border bg-secondary">
-      <span
-        className={cn(
-          "absolute h-28 w-28 rounded-full border-2 border-primary/40",
-          demo === "cardio" || demo === "bola" ? "animate-ping" : "animate-pulse",
-        )}
-      />
-      <span className="absolute h-20 w-20 animate-pulse rounded-full bg-primary/20" />
-      <div className="relative z-10 px-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-widest text-primary">{LABELS[demo]}</p>
-        <p className="mt-2 text-xl font-extrabold text-foreground">{nome}</p>
-        <p className="mt-2 text-[11px] text-muted-foreground">{aviso}</p>
-        <div className="mx-auto mt-5 h-1.5 w-24 overflow-hidden rounded-full bg-card">
-          <div className="h-full w-1/2 animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-primary" />
-        </div>
-      </div>
-    </div>
-  );
-}
+import { ExerciseMotion } from "@/components/ExerciseMotion";
+import { motionDoExercicio, type DemoCategoria } from "@/data/exercise-motions";
 
 function VideoSkeleton() {
   return (
@@ -49,18 +19,21 @@ export function ExerciseDemo({
   nome,
   videoUrl,
   guia = true,
+  motionId,
 }: {
-  demo?: keyof typeof LABELS;
+  demo?: DemoCategoria;
   nome: string;
   videoUrl?: string;
   /** Mostra o guia de execução escrito (padrão). Desligue em vídeos de capa. */
   guia?: boolean;
+  /** Cena ilustrada. Sem isso, deriva do nome do exercício. */
+  motionId?: ReturnType<typeof motionDoExercicio>;
 }) {
-
   const [carregando, setCarregando] = useState(true);
   const [falhou, setFalhou] = useState(false);
   // Embeds só montam o iframe depois do play (evita carregar o player de terceiros à toa).
   const [ativo, setAtivo] = useState(false);
+  const ilustracaoId = motionId ?? motionDoExercicio(nome, demo);
 
   useEffect(() => {
     setCarregando(true);
@@ -71,7 +44,7 @@ export function ExerciseDemo({
   if (!videoUrl) {
     return (
       <div>
-        <Ilustracao demo={demo} nome={nome} aviso="Siga o guia de execução abaixo" />
+        <ExerciseMotion motionId={ilustracaoId} nome={nome} demo={demo} />
         {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
@@ -106,7 +79,7 @@ export function ExerciseDemo({
   if (!seguro) {
     return (
       <div>
-        <Ilustracao demo={demo} nome={nome} aviso="Endereço de vídeo não permitido" />
+        <ExerciseMotion motionId={ilustracaoId} nome={nome} demo={demo} />
         {guia ? <ExerciseGuide nome={nome} demo={demo} /> : null}
       </div>
     );
@@ -117,55 +90,53 @@ export function ExerciseDemo({
 
   return (
     <div>
-    <div className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-card">
-
-      {carregando && (!isEmbed || ativo) ? <VideoSkeleton /> : null}
-      {isEmbed && !ativo ? (
-        <button
-          type="button"
-          onClick={() => setAtivo(true)}
-          className="group flex h-full w-full flex-col items-center justify-center gap-2 bg-secondary"
-          aria-label={`Reproduzir demonstração de ${nome}`}
-        >
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:scale-105">
-            <Play className="h-6 w-6 fill-current" />
-          </span>
-          <span className="px-6 text-center text-xs font-semibold text-muted-foreground">
-            Tocar demonstração — {nome}
-          </span>
-        </button>
-      ) : isEmbed ? (
-        <iframe
-          loading="lazy"
-          title={nome}
-          src={`${embedSrc}?autoplay=1`}
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          onLoad={() => setCarregando(false)}
-          onError={() => {
-            setCarregando(false);
-            setFalhou(true);
-          }}
-        />
-      ) : (
-        <video
-          className="h-full w-full object-cover"
-          src={seguro}
-          controls
-          playsInline
-          preload="none"
-          onLoadedData={() => setCarregando(false)}
-          onCanPlay={() => setCarregando(false)}
-          onError={() => {
-            setCarregando(false);
-            setFalhou(true);
-          }}
-        />
-      )}
-    </div>
-    {guia ? <ExerciseGuide nome={nome} demo={demo} variante="recolhido" /> : null}
+      <div className="relative aspect-video overflow-hidden rounded-3xl border border-border bg-card">
+        {carregando && (!isEmbed || ativo) ? <VideoSkeleton /> : null}
+        {isEmbed && !ativo ? (
+          <button
+            type="button"
+            onClick={() => setAtivo(true)}
+            className="group flex h-full w-full flex-col items-center justify-center gap-2 bg-secondary"
+            aria-label={`Reproduzir demonstração de ${nome}`}
+          >
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:scale-105">
+              <Play className="h-6 w-6 fill-current" />
+            </span>
+            <span className="px-6 text-center text-xs font-semibold text-muted-foreground">
+              Tocar demonstração — {nome}
+            </span>
+          </button>
+        ) : isEmbed ? (
+          <iframe
+            loading="lazy"
+            title={nome}
+            src={`${embedSrc}?autoplay=1`}
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            onLoad={() => setCarregando(false)}
+            onError={() => {
+              setCarregando(false);
+              setFalhou(true);
+            }}
+          />
+        ) : (
+          <video
+            className="h-full w-full object-cover"
+            src={seguro}
+            controls
+            playsInline
+            preload="none"
+            onLoadedData={() => setCarregando(false)}
+            onCanPlay={() => setCarregando(false)}
+            onError={() => {
+              setCarregando(false);
+              setFalhou(true);
+            }}
+          />
+        )}
+      </div>
+      {guia ? <ExerciseGuide nome={nome} demo={demo} variante="recolhido" /> : null}
     </div>
   );
 }
-

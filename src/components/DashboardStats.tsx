@@ -23,7 +23,11 @@ function lerRetomada(): { treinoId: string; idx: number } | null {
   }
 }
 
-export const DashboardStats = memo(function DashboardStats({ compact = false }: { compact?: boolean }) {
+export const DashboardStats = memo(function DashboardStats({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   const { state, streak, totalTreinos, totalMinutos, planoConcluidos } = usePlayer();
   const [retomar, setRetomar] = useState<{ treinoId: string; idx: number } | null>(null);
 
@@ -33,7 +37,11 @@ export const DashboardStats = memo(function DashboardStats({ compact = false }: 
 
   const xp = useMemo(() => xpTotal(state.sessoes), [state.sessoes]);
   const patente = useMemo(() => patenteDe(xp), [xp]);
-  const proxima = proximaConquista({ totalTreinos, streak, planoConcluidos: planoConcluidos.length });
+  const proxima = proximaConquista({
+    totalTreinos,
+    streak,
+    planoConcluidos: planoConcluidos.length,
+  });
 
   const dias = useMemo(
     () =>
@@ -59,8 +67,6 @@ export const DashboardStats = memo(function DashboardStats({ compact = false }: 
     { icon: Sparkles, valor: xp.toLocaleString("pt-BR"), label: "XP total" },
   ];
 
-  if (compact && !treinoRetomar) return null;
-
   return (
     <div className={cn(compact ? "mb-4" : "mt-5 space-y-6")}>
       {treinoRetomar ? (
@@ -73,7 +79,9 @@ export const DashboardStats = memo(function DashboardStats({ compact = false }: 
             <Play className="h-4 w-4" />
           </span>
           <span className="flex-1">
-            <span className="block text-sm font-extrabold text-foreground">Continue de onde parou</span>
+            <span className="block text-sm font-extrabold text-foreground">
+              Continue de onde parou
+            </span>
             <span className="block text-xs text-muted-foreground">
               {treinoRetomar.nome} · exercício {retomar!.idx + 1}
             </span>
@@ -81,88 +89,108 @@ export const DashboardStats = memo(function DashboardStats({ compact = false }: 
         </Link>
       ) : null}
 
-      {compact ? null : (
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {cards.map((c) => (
-          <div
-            key={c.label}
-            className="rounded-2xl border border-border/60 bg-card p-4 text-center shadow-soft"
-          >
-            <c.icon className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-2 text-2xl font-black tracking-tight text-foreground">{c.valor}</p>
-            <p className="text-[11px] font-medium text-muted-foreground">{c.label}</p>
-          </div>
-        ))}
-      </div>
+      {compact ? (
+        <div className="mb-3 grid grid-cols-4 gap-2">
+          {cards.map((c) => (
+            <div
+              key={c.label}
+              className="rounded-2xl border border-border/60 bg-card px-2 py-2.5 text-center shadow-soft"
+            >
+              <c.icon className="mx-auto h-3.5 w-3.5 text-primary" />
+              <p className="mt-1 text-sm font-black tracking-tight text-foreground">{c.valor}</p>
+              <p className="text-[9px] font-medium leading-tight text-muted-foreground">
+                {c.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {cards.map((c) => (
+            <div
+              key={c.label}
+              className="rounded-2xl border border-border/60 bg-card p-4 text-center shadow-soft"
+            >
+              <c.icon className="mx-auto h-5 w-5 text-primary" />
+              <p className="mt-2 text-2xl font-black tracking-tight text-foreground">{c.valor}</p>
+              <p className="text-[11px] font-medium text-muted-foreground">{c.label}</p>
+            </div>
+          ))}
+        </div>
       )}
 
       {compact ? null : (
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-[1.5rem] border border-border/60 bg-card p-6 shadow-soft">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-foreground">Meta da semana</h2>
-            <span className="text-xs font-bold text-primary">
-              {Math.min(feitosSemana, META_SEMANAL)}/{META_SEMANAL} treinos
-            </span>
-          </div>
-          <LevelBar value={(Math.min(feitosSemana, META_SEMANAL) / META_SEMANAL) * 100} className="mt-3" />
-          <div className="mt-5 grid grid-cols-7 gap-2">
-            {dias.map((d) => (
-              <div key={d.iso} className="flex flex-col items-center gap-1.5">
-                <span
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold sm:h-10 sm:w-10 sm:text-xs",
-                    d.ativo
-                      ? "bg-primary text-primary-foreground"
-                      : d.hoje
-                        ? "border border-dashed border-primary/50 text-primary"
-                        : "bg-secondary text-muted-foreground",
-                  )}
-                >
-                  {d.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-[1.5rem] border border-border/60 bg-card p-6 shadow-soft">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-foreground">
-              Patente {patente.atual.emoji} {patente.atual.nome}
-            </h2>
-            <span className="text-xs font-bold text-muted-foreground">
-              {patente.proxima ? `próxima: ${patente.proxima.nome}` : "máxima"}
-            </span>
-          </div>
-          <LevelBar value={patente.progresso} className="mt-3" />
-          <p className="mt-3 text-xs text-muted-foreground">
-            {patente.proxima
-              ? `Faltam ${patente.faltam.toLocaleString("pt-BR")} XP para ${patente.proxima.nome}.`
-              : "Você chegou ao topo — mantenha o ritmo."}
-          </p>
-
-          {proxima ? (
-            <div className="mt-5 rounded-2xl bg-secondary/70 p-4">
-              <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-primary" />
-                <p className="text-xs font-bold text-foreground">Próxima conquista: {proxima.titulo}</p>
-              </div>
-              <LevelBar value={(proxima.atual / proxima.meta) * 100} className="mt-2 h-2" />
-              <p className="mt-2 text-[11px] text-muted-foreground">
-                {proxima.atual}/{proxima.meta} · {proxima.desc}
-              </p>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <section className="rounded-[1.5rem] border border-border/60 bg-card p-6 shadow-soft">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-foreground">Meta da semana</h2>
+              <span className="text-xs font-bold text-primary">
+                {Math.min(feitosSemana, META_SEMANAL)}/{META_SEMANAL} treinos
+              </span>
             </div>
-          ) : null}
+            <LevelBar
+              value={(Math.min(feitosSemana, META_SEMANAL) / META_SEMANAL) * 100}
+              className="mt-3"
+            />
+            <div className="mt-5 grid grid-cols-7 gap-2">
+              {dias.map((d) => (
+                <div key={d.iso} className="flex flex-col items-center gap-1.5">
+                  <span
+                    className={cn(
+                      "flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold sm:h-10 sm:w-10 sm:text-xs",
+                      d.ativo
+                        ? "bg-primary text-primary-foreground"
+                        : d.hoje
+                          ? "border border-dashed border-primary/50 text-primary"
+                          : "bg-secondary text-muted-foreground",
+                    )}
+                  >
+                    {d.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          <Link
-            to="/progresso"
-            className="mt-5 inline-block text-xs font-bold text-primary underline underline-offset-4"
-          >
-            Ver todas as conquistas
-          </Link>
-        </section>
-      </div>
+          <section className="rounded-[1.5rem] border border-border/60 bg-card p-6 shadow-soft">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-foreground">
+                Patente {patente.atual.emoji} {patente.atual.nome}
+              </h2>
+              <span className="text-xs font-bold text-muted-foreground">
+                {patente.proxima ? `próxima: ${patente.proxima.nome}` : "máxima"}
+              </span>
+            </div>
+            <LevelBar value={patente.progresso} className="mt-3" />
+            <p className="mt-3 text-xs text-muted-foreground">
+              {patente.proxima
+                ? `Faltam ${patente.faltam.toLocaleString("pt-BR")} XP para ${patente.proxima.nome}.`
+                : "Você chegou ao topo — mantenha o ritmo."}
+            </p>
+
+            {proxima ? (
+              <div className="mt-5 rounded-2xl bg-secondary/70 p-4">
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-primary" />
+                  <p className="text-xs font-bold text-foreground">
+                    Próxima conquista: {proxima.titulo}
+                  </p>
+                </div>
+                <LevelBar value={(proxima.atual / proxima.meta) * 100} className="mt-2 h-2" />
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  {proxima.atual}/{proxima.meta} · {proxima.desc}
+                </p>
+              </div>
+            ) : null}
+
+            <Link
+              to="/progresso"
+              className="mt-5 inline-block text-xs font-bold text-primary underline underline-offset-4"
+            >
+              Ver todas as conquistas
+            </Link>
+          </section>
+        </div>
       )}
     </div>
   );
