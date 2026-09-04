@@ -103,3 +103,20 @@ export const fetchCheckoutD0Funil = createServerFn({ method: "POST" })
       d0Rate: purchased ? Math.round((d0 / purchased) * 100) : 0,
     };
   });
+
+export type CapiStatus = {
+  configured: boolean;
+  runtime: "start";
+};
+
+/** Só diz se o token existe neste runtime (Start). Sem devolver o valor. */
+export const fetchCapiStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({}).parse(data ?? {}))
+  .handler(async ({ context }): Promise<CapiStatus> => {
+    await garantirAdmin(context.supabase);
+    return {
+      configured: Boolean(process.env["META_CAPI_ACCESS_TOKEN"]),
+      runtime: "start",
+    };
+  });

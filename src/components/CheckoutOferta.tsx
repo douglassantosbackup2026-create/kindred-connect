@@ -8,15 +8,14 @@ import { Button } from "@/components/ui/button";
 import { CheckoutAuth, type CheckoutDados } from "@/components/CheckoutAuth";
 import { CupomCampo } from "@/components/checkout/CupomCampo";
 import { MercadoPagoCheckout } from "@/components/MercadoPagoCheckout";
-import { PLANOS_ASSINATURA } from "@/data/training";
+import { PLANOS_ASSINATURA, valorPlanoReais } from "@/data/training";
 import { supabase } from "@/integrations/supabase/client";
 import { PLANO_PADRAO, registrarCheckoutIntent } from "@/lib/checkout";
 import { cpfValido, phoneValido } from "@/lib/br-docs";
 import { usePlayer } from "@/lib/player-store";
 import {
-  lembrarInitiateCheckout,
-  newEventId,
-  trackMetaDedup,
+  trackInitiateCheckout,
+  trackPurchase,
   trackCheckoutStep,
 } from "@/lib/meta-pixel";
 
@@ -193,6 +192,13 @@ export function CheckoutOferta({
         const res = await sincronizarMp({ data: undefined }).catch(() => null);
         await refreshEntitlement();
         if (res?.assinante) {
+          if (res.paymentId) {
+            trackPurchase({
+              paymentId: String(res.paymentId),
+              value: Number(res.amount) || valorPlanoReais(res.plano ?? escolhido),
+              contentName: res.plano ?? escolhido,
+            });
+          }
           irParaPro();
           return true;
         }
@@ -215,26 +221,14 @@ export function CheckoutOferta({
         if (manual) setVerificando(false);
       }
     },
-    [sincronizarMp, refreshEntitlement, irParaPro],
+    [sincronizarMp, refreshEntitlement, irParaPro, escolhido],
   );
 
   const checkoutTrackedRef = useRef(false);
   const abrirBrick = useCallback((plano: string) => {
     if (!checkoutTrackedRef.current) {
       checkoutTrackedRef.current = true;
-      const icEventId = newEventId("initiatecheckout");
-      lembrarInitiateCheckout(icEventId);
-      trackMetaDedup(
-        "InitiateCheckout",
-        {
-          content_name: plano,
-          content_type: "product",
-          currency: "BRL",
-          value: (PLANOS_ASSINATURA.find((p) => p.id === plano)?.precoCentavos ?? 0) / 100,
-          num_items: 1,
-        },
-        { eventId: icEventId },
-      );
+      trackInitiateCheckout(plano, valorPlanoReais(plano));
     }
     setMostrarBrick(true);
     trackCheckoutStep("brick_open", { plano });

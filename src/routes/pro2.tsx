@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Pro2LandingPage } from "@/components/Pro2LandingPage";
 import { validateLandingSearch, type LandingSearch } from "@/lib/checkout";
+import { OG_IMAGE, siteUrl } from "@/lib/site";
 import { usePlayer } from "@/lib/player-store";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 
@@ -24,10 +25,13 @@ export const Route = createFileRoute("/pro2")({
           "Abra o app, veja o treino do dia e faça. Planos a partir de R$16,42/mês no anual. 14 dias de garantia.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { property: "og:url", content: siteUrl("/pro2") },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "robots", content: "noindex, nofollow" },
     ],
+    links: [{ rel: "canonical", href: siteUrl("/pro2") }],
   }),
   component: Pro2Page,
 });

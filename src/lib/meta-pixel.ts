@@ -327,6 +327,53 @@ export function trackCheckoutStep(step: string, extra?: MetaPayload) {
   trackMetaCustom("CheckoutStep", { step, ...extra });
 }
 
+/** Um InitiateCheckout por aba, com valor, para o Pix ligar original_event_data. */
+export function trackInitiateCheckout(plano: string, value: number) {
+  if (typeof window === "undefined") return;
+  const existente = getInitiateCheckout();
+  if (existente) return existente.eventId;
+  const eventId = newEventId("initiatecheckout");
+  lembrarInitiateCheckout(eventId);
+  trackMetaDedup(
+    "InitiateCheckout",
+    {
+      content_name: plano,
+      content_type: "product",
+      currency: "BRL",
+      value,
+      num_items: 1,
+    },
+    { eventId },
+  );
+  return eventId;
+}
+
+const PURCHASE_KEY = "jps:meta-purchase";
+
+/** Pixel Purchase + Subscribe. CAPI Purchase já vai no servidor com o mesmo event_id. */
+export function trackPurchase(opts: { paymentId: string; value: number; contentName: string }) {
+  if (typeof window === "undefined") return;
+  const paymentId = String(opts.paymentId);
+  if (!paymentId) return;
+  const eventId = `mp-${paymentId}`;
+  try {
+    if (sessionStorage.getItem(PURCHASE_KEY) === eventId) return;
+    sessionStorage.setItem(PURCHASE_KEY, eventId);
+  } catch {
+    /* ignore */
+  }
+  const compraPayload = {
+    value: opts.value,
+    currency: "BRL",
+    content_name: opts.contentName,
+    content_type: "product",
+    num_items: 1,
+    order_id: paymentId,
+  };
+  trackMeta("Purchase", compraPayload, eventId);
+  trackMetaDedup("Subscribe", compraPayload, { eventId: `${eventId}-sub` });
+}
+
 /**
  * Dispara o evento no pixel do navegador e na Conversions API com o MESMO
  * event_id — o Meta descarta a cópia duplicada automaticamente.

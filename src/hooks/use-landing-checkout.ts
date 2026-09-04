@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { captureUtmFromSearch } from "@/lib/utm";
 import { searchCheckout, type LandingSearch } from "@/lib/checkout";
-import { trackMetaCustom, trackMetaDedup } from "@/lib/meta-pixel";
+import { trackInitiateCheckout, trackMetaCustom, trackMetaDedup } from "@/lib/meta-pixel";
 import { whatsappSupportHref } from "@/lib/product-config";
+import { valorPlanoReais } from "@/data/training";
 
 /**
  * UTM + Pixel + navegação para /checkout. As 3 landings PRO compartilham isto;
@@ -31,11 +32,7 @@ export function useLandingCheckout(from: string, search: LandingSearch, defaultP
     (plano?: string) => {
       const alvo = plano ?? planoAtivo ?? defaultPlano;
       setPlanoAtivo(alvo);
-      trackMetaDedup("InitiateCheckout", {
-        content_name: alvo,
-        currency: "BRL",
-        num_items: 1,
-      });
+      trackInitiateCheckout(alvo, valorPlanoReais(alvo));
       void navigate({
         to: "/checkout",
         search: searchCheckout({

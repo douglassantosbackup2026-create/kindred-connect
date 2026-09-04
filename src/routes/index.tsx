@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Pro3LandingPage } from "@/components/Pro3LandingPage";
 import { validateLandingSearch, type LandingSearch } from "@/lib/checkout";
+import { OG_IMAGE, siteUrl } from "@/lib/site";
 import { usePlayer } from "@/lib/player-store";
 import { useEffect } from "react";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
@@ -25,12 +26,12 @@ export const Route = createFileRoute("/")({
       },
 
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://jogadorprosystem.lovable.app/" },
-      { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { property: "og:url", content: siteUrl("/") },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "https://jogadorprosystem.lovable.app/" }],
+    links: [{ rel: "canonical", href: siteUrl("/") }],
   }),
   component: HomePage,
 });

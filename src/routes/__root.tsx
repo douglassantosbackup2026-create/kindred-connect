@@ -16,6 +16,7 @@ import { PlayerProvider } from "@/lib/player-store";
 import { META_PIXEL_ID, captureFbclid, hydrateMetaIdentity, trackMetaDedup } from "@/lib/meta-pixel";
 import { supabase } from "@/integrations/supabase/client";
 import { captureUtmFromLocation } from "@/lib/utm";
+import { OG_IMAGE } from "@/lib/site";
 import { Toaster } from "@/components/ui/sonner";
 import { OfflineBanner } from "@/components/OfflineBanner";
 
@@ -93,6 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Jogador PRO System" },
       { property: "og:description", content: "Plano guiado de treinos para evoluir no futebol." },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

@@ -91,26 +91,44 @@ function AdminDashboard() {
         </div>
       </section>
 
-      <section className="mt-6 rounded-2xl border border-border bg-card p-5">
-        <h2 className="text-sm font-bold text-foreground">Checkout → Pix → treino D0 (7d)</h2>
-        <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-          <li>
-            Intents (CheckoutStep):{" "}
-            <span className="font-bold text-foreground">{stats?.checkoutD0?.started ?? 0}</span>
-          </li>
-          <li>
-            Pix/cartão aprovado:{" "}
-            <span className="font-bold text-foreground">
-              {stats?.checkoutD0?.purchased ?? 0} ({stats?.checkoutD0?.purchasedRate ?? 0}%)
-            </span>
-          </li>
-          <li>
-            1º treino no mesmo dia:{" "}
-            <span className="font-bold text-foreground">
-              {stats?.checkoutD0?.d0 ?? 0} ({stats?.checkoutD0?.d0Rate ?? 0}%)
-            </span>
-          </li>
-        </ul>
+      <section className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h2 className="text-sm font-bold text-foreground">Checkout → Pix → treino D0 (7d)</h2>
+          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+            <li>
+              Intents (CheckoutStep):{" "}
+              <span className="font-bold text-foreground">{stats?.checkoutD0?.started ?? 0}</span>
+            </li>
+            <li>
+              Pix/cartão aprovado:{" "}
+              <span className="font-bold text-foreground">
+                {stats?.checkoutD0?.purchased ?? 0} ({stats?.checkoutD0?.purchasedRate ?? 0}%)
+              </span>
+            </li>
+            <li>
+              1º treino no mesmo dia:{" "}
+              <span className="font-bold text-foreground">
+                {stats?.checkoutD0?.d0 ?? 0} ({stats?.checkoutD0?.d0Rate ?? 0}%)
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h2 className="text-sm font-bold text-foreground">CAPI Meta</h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {stats?.capi?.configured ? (
+              <>
+                Token presente neste runtime (Start).{" "}
+                <span className="font-bold text-foreground">Configurado</span>
+              </>
+            ) : (
+              <>
+                Token ausente neste runtime (Start). O Pixel do front pode funcionar mesmo assim — o CAPI
+                da Edge Function usa o secret do Dashboard, não o deste servidor.
+              </>
+            )}
+          </p>
+        </div>
       </section>
 
       <section className="mt-6 rounded-2xl border border-border bg-card p-5">

@@ -42,6 +42,7 @@ const EVENTOS_PERMITIDOS = new Set([
   "ScrollDepth",
   "FaqOpen",
   "WorkoutFeel",
+  "CheckoutStep",
 ]);
 
 function corsFor(req: Request): Record<string, string> {

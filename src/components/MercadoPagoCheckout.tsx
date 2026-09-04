@@ -9,8 +9,7 @@ import {
   getFbc,
   getInitiateCheckout,
   lembrarIdentidade,
-  trackMeta,
-  trackMetaDedup,
+  trackPurchase,
 } from "@/lib/meta-pixel";
 import { getStoredUtm } from "@/lib/utm";
 import { extrairErroPagamento, traduzErroPagamento } from "@/lib/checkout";
@@ -264,18 +263,13 @@ export function MercadoPagoCheckout({
       if (status === "approved") {
         gravarPixQr(null);
         setPixQr(null);
-        const eventId = payload?.id ? `mp-${payload.id}` : undefined;
-        const orderId = payload?.id ? String(payload.id) : undefined;
-        const compraPayload = {
-          value: paid,
-          currency: "BRL",
-          content_name: planoId,
-          content_type: "product",
-          num_items: 1,
-          ...(orderId ? { order_id: orderId } : {}),
-        };
-        trackMeta("Purchase", compraPayload, eventId);
-        trackMetaDedup("Subscribe", compraPayload, eventId ? { eventId: `${eventId}-sub` } : undefined);
+        if (payload?.id != null) {
+          trackPurchase({
+            paymentId: String(payload.id),
+            value: paid,
+            contentName: planoId,
+          });
+        }
         toast.success("Pagamento aprovado");
         onApprovedRef.current(planoId);
         return;

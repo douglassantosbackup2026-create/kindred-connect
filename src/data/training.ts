@@ -543,6 +543,10 @@ export const PLANOS_ASSINATURA = [
   },
 ];
 
+export function valorPlanoReais(planoId: string): number {
+  return (PLANOS_ASSINATURA.find((p) => p.id === planoId)?.precoCentavos ?? 0) / 100;
+}
+
 
 export const BENEFICIOS_PRO = [
   "Jornada guiada completa de 12 meses",

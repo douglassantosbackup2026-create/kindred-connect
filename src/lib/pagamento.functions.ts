@@ -20,7 +20,9 @@ export const sincronizarPagamento = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const accessToken = process.env["MERCADOPAGO_ACCESS_TOKEN"];
-    if (!accessToken) return { status: "unconfigured" as const, assinante: false, plano: null };
+    if (!accessToken) {
+      return { status: "unconfigured" as const, assinante: false, plano: null, paymentId: null, amount: null };
+    }
 
     const userId = context.userId;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -52,6 +54,8 @@ export const sincronizarPagamento = createServerFn({ method: "POST" })
 
     let status = "not_found";
     let planoAtivo: string | null = null;
+    let paymentId: string | null = null;
+    let amount: number | null = null;
 
     for (const id of ids) {
       const res = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
@@ -99,9 +103,11 @@ export const sincronizarPagamento = createServerFn({ method: "POST" })
 
         status = "approved";
         planoAtivo = plano;
+        paymentId = String(payment.id);
+        amount = Number(payment.transaction_amount ?? 0);
         break;
       }
     }
 
-    return { status, assinante: status === "approved", plano: planoAtivo };
+    return { status, assinante: status === "approved", plano: planoAtivo, paymentId, amount };
   });

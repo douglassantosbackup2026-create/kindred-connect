@@ -15,6 +15,20 @@ As Edge Functions leem **primeiro** o env do Dashboard e, se vazio, o **Vault** 
 
 `ADMIN_EMAILS` só existe no Dashboard (não dá para gravar via SQL). Sem ele, `ensure-admin-role` nunca promove ninguém — o painel `/admin` fica inacessível até o dono colar o e-mail confirmado, separado por vírgula.
 
+## Conta admin (painel)
+
+Consulta no Futebol:
+
+```sql
+select id, role from profiles where role = 'admin';
+```
+
+Resultado: **0 linhas**. Ninguém foi promovido.
+
+`ADMIN_EMAILS` **já está gravado** no Dashboard (Edge Function secret; não dá para ler o valor daqui nem gravar via SQL). O painel está promovível: o dono entra com o e-mail confirmado da allowlist e abre `/admin` — `ensure-admin-role` faz o upsert de `profiles.role = admin`.
+
+Não inventar e-mail, não promover conta `@teste.com` e não colar o endereço neste arquivo.
+
 Webhook MP: copie o secret em Your integrations → Webhooks e grave no Vault (substitui o valor de QA, se houver):
 
 ```sql
@@ -41,6 +55,21 @@ Outros secrets só no Dashboard → Edge Functions → Secrets:
 `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` já são injetados.
 
 Cartão com erro **Invalid credentials** (MP code 17): Public Key (`VITE_MERCADOPAGO_PUBLIC_KEY` / `MERCADOPAGO_PUBLIC_KEY`) e Access Token não são do mesmo aplicativo ou misturam Teste (`TEST-…`) com Produção (`APP_USR-…`). Copie os dois no [painel do MP](https://www.mercadopago.com.br/developers/panel/app) do mesmo bloco.
+
+## Domínio de produção (Meta Ads)
+
+`jogadorprosystem.com` está **NXDOMAIN** (RDAP 404): o nome não tem registro DNS. Sem isso o apex e o `www` não respondem 200 — o site no ar hoje é `https://jogadorprosystem.lovable.app`.
+
+Para o anúncio usar o domínio próprio:
+
+1. Registrar `jogadorprosystem.com` no registrador.
+2. No Lovable: Settings → Domains → adicionar `jogadorprosystem.com` (e `www`).
+3. Apontar o DNS exatamente como o painel pedir (em geral CNAME de `www` para `jogadorprosystem.lovable.app` e ALIAS/A no apex).
+4. Confirmar `GET https://jogadorprosystem.com/` = 200 e `GET /og-cover.jpg` = 200 antes de ligar a campanha.
+
+Até o DNS existir, a URL do anúncio deve ser `https://jogadorprosystem.lovable.app/?utm_source=facebook&utm_medium=cpc&utm_campaign=...`.
+
+Não deixe `META_TEST_EVENT_CODE` setado em produção.
 
 ## Crons (pg_cron + pg_net)
 

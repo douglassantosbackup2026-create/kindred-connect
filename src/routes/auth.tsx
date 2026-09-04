@@ -12,6 +12,7 @@ import { acessoProAtivo } from "@/lib/acesso";
 import { forcaSenha } from "@/lib/auth-ui";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 import { getErrorMessage } from "@/lib/utils";
+import { toast } from "sonner";
 
 export type AuthSearch = {
   from?: string;
@@ -47,11 +48,12 @@ async function perfilTemAcessoPro() {
   const { data } = await supabase.auth.getUser();
   const userId = data.user?.id;
   if (!userId) return false;
-  const { data: perfil } = await supabase
+  const { data: perfil, error } = await supabase
     .from("profiles")
     .select("assinante, assinante_until, paused_until")
     .eq("id", userId)
     .maybeSingle();
+  if (error) return false;
   return acessoProAtivo(perfil?.assinante ?? false, perfil?.assinante_until, perfil?.paused_until);
 }
 
@@ -101,7 +103,11 @@ function AuthPage() {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
-        if (error) throw error;
+        if (error) {
+          setErro(traduzErroAuth(error.message));
+          toast.error(traduzErroAuth(error.message));
+          return;
+        }
         setMsg("Enviamos um link de redefinição para o seu e-mail. Confira também o spam.");
         return;
       }
@@ -114,7 +120,11 @@ function AuthPage() {
             data: { nome },
           },
         });
-        if (error) throw error;
+        if (error) {
+          setErro(traduzErroAuth(error.message));
+          toast.error(traduzErroAuth(error.message));
+          return;
+        }
         if (data.user && (data.user.identities?.length ?? 0) === 0) {
           setErro("Este e-mail já tem conta. Faça login ou use “Esqueci minha senha”.");
           return;
@@ -136,7 +146,11 @@ function AuthPage() {
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-        if (error) throw error;
+        if (error) {
+          setErro(traduzErroAuth(error.message));
+          toast.error(traduzErroAuth(error.message));
+          return;
+        }
       }
 
       if (isCheckoutAuthFrom(from)) {
@@ -166,7 +180,9 @@ function AuthPage() {
       }
       await navigate({ to: "/app" });
     } catch (e) {
-      setErro(traduzErroAuth(getErrorMessage(e, "Não foi possível continuar. Tente novamente.")));
+      const msgErro = traduzErroAuth(getErrorMessage(e, "Não foi possível continuar. Tente novamente."));
+      setErro(msgErro);
+      toast.error(msgErro);
     } finally {
       setLoading(false);
     }

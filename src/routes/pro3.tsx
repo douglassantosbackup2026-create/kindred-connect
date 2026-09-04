@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Pro3LandingPage } from "@/components/Pro3LandingPage";
 import { validateLandingSearch, type LandingSearch } from "@/lib/checkout";
+import { OG_IMAGE, siteUrl } from "@/lib/site";
 import { usePlayer } from "@/lib/player-store";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 
@@ -24,12 +25,13 @@ export const Route = createFileRoute("/pro3")({
           "Plano pronto, treino do dia no app e evolução acompanhada. A partir de R$16,42/mês no plano anual, com 14 dias de garantia.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://jogadorprosystem.lovable.app/pro3" },
-      { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { property: "og:url", content: siteUrl("/pro3") },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "robots", content: "noindex, nofollow" },
     ],
-    links: [{ rel: "canonical", href: "https://jogadorprosystem.lovable.app/pro3" }],
+    links: [{ rel: "canonical", href: siteUrl("/pro3") }],
   }),
   component: Pro3Page,
 });

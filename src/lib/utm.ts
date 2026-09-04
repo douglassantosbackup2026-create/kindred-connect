@@ -1,4 +1,6 @@
 const UTM_KEY = "jogador-pro-utm-v1";
+const UTM_FIRST_KEY = "jogador-pro-utm-first-v1";
+export const UTM_FIRST_TOUCH_MS = 90 * 24 * 60 * 60 * 1000;
 
 export type UtmParams = {
   utm_source?: string | undefined;
@@ -7,6 +9,48 @@ export type UtmParams = {
   utm_content?: string | undefined;
   utm_term?: string | undefined;
 };
+
+type FirstTouch = { at: number; utm: UtmParams };
+
+function temUtm(utm: UtmParams): boolean {
+  return Object.values(utm).some(Boolean);
+}
+
+function lerSession(): UtmParams {
+  try {
+    const raw = sessionStorage.getItem(UTM_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as UtmParams;
+    return temUtm(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+export function lerFirstTouch(now = Date.now()): UtmParams {
+  try {
+    const raw = localStorage.getItem(UTM_FIRST_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as FirstTouch;
+    if (!parsed?.at || !parsed.utm || now - parsed.at > UTM_FIRST_TOUCH_MS) {
+      localStorage.removeItem(UTM_FIRST_KEY);
+      return {};
+    }
+    return temUtm(parsed.utm) ? parsed.utm : {};
+  } catch {
+    return {};
+  }
+}
+
+function gravarFirstTouch(utm: UtmParams, now = Date.now()) {
+  if (!temUtm(utm)) return;
+  if (temUtm(lerFirstTouch(now))) return;
+  try {
+    localStorage.setItem(UTM_FIRST_KEY, JSON.stringify({ at: now, utm } satisfies FirstTouch));
+  } catch {
+    /* ignore */
+  }
+}
 
 export function captureUtmFromSearch(search: URLSearchParams | Record<string, unknown>) {
   const get = (k: string) => {
@@ -27,23 +71,21 @@ export function captureUtmFromSearch(search: URLSearchParams | Record<string, un
   if (content) next.utm_content = content;
   if (term) next.utm_term = term;
 
-  if (!Object.values(next).some(Boolean)) return getStoredUtm();
+  if (!temUtm(next)) return getStoredUtm();
 
   try {
     sessionStorage.setItem(UTM_KEY, JSON.stringify(next));
   } catch {
     /* ignore */
   }
+  gravarFirstTouch(next);
   return next;
 }
 
 export function getStoredUtm(): UtmParams {
-  try {
-    const raw = sessionStorage.getItem(UTM_KEY);
-    return raw ? (JSON.parse(raw) as UtmParams) : {};
-  } catch {
-    return {};
-  }
+  const sessao = lerSession();
+  if (temUtm(sessao)) return sessao;
+  return lerFirstTouch();
 }
 
 export function captureUtmFromLocation() {

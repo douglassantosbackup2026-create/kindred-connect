@@ -73,7 +73,7 @@ function ProgressoPage() {
     },
   });
   const { user } = useAuth();
-  const { week, rows: rankingRows } = useRankingSemanal(state.assinante);
+  const { week, rows: rankingRows, isError: rankingErro } = useRankingSemanal(state.assinante);
   const xp = xpTotal(state.sessoes);
   const patente = patenteDe(xp);
   const minhaPosicao = rankingRows.find((r) =>
@@ -242,21 +242,27 @@ function ProgressoPage() {
           </Link>
         </div>
         <div className="mt-3">
-          <RankingLista
-            rows={rankingRows.slice(0, 5)}
-            meuNome={state.nome}
-            meuUserId={user?.id}
-            emptyCta={
-              treinoDeHoje
-                ? {
-                    to: "/treino/$treinoId",
-                    params: { treinoId: treinoDeHoje.id },
-                    search: { plano: proximoPlano?.key ?? "" },
-                    label: "Fazer o treino de hoje",
-                  }
-                : null
-            }
-          />
+          {rankingErro ? (
+            <p className="rounded-2xl border border-destructive/30 bg-card p-6 text-center text-sm text-destructive">
+              Não deu para carregar o ranking. Tente de novo em instantes.
+            </p>
+          ) : (
+            <RankingLista
+              rows={rankingRows.slice(0, 5)}
+              meuNome={state.nome}
+              meuUserId={user?.id}
+              emptyCta={
+                treinoDeHoje
+                  ? {
+                      to: "/treino/$treinoId",
+                      params: { treinoId: treinoDeHoje.id },
+                      search: { plano: proximoPlano?.key ?? "" },
+                      label: "Fazer o treino de hoje",
+                    }
+                  : null
+              }
+            />
+          )}
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CheckoutPagamento } from "@/components/CheckoutPagamento";
 import { parseCheckoutSearch } from "@/lib/checkout";
+import { OG_IMAGE, siteUrl } from "@/lib/site";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
 
 export const Route = createFileRoute("/checkout")({
@@ -21,10 +22,12 @@ export const Route = createFileRoute("/checkout")({
         content: "Checkout transparente. Pix e cartão. Acesso na aprovação.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { property: "og:url", content: siteUrl("/checkout") },
+      { property: "og:image", content: OG_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://jogadorprosystem.lovable.app/og-cover.jpg" },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
+    links: [{ rel: "canonical", href: siteUrl("/checkout") }],
   }),
   component: CheckoutRoute,
 });
