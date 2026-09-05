@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { captureUtmFromSearch } from "@/lib/utm";
 import { searchCheckout, type LandingSearch } from "@/lib/checkout";
+import { registrarFunnel } from "@/lib/funnel";
 import { trackInitiateCheckout, trackMetaCustom, trackMetaDedup } from "@/lib/meta-pixel";
 import { whatsappSupportHref } from "@/lib/product-config";
 import { valorPlanoReais } from "@/data/training";
@@ -26,6 +27,7 @@ export function useLandingCheckout(from: string, search: LandingSearch, defaultP
       utm_source: search.utm_source ?? "",
       utm_campaign: search.utm_campaign ?? "",
     });
+    registrarFunnel("landing", { from });
   }, [from, search]);
 
   const irParaCheckout = useCallback(

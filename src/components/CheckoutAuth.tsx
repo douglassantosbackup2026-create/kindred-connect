@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { checkoutEmailRedirect, garantirSessaoAposCadastro, traduzErroAuth } from "@/lib/checkout";
 import { forcaSenha } from "@/lib/auth-ui";
 import { cpfValido, maskCpf, maskPhone, phoneE164Br, phoneValido, soDigitos } from "@/lib/br-docs";
+import { registrarFunnel } from "@/lib/funnel";
 import { trackMetaDedup, trackCheckoutStep } from "@/lib/meta-pixel";
 import { getErrorMessage } from "@/lib/utils";
 
@@ -121,6 +122,7 @@ export function CheckoutAuth({
           { email, phone: phoneE164Br(phoneDigits), nome },
         );
         trackCheckoutStep("auth", { plano });
+        registrarFunnel("signup");
         let userId = data.session && data.user ? data.user.id : null;
         if (!userId) {
           const extra = await garantirSessaoAposCadastro(email, senha);

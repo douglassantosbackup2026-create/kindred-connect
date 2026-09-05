@@ -372,6 +372,9 @@ export function trackPurchase(opts: { paymentId: string; value: number; contentN
   };
   trackMeta("Purchase", compraPayload, eventId);
   trackMetaDedup("Subscribe", compraPayload, { eventId: `${eventId}-sub` });
+  void import("@/lib/funnel").then((m) => m.registrarFunnel("purchase")).catch(() => {
+    /* analytics */
+  });
 }
 
 /**

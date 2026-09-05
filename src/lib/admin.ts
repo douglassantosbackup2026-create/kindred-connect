@@ -68,7 +68,7 @@ export async function fetchAdminStats() {
   since30.setDate(since30.getDate() - 30);
   const iso30 = since30.toISOString();
 
-  const [users, sessoes, payments, assinantes, pagamentos7, cancelados, clicks, cohortPayments, checkoutD0, capi] =
+  const [users, sessoes, payments, assinantes, pagamentos7, cancelados, clicks, cohortPayments, capi] =
     await Promise.all([
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("sessoes").select("id", { count: "exact", head: true }),
@@ -91,9 +91,6 @@ export async function fetchAdminStats() {
         .gte("created_at", iso30)
         .order("created_at", { ascending: true })
         .limit(500),
-      import("@/lib/admin.functions")
-        .then((m) => m.fetchCheckoutD0Funil({ data: {} }))
-        .catch(() => ({ started: 0, purchased: 0, purchasedRate: 0, d0: 0, d0Rate: 0 })),
       import("@/lib/admin.functions")
         .then((m) => m.fetchCapiStatus({ data: {} }))
         .catch(() => ({ configured: false as const, runtime: "start" as const })),
@@ -205,13 +202,6 @@ export async function fetchAdminStats() {
       d7Rate: elegivelD7 ? Math.round((d7Total / elegivelD7) * 100) : 0,
     },
     funilPorUtm,
-    checkoutD0: checkoutD0 ?? {
-      started: 0,
-      purchased: 0,
-      purchasedRate: 0,
-      d0: 0,
-      d0Rate: 0,
-    },
     capi: capi ?? { configured: false, runtime: "start" as const },
   };
 }

@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PLANO_PADRAO, registrarCheckoutIntent } from "@/lib/checkout";
 import { cpfValido, phoneValido } from "@/lib/br-docs";
 import { usePlayer } from "@/lib/player-store";
+import { registrarFunnel } from "@/lib/funnel";
 import {
   trackInitiateCheckout,
   trackPurchase,
@@ -232,6 +233,7 @@ export function CheckoutOferta({
     }
     setMostrarBrick(true);
     trackCheckoutStep("brick_open", { plano });
+    registrarFunnel("pay_start", { from: plano });
     void registrarCheckoutIntent(plano).catch(() => {
       toast.message("Não deu para registrar o checkout", {
         description: "Você ainda pode pagar normalmente.",

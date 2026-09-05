@@ -104,6 +104,41 @@ export const fetchCheckoutD0Funil = createServerFn({ method: "POST" })
     };
   });
 
+export type { VendasFunil } from "@/lib/vendas-funil";
+
+export const fetchVendasFunil = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => z.object({ dias: z.union([z.literal(7), z.literal(30)]) }).parse(data))
+  .handler(async ({ data, context }) => {
+    await garantirAdmin(context.supabase);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { montarVendasFunil } = await import("@/lib/vendas-funil");
+    const since = new Date();
+    since.setDate(since.getDate() - data.dias);
+    const iso = since.toISOString();
+
+    const [funnelRes, intentsRes, paymentsRes] = await Promise.all([
+      supabaseAdmin.from("funnel_events").select("step, visitor_id").gte("created_at", iso).limit(10000),
+      supabaseAdmin.from("checkout_intents").select("user_id").gte("started_at", iso).limit(5000),
+      supabaseAdmin
+        .from("payment_events")
+        .select("event_type, user_id")
+        .gte("created_at", iso)
+        .limit(5000),
+    ]);
+
+    if (funnelRes.error) throw new Error(funnelRes.error.message);
+    if (intentsRes.error) throw new Error(intentsRes.error.message);
+    if (paymentsRes.error) throw new Error(paymentsRes.error.message);
+
+    return montarVendasFunil({
+      dias: data.dias,
+      funnel: funnelRes.data ?? [],
+      intentUserIds: (intentsRes.data ?? []).map((r) => r.user_id),
+      payments: paymentsRes.data ?? [],
+    });
+  });
+
 export type CapiStatus = {
   configured: boolean;
   runtime: "start";

@@ -144,6 +144,39 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_events: {
+        Row: {
+          created_at: string
+          from_page: string | null
+          id: string
+          step: string
+          user_id: string | null
+          utm_campaign: string | null
+          utm_source: string | null
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_page?: string | null
+          id?: string
+          step: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          from_page?: string | null
+          id?: string
+          step?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       league_entries: {
         Row: {
           id: string

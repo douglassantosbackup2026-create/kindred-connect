@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CreditCard, Dumbbell, Users, Crown, TrendingUp } from "lucide-react";
+import { CreditCard, Dumbbell, Users, Crown } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
+import { FunilVendas } from "@/components/admin/FunilVendas";
 import { fetchAdminStats, exportFunilCsv } from "@/lib/admin";
 import { PRODUCT } from "@/lib/product-config";
 import { RouteError, RouteNotFound } from "@/components/RouteBoundary";
@@ -41,30 +42,9 @@ function AdminDashboard() {
         ))}
       </div>
 
+      <FunilVendas />
+
       <section className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-bold text-foreground">Funil 7 dias</h2>
-          </div>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>
-              Eventos de pagamento:{" "}
-              <span className="font-bold text-foreground">{stats?.pagamentos7d ?? 0}</span>
-            </li>
-            <li>
-              Aprovados: <span className="font-bold text-foreground">{stats?.aprovados7d ?? 0}</span>
-            </li>
-            <li>
-              Cancelamentos (histórico):{" "}
-              <span className="font-bold text-foreground">{stats?.cancelados ?? 0}</span>
-            </li>
-            <li>
-              Cliques afiliado:{" "}
-              <span className="font-bold text-foreground">{stats?.affiliateClicks ?? 0}</span>
-            </li>
-          </ul>
-        </div>
         <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="text-sm font-bold text-foreground">Ativação cohort (30d)</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
@@ -88,30 +68,6 @@ function AdminDashboard() {
           <p className="mt-3 text-[11px] text-muted-foreground">
             Meta: D0 ≥70% · D7 ≥40%. Use UTM nos ads para ler a tabela abaixo.
           </p>
-        </div>
-      </section>
-
-      <section className="mt-6 grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <h2 className="text-sm font-bold text-foreground">Checkout → Pix → treino D0 (7d)</h2>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>
-              Intents (CheckoutStep):{" "}
-              <span className="font-bold text-foreground">{stats?.checkoutD0?.started ?? 0}</span>
-            </li>
-            <li>
-              Pix/cartão aprovado:{" "}
-              <span className="font-bold text-foreground">
-                {stats?.checkoutD0?.purchased ?? 0} ({stats?.checkoutD0?.purchasedRate ?? 0}%)
-              </span>
-            </li>
-            <li>
-              1º treino no mesmo dia:{" "}
-              <span className="font-bold text-foreground">
-                {stats?.checkoutD0?.d0 ?? 0} ({stats?.checkoutD0?.d0Rate ?? 0}%)
-              </span>
-            </li>
-          </ul>
         </div>
         <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="text-sm font-bold text-foreground">CAPI Meta</h2>

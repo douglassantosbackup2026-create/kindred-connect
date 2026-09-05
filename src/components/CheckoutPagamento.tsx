@@ -18,6 +18,7 @@ import { PLANO_PADRAO, type CheckoutSearch } from "@/lib/checkout";
 import { whatsappSupportHref } from "@/lib/product-config";
 import { usePlayer } from "@/lib/player-store";
 import { captureUtmFromSearch } from "@/lib/utm";
+import { registrarFunnel } from "@/lib/funnel";
 import { trackMetaCustom, trackMetaDedup, trackCheckoutStep } from "@/lib/meta-pixel";
 import { cn } from "@/lib/utils";
 
@@ -85,6 +86,7 @@ export function CheckoutPagamento({ search }: { search: CheckoutSearch }) {
     });
     trackMetaCustom("CheckoutPageView", { plano, from });
     trackCheckoutStep("view", { plano, from });
+    registrarFunnel("checkout", { from });
   }, [origem, from, plano]);
 
   const config = PLANOS_ASSINATURA.find((p) => p.id === plano) ?? PLANOS_ASSINATURA[1]!;
